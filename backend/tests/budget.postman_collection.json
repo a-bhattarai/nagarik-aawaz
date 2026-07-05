@@ -1,0 +1,128 @@
+{
+  "info": {
+    "name": "Nagarik Aawaz - Budget API",
+    "description": "Manual test collection for budgetRoutes.js. Set {{base_url}}, {{ward_official_token}}, {{metro_admin_token}} in a Postman environment before running.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:5000/api/budgets" },
+    { "key": "ward_official_token", "value": "" },
+    { "key": "metro_admin_token", "value": "" },
+    { "key": "budget_id", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "GET all budgets (public)",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}"
+      }
+    },
+    {
+      "name": "GET budgets filtered by ward + fiscalYear (public)",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}?ward=5&fiscalYear=2082/83"
+      }
+    },
+    {
+      "name": "GET single budget by id (public)",
+      "request": {
+        "method": "GET",
+        "url": "{{base_url}}/{{budget_id}}"
+      }
+    },
+    {
+      "name": "POST create budget (ward_official, own ward)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{ward_official_token}}" }
+        ],
+        "url": "{{base_url}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ward\": 5,\n  \"fiscalYear\": \"2082/83\",\n  \"allocatedAmount\": 500000,\n  \"spentAmount\": 120000,\n  \"breakdown\": [\n    { \"category\": \"Road Maintenance\", \"project\": \"Ward Road Repair\", \"allocatedAmount\": 300000, \"spentAmount\": 100000 },\n    { \"category\": \"Sanitation\", \"allocatedAmount\": 200000, \"spentAmount\": 20000 }\n  ]\n}"
+        }
+      }
+    },
+    {
+      "name": "POST create budget (metro_admin, any ward)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{metro_admin_token}}" }
+        ],
+        "url": "{{base_url}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ward\": 12,\n  \"fiscalYear\": \"2082/83\",\n  \"allocatedAmount\": 750000\n}"
+        }
+      }
+    },
+    {
+      "name": "POST create budget - no token (expect 401)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{base_url}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ward\": 5,\n  \"fiscalYear\": \"2082/83\",\n  \"allocatedAmount\": 500000\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT update budget (ward_official, own ward)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{ward_official_token}}" }
+        ],
+        "url": "{{base_url}}/{{budget_id}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"spentAmount\": 150000\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT update budget - wrong ward (expect 403)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{ward_official_token}}" }
+        ],
+        "url": "{{base_url}}/{{budget_id}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"allocatedAmount\": 999999\n}"
+        }
+      }
+    },
+    {
+      "name": "DELETE budget (metro_admin only)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{metro_admin_token}}" }
+        ],
+        "url": "{{base_url}}/{{budget_id}}"
+      }
+    },
+    {
+      "name": "DELETE budget - as ward_official (expect 403)",
+      "request": {
+        "method": "DELETE",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{ward_official_token}}" }
+        ],
+        "url": "{{base_url}}/{{budget_id}}"
+      }
+    }
+  ]
+}
