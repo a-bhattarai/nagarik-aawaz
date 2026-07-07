@@ -31,6 +31,11 @@ const complaintSchema = new mongoose.Schema(
         type: Number,
         default: null,
       },
+      landmark: {
+        type: String,
+        trim: true,
+        default: null, // optional human-readable location hint, e.g. "near Bindhyabasini Temple"
+      },
     },
     status: {
       type: String,
@@ -56,13 +61,14 @@ const complaintSchema = new mongoose.Schema(
 );
 
 // Auto-set deadlineAt on creation if not explicitly provided.
-complaintSchema.pre("save", function () {
+complaintSchema.pre("save", function (next) {
   if (this.isNew && !this.deadlineAt) {
     const DEFAULT_DEADLINE_DAYS = 7;
     this.deadlineAt = new Date(
       Date.now() + DEFAULT_DEADLINE_DAYS * 24 * 60 * 60 * 1000,
     );
   }
+  next();
 });
 
 // Helpful index for escalation job: query pending/in-progress complaints
