@@ -33,7 +33,7 @@ const complaintSchema = new mongoose.Schema(
       landmark: {
         type: String,
         trim: true,
-        default: null,
+        default: null, // optional human-readable location hint, e.g. "near Bindhyabasini Temple"
       },
     },
     status: {
