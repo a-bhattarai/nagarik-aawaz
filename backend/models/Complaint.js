@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-
 const complaintSchema = new mongoose.Schema(
   {
     title: {
@@ -13,7 +12,7 @@ const complaintSchema = new mongoose.Schema(
       trim: true,
     },
     photo: {
-      type: String, // URL to uploaded image (single photo for now)
+      type: String,
       default: null,
     },
     location: {
@@ -31,6 +30,11 @@ const complaintSchema = new mongoose.Schema(
         type: Number,
         default: null,
       },
+      landmark: {
+        type: String,
+        trim: true,
+        default: null,
+      },
     },
     status: {
       type: String,
@@ -42,11 +46,6 @@ const complaintSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
-    // ASSUMPTION (flag with Person 2): deadline is stored so escalation
-    // logic can query "find all complaints past deadline" directly in
-    // MongoDB instead of computing it in application code every time.
-    // Default deadline = 7 days from creation. Adjust the pre-save hook
-    // below if the real escalation rule differs (e.g. varies by category).
     deadlineAt: {
       type: Date,
       default: null,
@@ -54,7 +53,6 @@ const complaintSchema = new mongoose.Schema(
   },
   { timestamps: true },
 );
-
 // Auto-set deadlineAt on creation if not explicitly provided.
 complaintSchema.pre("save", function () {
   if (this.isNew && !this.deadlineAt) {
@@ -64,9 +62,5 @@ complaintSchema.pre("save", function () {
     );
   }
 });
-
-// Helpful index for escalation job: query pending/in-progress complaints
-// whose deadline has passed.
 complaintSchema.index({ status: 1, deadlineAt: 1 });
-
 module.exports = mongoose.model("Complaint", complaintSchema);

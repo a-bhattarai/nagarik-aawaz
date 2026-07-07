@@ -17,7 +17,7 @@ function applyEscalationCheck(complaint) {
 // ===== CREATE COMPLAINT =====
 router.post('/', protect, async (req, res) => {
   try {
-    const { title, description, photo, location, landmark } = req.body;
+    const { title, description, photo, location } = req.body;
 
     if (!title || !description || !location || !location.ward) {
       return res.status(400).json({
@@ -32,7 +32,8 @@ router.post('/', protect, async (req, res) => {
       location: {
         ward: location.ward,
         lat: location.lat || null,
-        lng: location.lng || null
+        lng: location.lng || null,
+        landmark: location.landmark || null
       },
       submittedBy: req.user.id
     });
