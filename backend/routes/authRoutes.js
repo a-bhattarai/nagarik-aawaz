@@ -3,6 +3,7 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { protect } = require('../middleware/auth');
 
 // Generate a random 6-digit OTP
 function generateOtp() {
@@ -214,6 +215,18 @@ router.post('/reset-password', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Server error during password reset' });
+  }
+});
+
+// ===== GET CURRENT USER PROFILE =====
+router.get('/me', protect, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password -otp -otpExpiresAt');
+    if (!user) return res.status(404).json({ message: 'User not found' });
+
+    res.status(200).json({ user });
+  } catch (err) {
+    res.status(500).json({ message: 'Failed to fetch profile', error: err.message });
   }
 });
 

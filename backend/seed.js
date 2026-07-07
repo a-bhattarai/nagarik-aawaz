@@ -10,29 +10,54 @@ async function seed() {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('Connected to MongoDB for seeding');
 
-    const email = 'ward5official@nagarikaawaz.gov.np';
+    // ===== Seed 33 ward officials (one per ward) =====
+    for (let ward = 1; ward <= 33; ward++) {
+      const email = `ward${ward}official@nagarikaawaz.gov.np`;
+      const existing = await User.findOne({ email });
 
-    const existing = await User.findOne({ email });
-    if (existing) {
-      console.log('This seed user already exists, skipping creation:', email);
-      process.exit(0);
+      if (existing) {
+        console.log(`Ward ${ward} official already exists, skipping.`);
+        continue;
+      }
+
+      const hashedPassword = await bcrypt.hash(`ward${ward}pass123`, 10);
+
+      await User.create({
+        fullName: `Ward ${ward} Official`,
+        email,
+        phone: `98000000${String(ward).padStart(2, '0')}`,
+        ward,
+        password: hashedPassword,
+        role: 'ward_official',
+        isVerified: true
+      });
+
+      console.log(`Created ward ${ward} official: ${email}`);
     }
 
-    const hashedPassword = await bcrypt.hash('ward5pass123', 10);
+    // ===== Seed 1 metro admin =====
+    const adminEmail = 'metroadmin@nagarikaawaz.gov.np';
+    const existingAdmin = await User.findOne({ email: adminEmail });
 
-    const wardOfficial = await User.create({
-      fullName: 'Ward 5 Official',
-      email,
-      phone: '9800000005',
-      ward: 5,
-      password: hashedPassword,
-      role: 'ward_official',
-      isVerified: true // seeded accounts start pre-verified, no OTP needed
-    });
+    if (existingAdmin) {
+      console.log('Metro admin already exists, skipping.');
+    } else {
+      const hashedAdminPassword = await bcrypt.hash('metroadmin123', 10);
 
-    console.log('Ward 5 official created successfully:');
-    console.log({ email: wardOfficial.email, role: wardOfficial.role, ward: wardOfficial.ward });
+      await User.create({
+        fullName: 'Metro Admin',
+        email: adminEmail,
+        phone: '9800000000',
+        ward: 1, // admins aren't tied to a specific ward, but schema requires one
+        password: hashedAdminPassword,
+        role: 'metro_admin',
+        isVerified: true
+      });
 
+      console.log(`Created metro admin: ${adminEmail}`);
+    }
+
+    console.log('Seeding complete.');
     process.exit(0);
   } catch (err) {
     console.error('Seeding failed:', err);
