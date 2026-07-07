@@ -56,14 +56,13 @@ const complaintSchema = new mongoose.Schema(
 );
 
 // Auto-set deadlineAt on creation if not explicitly provided.
-complaintSchema.pre("save", function (next) {
+complaintSchema.pre("save", function () {
   if (this.isNew && !this.deadlineAt) {
     const DEFAULT_DEADLINE_DAYS = 7;
     this.deadlineAt = new Date(
       Date.now() + DEFAULT_DEADLINE_DAYS * 24 * 60 * 60 * 1000,
     );
   }
-  next();
 });
 
 // Helpful index for escalation job: query pending/in-progress complaints

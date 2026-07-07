@@ -74,9 +74,8 @@ const budgetSchema = new mongoose.Schema(
 budgetSchema.index({ ward: 1, fiscalYear: 1 }, { unique: true });
 
 // Keep lastUpdated in sync automatically whenever the doc is saved.
-budgetSchema.pre("save", function (next) {
+budgetSchema.pre("save", function () {
   this.lastUpdated = new Date();
-  next();
 });
 
 module.exports = mongoose.model("Budget", budgetSchema);

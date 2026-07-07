@@ -9,6 +9,7 @@ connectDB();
 app.use(express.json());
 app.use(cors());
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/complaints', require('./routes/complaintRoutes'));
 app.use('/api/budgets', require('./routes/budgetRoutes'));   // ← ADD THIS LINE
 app.get('/', (req, res) => {
   res.send('Nagarik Aawaz API running');
