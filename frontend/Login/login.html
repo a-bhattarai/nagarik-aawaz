@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>लग-इन | Login — Nagarik Aawaz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="stylelogin.css">
+</head>
+<body>
+
+<!-- ===== TOP STRIP ===== -->
+<div class="top-strip">
+  <div class="top-strip-inner">
+
+    <div class="top-strip-left"></div>
+
+    <div class="top-strip-right">
+
+    <!-- Phone -->
+<a href="tel:061500000" class="top-strip-link">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l.95-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+  </svg>
+
+  <span data-lang="ne">०६१-५०००००</span>
+  <span data-lang="en">061-500000</span>
+</a>
+
+<!-- Contact -->
+<a href="mailto:nagarikaawaz@pokharamun.gov.np" class="top-strip-link">
+  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+    <polyline points="22,6 12,13 2,6"/>
+  </svg>
+
+  <span data-lang="ne">सम्पर्क</span>
+  <span data-lang="en">Contact</span>
+</a>
+
+      <!-- Language Toggle -->
+      <div class="lang-toggle">
+        <button id="btn-ne" class="active" onclick="setLang('ne')" aria-label="नेपाली">नेपाली</button>
+        <button id="btn-en" onclick="setLang('en')" aria-label="English">English</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ===== MASTHEAD ===== -->
+ 
+<div class="masthead">
+  <div class="masthead-inner">
+
+    <!-- Home Button -->
+    <a href="index.html" class="home-btn">
+      <i class="fas fa-house"></i>
+      <span data-lang="ne">गृहपृष्ठ</span>
+      <span data-lang="en">Home</span>
+    </a>
+
+    <!-- Brand -->
+    <div class="masthead-brand">
+
+      <!-- Logo -->
+      <div class="masthead-logo-metro" title="Pokhara Metropolitan City Logo">
+        <img src="logo1.jpg" alt="Pokhara Metropolitan City Logo">
+      </div>
+
+      <!-- Text -->
+      <div class="masthead-text">
+
+        <h1 data-lang="ne">पोखरा महानगरपालिका</h1>
+        <h1 data-lang="en">Pokhara Metropolitan City</h1>
+
+        <p class="sub-district" data-lang="ne">
+          गण्डकी प्रदेश, नेपाल
+        </p>
+
+        <p class="sub-district" data-lang="en">
+          Gandaki Province, Nepal
+        </p>
+
+        <p class="sub-portal" data-lang="ne">
+          नागरिक आवाज — नागरिक गुनासो पोर्टल
+        </p>
+
+        <p class="sub-portal" data-lang="en">
+          NAGARIK AAWAZ — CITIZEN'S VOICE PORTAL
+        </p>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>
+<!-- ===== STICKY NAVBAR ===== -->
+
+
+<!-- ===== MAIN ===== -->
+<main>
+  <div class="auth-card" role="main">
+
+    <!-- =====================================================
+         STEP 1 — LOGIN FORM
+    ===================================================== -->
+    <div class="form-step active" id="step1">
+      <div class="auth-header">
+        <div class="icon-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+          </svg>
+        </div>
+        <p class="eyebrow">WELCOME BACK</p>
+        <h2 data-lang="ne">लग-इन गर्नुहोस्</h2>
+        <h2 data-lang="en">Login to Your Account</h2>
+        <p class="subtitle" data-lang="ne">गुनासो दर्ता र स्थिती हेर्न आफ्नो खातामा लग-इन गर्नुहोस्</p>
+        <p class="subtitle" data-lang="en">Log in to report complaints and track their status</p>
+      </div>
+
+      <div class="alert-banner" id="loginAlert" role="alert">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>
+          <span data-lang="ne">इमेल वा पासवर्ड मिलेन। कृपया फेरि प्रयास गर्नुहोस्।</span>
+          <span data-lang="en">Incorrect email or password. Please try again.</span>
+        </div>
+      </div>
+
+      <form id="loginForm" novalidate>
+
+        <!-- Role -->
+       
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">
+            <span data-lang="ne">इमेल</span>
+            <span data-lang="en">Email Address</span>
+            <span class="label-tag">EMAIL</span>
+          </label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
+            <input type="email" id="email" name="email" placeholder="example@gmail.com" required autocomplete="username">
+          </div>
+          <p class="error-msg" id="emailError">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-lang="ne">कृपया मान्य इमेल लेख्नुहोस्</span>
+            <span data-lang="en">Please enter a valid email address</span>
+          </p>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">
+            <span data-lang="ne">पासवर्ड</span>
+            <span data-lang="en">Password</span>
+            <span class="label-tag">PASSWORD</span>
+          </label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password">
+            <button type="button" class="toggle-pw" id="togglePwMain" onclick="togglePassword('password', this)" aria-label="Show password">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <p class="error-msg" id="passwordError">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-lang="ne">कृपया पासवर्ड लेख्नुहोस्</span>
+            <span data-lang="en">Please enter your password</span>
+          </p>
+        </div>
+
+        <!-- Remember / Forgot -->
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" id="rememberMe">
+            <span data-lang="ne">मलाई सम्झनुहोस्</span>
+            <span data-lang="en">Remember me</span>
+          </label>
+          <button type="button" class="forgot-btn" onclick="goToStep('stepForgot1')">
+            <span data-lang="ne">पासवर्ड बिर्सनुभयो?</span>
+            <span data-lang="en">Forgot password?</span>
+          </button>
+        </div>
+
+        <!-- Submit -->
+        <button type="submit" class="btn btn-primary" id="loginBtn">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+          <span id="loginBtnText">
+            <span data-lang="ne">लग-इन गर्नुहोस्</span>
+            <span data-lang="en">Login</span>
+          </span>
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <span data-lang="ne">खाता छैन?</span>
+        <span data-lang="en">Don't have an account?</span>
+        <a href="register.html" data-lang="ne">दर्ता गर्नुहोस्</a>
+        <a href="register.html" data-lang="en">Register here</a>
+      </div>
+    </div>
+
+    <!-- =====================================================
+         STEP FORGOT 1 — ENTER EMAIL
+    ===================================================== -->
+    <div class="form-step" id="stepForgot1">
+      <div class="auth-header">
+        <div class="icon-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        </div>
+        <p class="eyebrow">RESET PASSWORD</p>
+        <h2 data-lang="ne">पासवर्ड रिसेट गर्नुहोस्</h2>
+        <h2 data-lang="en">Reset Your Password</h2>
+        <p class="subtitle" data-lang="ne">दर्ता गरिएको इमेल लेख्नुहोस् — हामी OTP पठाउँछौं</p>
+        <p class="subtitle" data-lang="en">Enter your registered email — we'll send you a 6-digit OTP</p>
+      </div>
+
+      <div class="alert-banner" id="forgotAlert" role="alert">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        <div>
+          <span data-lang="ne">यो इमेल हाम्रो प्रणालीमा फेला परेन।</span>
+          <span data-lang="en">This email was not found in our system.</span>
+        </div>
+      </div>
+
+      <form id="forgotEmailForm" novalidate>
+        <div class="form-group">
+          <label for="resetEmail">
+            <span data-lang="ne">इमेल</span>
+            <span data-lang="en">Registered Email</span>
+            <span class="label-tag">EMAIL</span>
+          </label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </span>
+            <input type="email" id="resetEmail" name="resetEmail" placeholder="example@gmail.com" required>
+          </div>
+          <p class="error-msg" id="resetEmailError">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-lang="ne">कृपया मान्य इमेल लेख्नुहोस्</span>
+            <span data-lang="en">Please enter a valid email address</span>
+          </p>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-secondary" onclick="goToStep('step1')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <span data-lang="ne">पछाडि</span>
+            <span data-lang="en">Back</span>
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            <span data-lang="ne">OTP पठाउनुहोस्</span>
+            <span data-lang="en">Send OTP</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- =====================================================
+         STEP FORGOT 2 — OTP VERIFICATION
+    ===================================================== -->
+    <div class="form-step" id="stepForgot2">
+      <div class="auth-header">
+        <div class="icon-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        </div>
+        <p class="eyebrow">VERIFY OTP</p>
+        <h2 data-lang="ne">OTP प्रमाणीकरण</h2>
+        <h2 data-lang="en">OTP Verification</h2>
+      </div>
+
+      <p class="otp-info" data-lang="ne">हामीले <strong id="resetOtpEmailNe">your@email.com</strong> मा ६ अंकको OTP पठायौं।</p>
+      <p class="otp-info" data-lang="en">We sent a 6-digit OTP to <strong id="resetOtpEmailEn">your@email.com</strong>.</p>
+
+      <form id="resetOtpForm" novalidate>
+        <div class="otp-inputs" role="group" aria-label="OTP input">
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box" autocomplete="one-time-code" aria-label="Digit 1">
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 2">
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 3">
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 4">
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 5">
+          <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 6">
+        </div>
+        <p class="error-msg" id="resetOtpError" style="justify-content:center;">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span data-lang="ne">गलत OTP — कृपया फेरि प्रयास गर्नुहोस्</span>
+          <span data-lang="en">Incorrect OTP — please try again</span>
+        </p>
+
+        <div class="resend">
+          <span data-lang="ne">OTP प्राप्त भएन?</span>
+          <span data-lang="en">Didn't receive OTP?</span>
+          <button type="button" class="resend-link disabled" id="resendResetBtn" onclick="resendResetOtp()">
+            <span data-lang="ne">पुन: पठाउनुहोस् <span id="resetTimerNe">(३०)</span></span>
+            <span data-lang="en">Resend <span id="resetTimerEn">(30)</span></span>
+          </button>
+        </div>
+
+        <div class="btn-row">
+          <button type="button" class="btn btn-secondary" onclick="goToStep('stepForgot1')">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            <span data-lang="ne">पछाडि</span>
+            <span data-lang="en">Back</span>
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            <span data-lang="ne">प्रमाणित गर्नुहोस्</span>
+            <span data-lang="en">Verify OTP</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- =====================================================
+         STEP FORGOT 3 — SET NEW PASSWORD
+    ===================================================== -->
+    <div class="form-step" id="stepForgot3">
+      <div class="auth-header">
+        <div class="icon-circle">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <p class="eyebrow">NEW PASSWORD</p>
+        <h2 data-lang="ne">नयाँ पासवर्ड सेट गर्नुहोस्</h2>
+        <h2 data-lang="en">Set New Password</h2>
+      </div>
+
+      <form id="newPasswordForm" novalidate>
+        <div class="form-group">
+          <label for="newPassword">
+            <span data-lang="ne">नयाँ पासवर्ड</span>
+            <span data-lang="en">New Password</span>
+            <span class="label-tag">NEW</span>
+          </label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="newPassword" name="newPassword" placeholder="••••••••" minlength="8" required>
+            <button type="button" class="toggle-pw" onclick="togglePassword('newPassword', this)" aria-label="Show password">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <p class="hint" data-lang="ne">कम्तीमा ८ अक्षर हुनुपर्छ</p>
+          <p class="hint" data-lang="en">Must be at least 8 characters</p>
+          <p class="error-msg">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-lang="ne">पासवर्ड कम्तीमा ८ अक्षर हुनुपर्छ</span>
+            <span data-lang="en">Password must be at least 8 characters</span>
+          </p>
+        </div>
+
+        <div class="form-group">
+          <label for="confirmNewPassword">
+            <span data-lang="ne">पासवर्ड पुष्टि</span>
+            <span data-lang="en">Confirm New Password</span>
+            <span class="label-tag">CONFIRM</span>
+          </label>
+          <div class="input-wrap">
+            <span class="input-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </span>
+            <input type="password" id="confirmNewPassword" name="confirmNewPassword" placeholder="••••••••" required>
+            <button type="button" class="toggle-pw" onclick="togglePassword('confirmNewPassword', this)" aria-label="Show password">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+          <p class="error-msg">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span data-lang="ne">पासवर्ड मेल खाएन</span>
+            <span data-lang="en">Passwords do not match</span>
+          </p>
+        </div>
+
+        <button type="submit" class="btn btn-primary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          <span data-lang="ne">पासवर्ड परिवर्तन गर्नुहोस्</span>
+          <span data-lang="en">Reset Password</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- =====================================================
+         STEP FORGOT SUCCESS
+    ===================================================== -->
+    <div class="form-step" id="stepForgotSuccess">
+      <div class="auth-header">
+        <div class="success-circle">
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2 data-lang="ne">पासवर्ड परिवर्तन भयो!</h2>
+        <h2 data-lang="en">Password Changed!</h2>
+        <p class="subtitle" data-lang="ne">तपाईंको पासवर्ड सफलतापूर्वक परिवर्तन भयो। अब नयाँ पासवर्डले लग-इन गर्नुहोस्।</p>
+        <p class="subtitle" data-lang="en">Your password has been successfully changed. You can now log in with your new password.</p>
+      </div>
+      <button class="btn btn-primary" onclick="goToStep('step1')">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+        <span data-lang="ne">लग-इन गर्नुहोस्</span>
+        <span data-lang="en">Go to Login</span>
+      </button>
+    </div>
+
+  </div><!-- /auth-card -->
+</main>
+
+<script src="scriptlogin.js"></script>
+</body>
+</html>

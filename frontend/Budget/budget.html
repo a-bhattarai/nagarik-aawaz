@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>बजेट पारदर्शिता | Budget Transparency - Nagarik Aawaz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="stylebudget.css">
+</head>
+<body>
+
+<!-- ===== TOP STRIP ===== -->
+<div class="top-strip">
+  <div class="top-strip-inner">
+    <div class="top-strip-left"></div>
+    <div class="top-strip-right">
+      <a href="tel:061500000" class="top-strip-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l.95-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <span data-lang="ne">०६१-५०००००</span>
+        <span data-lang="en">061-500000</span>
+      </a>
+      <a href="mailto:nagarikaawaz@pokharamun.gov.np" class="top-strip-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <span data-lang="ne">सम्पर्क</span>
+        <span data-lang="en">Contact</span>
+      </a>
+      <div class="lang-toggle">
+        <button id="btn-ne" class="active" onclick="setLang('ne')">नेपाली</button>
+        <button id="btn-en" onclick="setLang('en')">English</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MASTHEAD ===== -->
+<div class="masthead">
+  <div class="masthead-inner">
+    <a href="dashboard-citizen.html" class="home-btn">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10"/><path d="M9 21v-6h6v6"/></svg>
+      <span data-lang="ne">मेरो ड्यासबोर्ड</span>
+      <span data-lang="en">My Dashboard</span>
+    </a>
+
+    <div class="masthead-brand">
+     <div class="masthead-logo-metro" title="Pokhara Metropolitan City Logo">
+        <img src="logo1.jpg" alt="Pokhara Metropolitan City Logo">
+      </div>
+      <div class="masthead-text">
+        <h1 data-lang="ne">पोखरा महानगरपालिका</h1>
+        <h1 data-lang="en">Pokhara Metropolitan City</h1>
+        <p class="sub-district" data-lang="ne">गण्डकी प्रदेश, नेपाल</p>
+        <p class="sub-district" data-lang="en">Gandaki Province, Nepal</p>
+        <p class="sub-portal" data-lang="ne">नागरिक आवाज — नागरिक गुनासो पोर्टल</p>
+        <p class="sub-portal" data-lang="en">NAGARIK AAWAZ — CITIZEN'S VOICE PORTAL</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAGE HEADER ===== -->
+<section class="page-header">
+  <div class="page-header-inner">
+    <div class="breadcrumb">
+      <a href="dashboard-citizen.html" data-lang="ne">मेरो ड्यासबोर्ड</a><a href="index.html" data-lang="en">My Dashboard</a>
+      <span>/</span>
+      <span class="current" data-lang="ne">बजेट पारदर्शिता</span>
+      <span class="current" data-lang="en">Budget Transparency</span>
+    </div>
+    <h2 data-lang="ne">सार्वजनिक बजेट पारदर्शिता ट्र्याकर</h2>
+    <h2 data-lang="en">Public Budget Transparency Tracker</h2>
+    <p data-lang="ne">तपाईंको कर र विकास बजेट कहाँ खर्च भइरहेको छ हेर्नुहोस् — सबै ३३ वडाका परियोजना र खर्चको विवरण सार्वजनिक रूपमा उपलब्ध।</p>
+    <p data-lang="en">See where your tax and development funds are being spent — project and expenditure details across all 33 wards, open to every citizen.</p>
+  </div>
+</section>
+
+<!-- ===== CONTROL BAR ===== -->
+<div class="control-bar">
+  <div class="control-field">
+    <label data-lang="ne">आर्थिक वर्ष</label>
+    <label data-lang="en">Fiscal Year</label>
+    <select>
+      <option data-lang="ne">आ.व. २०८२/८३</option><option data-lang="en">FY 2025/26</option>
+      <option data-lang="ne">आ.व. २०८१/८२</option><option data-lang="en">FY 2024/25</option>
+      <option data-lang="ne">आ.व. २०८०/८१</option><option data-lang="en">FY 2023/24</option>
+    </select>
+  </div>
+  <div class="control-field">
+    <label data-lang="ne">वडा</label>
+    <label data-lang="en">Ward</label>
+    <select id="wardFilter">
+      <option data-lang="ne">सबै वडा</option><option data-lang="en">All Wards</option>
+    </select>
+  </div>
+  <div class="control-field control-search" style="flex:1;">
+    <label data-lang="ne">परियोजना खोज्नुहोस्</label>
+    <label data-lang="en">Search Projects</label>
+    <div style="position:relative;">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="search" placeholder="जस्तै: वडा ४ ढल निकास सुधार..." data-lang="ne">
+      <input type="search" placeholder="e.g. Ward 4 Sewerage System Optimization" data-lang="en">
+    </div>
+  </div>
+</div>
+
+<!-- ===== FINANCIAL PROGRESS CARDS ===== -->
+<section class="section">
+  <div class="finance-grid">
+
+    <div class="finance-card">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 100 100" width="92" height="92">
+          <circle class="ring-bg" cx="50" cy="50" r="42"/>
+          <circle class="ring-fill" cx="50" cy="50" r="42" stroke="#2563A8" stroke-dasharray="264" stroke-dashoffset="0"/>
+        </svg>
+        <div class="ring-label">100%</div>
+      </div>
+      <div class="finance-text">
+        <h4 data-lang="ne">कुल विनियोजित बजेट</h4>
+        <h4 data-lang="en">Allocated Budget</h4>
+        <div class="amount">रु. २३,५०,००,०००</div>
+        <div class="amount-sub" data-lang="ne">आ.व. २०८२/८३ का लागि</div>
+        <div class="amount-sub" data-lang="en">For FY 2025/26</div>
+      </div>
+    </div>
+
+    <div class="finance-card">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 100 100" width="92" height="92">
+          <circle class="ring-bg" cx="50" cy="50" r="42"/>
+          <circle class="ring-fill" cx="50" cy="50" r="42" stroke="#D9A441" stroke-dasharray="264" stroke-dashoffset="84.5"/>
+        </svg>
+        <div class="ring-label">68%</div>
+      </div>
+      <div class="finance-text">
+        <h4 data-lang="ne">हालसम्म खर्च भएको</h4>
+        <h4 data-lang="en">Spent Amount</h4>
+        <div class="amount">रु. १५,९६,००,०००</div>
+        <div class="amount-sub" data-lang="ne">२६५ परियोजनामा</div>
+        <div class="amount-sub" data-lang="en">Across 265 projects</div>
+      </div>
+    </div>
+
+    <div class="finance-card">
+      <div class="ring-wrap">
+        <svg viewBox="0 0 100 100" width="92" height="92">
+          <circle class="ring-bg" cx="50" cy="50" r="42"/>
+          <circle class="ring-fill" cx="50" cy="50" r="42" stroke="#4CAF7D" stroke-dasharray="264" stroke-dashoffset="179.5"/>
+        </svg>
+        <div class="ring-label">32%</div>
+      </div>
+      <div class="finance-text">
+        <h4 data-lang="ne">कोषमा बाँकी रकम</h4>
+        <h4 data-lang="en">Treasury Balance</h4>
+        <div class="amount">रु. ७,५४,००,०००</div>
+        <div class="amount-sub" data-lang="ne">यो त्रैमासका लागि उपलब्ध</div>
+        <div class="amount-sub" data-lang="en">Available for this quarter</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== INFO BANNER ===== -->
+  <div class="info-banner">
+    <div class="ib-icon">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    </div>
+    <div>
+      <h4 data-lang="ne">यो तथ्याङ्क कसरी अद्यावधिक हुन्छ?</h4>
+      <h4 data-lang="en">How is this data updated?</h4>
+      <p data-lang="ne">महानगरपालिकाको योजना तथा आर्थिक प्रशासन शाखाले हरेक महिनाको अन्त्यमा खर्चको विवरण अद्यावधिक गर्छ। प्रत्येक परियोजनाको प्रगति वडा कार्यालयबाट प्रमाणित गरिन्छ।</p>
+      <p data-lang="en">The Planning &amp; Financial Administration division updates expenditure figures at the end of every month. Each project's progress is verified by the respective ward office.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJECTS LEDGER ===== -->
+<section class="section section-tight">
+  <div class="panel">
+    <div class="panel-header">
+      <h3>
+        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="13" y2="17"/></svg>
+        <span data-lang="ne">विकास परियोजना लेजर</span><span data-lang="en">Development Projects Ledger</span>
+      </h3>
+      <p><span data-lang="ne">२६५ मध्ये देखाइँदै</span><span data-lang="en">Showing of 265 projects</span></p>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th data-lang="ne">परियोजनाको नाम</th><th data-lang="en">Project Name</th>
+            <th data-lang="ne">वडा नं.</th><th data-lang="en">Ward No.</th>
+            <th data-lang="ne">कुल लागत</th><th data-lang="en">Total Cost</th>
+            <th data-lang="ne">कार्यान्वयन चरण</th><th data-lang="en">Implementation Stage</th>
+            <th data-lang="ne">जनसमर्थन</th><th data-lang="en">Public Support</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div class="proj-name" data-lang="ne">वडा ४ ढल निकास प्रणाली सुधार</div>
+              <div class="proj-name" data-lang="en">Ward 4 Sewerage System Optimization</div>
+              <div class="proj-sub" data-lang="ne">मुख्य ढल लाइन विस्तार र मर्मत</div>
+              <div class="proj-sub" data-lang="en">Main sewer line expansion and repair</div>
+            </td>
+            <td><span class="ward-pill" data-lang="ne">वडा ४</span><span class="ward-pill" data-lang="en">Ward 4</span></td>
+            <td>रु. ४२,५०,०००</td>
+            <td><span class="stage-badge s-execution"><span class="dot"></span><span data-lang="ne">कार्यान्वयनमा</span><span data-lang="en">In-Execution</span></span></td>
+            <td>
+              <button class="upvote-btn voted" onclick="toggleVote(this)">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L13 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+                <span data-vote>248</span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="proj-name" data-lang="ne">नया बजार सडक स्तरोन्नति</div>
+              <div class="proj-name" data-lang="en">Naya Bazar Road Upgrade</div>
+              <div class="proj-sub" data-lang="ne">कालोपत्रे र फुटपाथ निर्माण</div>
+              <div class="proj-sub" data-lang="en">Blacktopping and footpath construction</div>
+            </td>
+            <td><span class="ward-pill" data-lang="ne">वडा ८</span><span class="ward-pill" data-lang="en">Ward 8</span></td>
+            <td>रु. १,१०,००,०००</td>
+            <td><span class="stage-badge s-tender"><span class="dot"></span><span data-lang="ne">टेन्डर प्रक्रियामा</span><span data-lang="en">Tender</span></span></td>
+            <td>
+              <button class="upvote-btn" onclick="toggleVote(this)">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L13 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+                <span data-vote>186</span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="proj-name" data-lang="ne">सामुदायिक खानेपानी पाइपलाइन विस्तार</div>
+              <div class="proj-name" data-lang="en">Community Water Pipeline Extension</div>
+              <div class="proj-sub" data-lang="ne">२० घर परिवारलाई नयाँ धारा जडान</div>
+              <div class="proj-sub" data-lang="en">New tap connections for 20 households</div>
+            </td>
+            <td><span class="ward-pill" data-lang="ne">वडा १२</span><span class="ward-pill" data-lang="en">Ward 12</span></td>
+            <td>रु. १८,२०,०००</td>
+            <td><span class="stage-badge s-completed"><span class="dot"></span><span data-lang="ne">सम्पन्न</span><span data-lang="en">Completed</span></span></td>
+            <td>
+              <button class="upvote-btn" onclick="toggleVote(this)">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L13 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+                <span data-vote>312</span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="proj-name" data-lang="ne">वडा १९ सामुदायिक पार्क निर्माण</div>
+              <div class="proj-name" data-lang="en">Ward 19 Community Park Construction</div>
+              <div class="proj-sub" data-lang="ne">खेल मैदान र हरियाली क्षेत्र विकास</div>
+              <div class="proj-sub" data-lang="en">Playground and green space development</div>
+            </td>
+            <td><span class="ward-pill" data-lang="ne">वडा १९</span><span class="ward-pill" data-lang="en">Ward 19</span></td>
+            <td>रु. ६५,००,०००</td>
+            <td><span class="stage-badge s-planning"><span class="dot"></span><span data-lang="ne">योजना तहमा</span><span data-lang="en">Planning</span></span></td>
+            <td>
+              <button class="upvote-btn" onclick="toggleVote(this)">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L13 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+                <span data-vote>97</span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="proj-name" data-lang="ne">टुटेपानी फोहोरमैला संकलन केन्द्र</div>
+              <div class="proj-name" data-lang="en">Tutepani Waste Collection Hub</div>
+              <div class="proj-sub" data-lang="ne">वर्गीकरण तथा कम्पोस्टिङ सुविधा</div>
+              <div class="proj-sub" data-lang="en">Segregation and composting facility</div>
+            </td>
+            <td><span class="ward-pill" data-lang="ne">वडा ८</span><span class="ward-pill" data-lang="en">Ward 8</span></td>
+            <td>रु. २८,९०,०००</td>
+            <td><span class="stage-badge s-execution"><span class="dot"></span><span data-lang="ne">कार्यान्वयनमा</span><span data-lang="en">In-Execution</span></span></td>
+            <td>
+              <button class="upvote-btn" onclick="toggleVote(this)">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L13 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+                <span data-vote>154</span>
+              </button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div class="proj-name" data-lang="ne">खोल्सी किनार पैदल पुल निर्माण</div>
+              <div class="proj-name" data-lang="en">Kholsi Bank Foot-bridge Construction</div>
+              <div class="proj-sub" data-lang="ne">सुरक्षित पैदल आवतजावतका लागि नयाँ पुल</div>
+              <div class="proj-sub" data-lang="en">New bridge for safe pedestrian crossing</div>
+            </td>
+            <td><span class="ward-pill" data-lang="ne">वडा ८</span><span class="ward-pill" data-lang="en">Ward 8</span></td>
+            <td>रु. ४२,००,०००</td>
+            <td><span class="stage-badge s-tender"><span class="dot"></span><span data-lang="ne">टेन्डर प्रक्रियामा</span><span data-lang="en">Tender</span></span></td>
+            <td>
+              <button class="upvote-btn" onclick="toggleVote(this)">
+                <svg class="icon" viewBox="0 0 24 24"><path d="M7 10v12"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L13 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>
+                <span data-vote>221</span>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="pagination">
+      <p><span data-lang="ne">२६५ मध्ये १–६ देखाइँदै</span><span data-lang="en">Showing 1–6 of 265</span></p>
+      <div class="page-btns">
+        <button class="page-btn active">1</button>
+        <button class="page-btn">2</button>
+        <button class="page-btn">3</button>
+        <button class="page-btn">
+          <svg class="icon" viewBox="0 0 24 24" style="width:0.8em;height:0.8em;"><polyline points="9 18 15 12 9 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-col">
+      <h5 data-lang="ne">नागरिक आवाज</h5>
+      <h5 data-lang="en">Nagarik Aawaz</h5>
+      <p data-lang="ne">पोखरा महानगरपालिकाको लागि निर्मित नागरिक गुनासो तथा बजेट पारदर्शिता पोर्टल।</p>
+      <p data-lang="en">A civic complaint and budget transparency portal built for Pokhara Metropolitan City.</p>
+    </div>
+   
+    
+    <div class="footer-col">
+      <h5 data-lang="ne">सम्पर्क</h5>
+      <h5 data-lang="en">Contact</h5>
+      <p data-lang="ne">पोखरा महानगरपालिका कार्यालय, पोखरा-८, कास्की</p>
+      <p data-lang="en">Pokhara Metropolitan City Office, Pokhara-8, Kaski</p>
+      <p>०६१-५०००००</p>
+      <p>nagarikaawaz@pokharamun.gov.np</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p data-lang="ne">© २०८२ नागरिक आवाज — पोखरा महानगरपालिका। सर्वाधिकार सुरक्षित।</p>
+    <p data-lang="en">© 2026 Nagarik Aawaz — Pokhara Metropolitan City. All rights reserved.</p>
+  </div>
+</footer>
+
+<script src="scriptbudget.js"></script>
+</body>
+</html>
