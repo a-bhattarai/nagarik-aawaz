@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>वडा ड्यासबोर्ड | Ward Official Dashboard - Nagarik Aawaz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-deep: #1B5E3C;
+    --green-main: #2E7D52;
+    --green-light: #E8F5EE;
+    --green-accent: #4CAF7D;
+    --gold: #D9A441;
+    --ink: #1F2A24;
+    --gray: #6B7770;
+    --bg: #FAFAF7;
+    --white: #FFFFFF;
+    --border: #DCE6DF;
+    --error: #C0392B;
+    --error-bg: #FDEDEC;
+    --success: #1B5E3C;
+    --warning: #B7770D;
+    --warning-bg: #FEF9EE;
+    --info: #2563A8;
+    --info-bg: #EAF2FB;
+    --purple: #6B4FA0;
+    --purple-bg: #F1EDF8;
+    --sidebar-w: 256px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Noto Sans Devanagari', 'Poppins', sans-serif; background: var(--bg); color: var(--ink); line-height: 1.6; min-height: 100vh; }
+  svg.icon { width: 1em; height: 1em; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex-shrink: 0; }
+  a { color: inherit; }
+
+  /* ===== TOP STRIP ===== */
+  .top-strip { background: var(--green-deep); color: #fff; font-size: 0.8rem; padding: 6px 0; }
+  .top-strip-inner { max-width: 1440px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+  .top-strip-left, .top-strip-right { display: flex; align-items: center; gap: 18px; }
+  .top-strip a { color: #DFF3E8; text-decoration: none; display: flex; align-items: center; gap: 6px; }
+  .top-strip a:hover { color: #fff; text-decoration: underline; }
+  .lang-toggle { display: flex; border: 1px solid rgba(255,255,255,0.4); border-radius: 999px; overflow: hidden; }
+  .lang-toggle button { border: none; background: transparent; color: #DFF3E8; font-family: inherit; font-size: 0.78rem; font-weight: 600; padding: 4px 14px; cursor: pointer; transition: all 0.2s ease; }
+  .lang-toggle button.active { background: var(--gold); color: var(--green-deep); }
+
+  /* ===== APP BAR ===== */
+  .app-bar { background: var(--white); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+  .app-bar-inner { max-width: 1440px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+  .brand-logo { width: 42px; height: 42px; border-radius: 50%; background: var(--green-light); border: 2px solid var(--green-accent); display: flex; align-items: center; justify-content: center; color: var(--green-deep); font-size: 1.1rem; flex-shrink: 0; }
+  .brand-text h1 { font-size: 1.05rem; color: var(--green-deep); font-weight: 700; line-height: 1.2; }
+  .brand-text p { font-size: 0.72rem; color: var(--gray); font-family: 'Poppins', sans-serif; letter-spacing: 0.5px; }
+  .app-bar-actions { display: flex; align-items: center; gap: 14px; }
+  .icon-btn { width: 38px; height: 38px; border-radius: 9px; border: 1.5px solid var(--border); background: var(--white); display: flex; align-items: center; justify-content: center; color: var(--gray); cursor: pointer; position: relative; transition: all 0.2s ease; }
+  .icon-btn:hover { border-color: var(--green-accent); color: var(--green-deep); background: var(--green-light); }
+  .icon-btn .dot { position: absolute; top: 6px; right: 6px; width: 8px; height: 8px; border-radius: 50%; background: var(--error); border: 1.5px solid #fff; }
+  .user-chip { display: flex; align-items: center; gap: 10px; padding: 5px 12px 5px 5px; border: 1.5px solid var(--border); border-radius: 999px; cursor: pointer; background: var(--white); }
+  .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--green-deep); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; font-family: 'Poppins', sans-serif; flex-shrink: 0; }
+  .user-chip .uname { font-size: 0.85rem; font-weight: 600; }
+  .user-chip .uward { font-size: 0.7rem; color: var(--gray); }
+  .menu-toggle-sb { display: none; background: none; border: none; color: var(--green-deep); cursor: pointer; padding: 6px; }
+
+  /* ===== SHELL ===== */
+  .app-shell { max-width: 1440px; margin: 0 auto; display: grid; grid-template-columns: var(--sidebar-w) 1fr; align-items: start; }
+  .sidebar { position: sticky; top: 65px; height: calc(100vh - 65px); background: var(--white); border-right: 1px solid var(--border); padding: 22px 16px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+  .sb-label { font-family: 'Poppins', sans-serif; font-size: 0.68rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gray); padding: 14px 12px 8px; }
+  .sb-link { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 9px; text-decoration: none; color: var(--ink); font-size: 0.9rem; font-weight: 500; transition: all 0.15s ease; }
+  .sb-link svg.icon { font-size: 1.05rem; color: var(--gray); }
+  .sb-link:hover { background: var(--green-light); color: var(--green-deep); }
+  .sb-link:hover svg.icon { color: var(--green-deep); }
+  .sb-link.active { background: var(--green-deep); color: #fff; font-weight: 600; }
+  .sb-link.active svg.icon { color: #fff; }
+  .sb-divider { height: 1px; background: var(--border); margin: 12px 4px; }
+  .sb-logout { margin-top: auto; }
+  .sb-logout .sb-link:hover { background: var(--error-bg); color: var(--error); }
+  .sb-logout .sb-link:hover svg.icon { color: var(--error); }
+
+  .main-content { padding: 28px 28px 60px; min-width: 0; }
+  .page-title-row { display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 24px; }
+  .page-title h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 4px; }
+  .page-title p { font-size: 0.88rem; color: var(--gray); }
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 9px; font-size: 0.9rem; font-weight: 600; font-family: inherit; cursor: pointer; text-decoration: none; border: none; transition: all 0.2s ease; white-space: nowrap; }
+  .btn-primary { background: var(--green-deep); color: #fff; }
+  .btn-primary:hover { background: var(--green-main); transform: translateY(-1px); }
+  .btn-outline { background: var(--white); color: var(--green-deep); border: 1.5px solid var(--border); }
+  .btn-outline:hover { border-color: var(--green-accent); background: var(--green-light); }
+  .btn-sm { padding: 7px 12px; font-size: 0.78rem; border-radius: 7px; }
+
+  /* ===== STAT CARDS ===== */
+  .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-bottom: 24px; }
+  .stat-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; box-shadow: 0 2px 14px rgba(27,94,60,0.05); }
+  .stat-card .s-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+  .stat-card.pending .s-icon { background: var(--warning-bg); color: var(--warning); }
+  .stat-card.field .s-icon { background: var(--info-bg); color: var(--info); }
+  .stat-card.escalated .s-icon { background: var(--error-bg); color: var(--error); }
+  .stat-card.resolved .s-icon { background: var(--green-light); color: var(--green-deep); }
+  .stat-num { font-family: 'Poppins', sans-serif; font-size: 1.7rem; font-weight: 800; line-height: 1; }
+  .stat-label { font-size: 0.82rem; color: var(--gray); margin-top: 6px; font-weight: 500; }
+
+  /* ===== FILTER BAR ===== */
+  .filter-bar { background: var(--white); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-bottom: 20px; box-shadow: 0 2px 14px rgba(27,94,60,0.05); }
+  .filter-field { display: flex; flex-direction: column; gap: 5px; }
+  .filter-field label { font-size: 0.72rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.6px; }
+  .filter-field select, .filter-field input[type="search"] {
+    border: 1.5px solid var(--border); border-radius: 8px; padding: 8px 12px; font-size: 0.85rem;
+    font-family: inherit; color: var(--ink); background: var(--white); min-width: 150px; outline: none; cursor: pointer;
+  }
+  .filter-field input[type="search"] { cursor: text; min-width: 200px; }
+  .filter-field select:focus, .filter-field input[type="search"]:focus { border-color: var(--green-accent); box-shadow: 0 0 0 3px rgba(76,175,125,0.15); }
+  .filter-search-wrap { position: relative; }
+  .filter-search-wrap svg.icon { position: absolute; left: 11px; top: 50%; transform: translateY(-50%); color: var(--gray); font-size: 0.9rem; }
+  .filter-search-wrap input { padding-left: 32px !important; }
+  .filter-clear { margin-left: auto; }
+
+  /* ===== TABLE PANEL ===== */
+  .panel { background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; box-shadow: 0 2px 14px rgba(27,94,60,0.05); }
+  .panel-header { padding: 18px 22px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .panel-header h3 { font-size: 1.02rem; font-weight: 700; display: flex; align-items: center; gap: 9px; }
+  .panel-header h3 svg.icon { color: var(--green-deep); font-size: 1.1rem; }
+
+  .table-scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 920px; }
+  thead th { text-align: left; font-size: 0.72rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.7px; padding: 12px 18px; background: var(--bg); border-bottom: 1px solid var(--border); white-space: nowrap; }
+  tbody td { padding: 14px 18px; font-size: 0.86rem; border-bottom: 1px solid var(--border); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: none; }
+  tbody tr:hover { background: var(--bg); }
+  .cell-id { font-family: 'Poppins', sans-serif; font-weight: 600; color: var(--green-deep); font-size: 0.82rem; }
+  .cell-title { font-weight: 600; color: var(--ink); }
+  .cell-sub { font-size: 0.76rem; color: var(--gray); margin-top: 2px; }
+  .cat-pill { display: inline-flex; align-items: center; gap: 6px; padding: 4px 11px; border-radius: 999px; font-size: 0.76rem; font-weight: 600; background: var(--green-light); color: var(--green-deep); }
+
+  .urgency-tag { display: inline-flex; align-items: center; gap: 5px; font-size: 0.76rem; font-weight: 700; }
+  .urgency-tag .dot { width: 7px; height: 7px; border-radius: 50%; }
+  .urgency-tag.low { color: var(--green-deep); } .urgency-tag.low .dot { background: var(--green-accent); }
+  .urgency-tag.medium { color: var(--warning); } .urgency-tag.medium .dot { background: var(--gold); }
+  .urgency-tag.high { color: var(--error); } .urgency-tag.high .dot { background: var(--error); }
+
+  .badge { display: inline-flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 999px; font-size: 0.76rem; font-weight: 700; white-space: nowrap; }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+  .badge.b-pending { background: var(--warning-bg); color: var(--warning); }
+  .badge.b-pending .dot { background: var(--warning); }
+  .badge.b-progress { background: var(--info-bg); color: var(--info); }
+  .badge.b-progress .dot { background: var(--info); }
+  .badge.b-resolved { background: var(--green-light); color: var(--green-deep); }
+  .badge.b-resolved .dot { background: var(--green-accent); }
+  .badge.b-escalated { background: var(--purple-bg); color: var(--purple); }
+  .badge.b-escalated .dot { background: var(--purple); }
+
+  /* dropdown-style status select inline in table */
+  .status-select {
+    border: 1.5px solid var(--border); border-radius: 7px; padding: 6px 28px 6px 10px; font-size: 0.78rem;
+    font-family: inherit; font-weight: 600; color: var(--ink); background: var(--white); cursor: pointer; outline: none;
+    appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%236B7770' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 9px center;
+  }
+  .status-select:focus { border-color: var(--green-accent); }
+
+  .row-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .action-btn { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--white); color: var(--gray); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s ease; flex-shrink: 0; }
+  .action-btn:hover { border-color: var(--green-accent); color: var(--green-deep); background: var(--green-light); }
+  .action-btn.escalate:hover { border-color: var(--error); color: var(--error); background: var(--error-bg); }
+  .action-btn.assign:hover { border-color: var(--info); color: var(--info); background: var(--info-bg); }
+
+  .pagination { display: flex; align-items: center; justify-content: space-between; padding: 16px 22px; border-top: 1px solid var(--border); flex-wrap: wrap; gap: 10px; }
+  .pagination p { font-size: 0.8rem; color: var(--gray); }
+  .page-btns { display: flex; gap: 6px; }
+  .page-btn { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--border); background: var(--white); font-size: 0.82rem; font-weight: 600; cursor: pointer; color: var(--ink); }
+  .page-btn.active { background: var(--green-deep); color: #fff; border-color: var(--green-deep); }
+  .page-btn:hover:not(.active) { border-color: var(--green-accent); }
+
+  /* ===== LANGUAGE VISIBILITY ===== */
+  [data-lang="en"] { display: none; }
+  body.lang-mode-en [data-lang="ne"] { display: none; }
+  body.lang-mode-en [data-lang="en"] { display: inline; }
+  span[data-lang="en"], p[data-lang="en"], h1[data-lang="en"], h2[data-lang="en"], h3[data-lang="en"], h4[data-lang="en"], h5[data-lang="en"], option[data-lang="en"] { display: none; }
+  body.lang-mode-en span[data-lang="ne"], body.lang-mode-en p[data-lang="ne"], body.lang-mode-en h1[data-lang="ne"], body.lang-mode-en h2[data-lang="ne"], body.lang-mode-en h3[data-lang="ne"], body.lang-mode-en h4[data-lang="ne"], body.lang-mode-en h5[data-lang="ne"], body.lang-mode-en option[data-lang="ne"] { display: none; }
+  body.lang-mode-en span[data-lang="en"] { display: inline; }
+  body.lang-mode-en p[data-lang="en"] { display: block; }
+  body.lang-mode-en h1[data-lang="en"], body.lang-mode-en h2[data-lang="en"], body.lang-mode-en h3[data-lang="en"], body.lang-mode-en h4[data-lang="en"], body.lang-mode-en h5[data-lang="en"] { display: block; }
+  body.lang-mode-en option[data-lang="en"] { display: block; }
+  .sb-link span[data-lang="ne"] { display: inline; }
+  .sb-link span[data-lang="en"] { display: none; }
+  body.lang-mode-en .sb-link span[data-lang="ne"] { display: none; }
+  body.lang-mode-en .sb-link span[data-lang="en"] { display: inline; }
+  .filter-field label span[data-lang="ne"] { display: inline; }
+  .filter-field label span[data-lang="en"] { display: none; }
+  body.lang-mode-en .filter-field label span[data-lang="ne"] { display: none; }
+  body.lang-mode-en .filter-field label span[data-lang="en"] { display: inline; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 900px) {
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .app-shell { grid-template-columns: 1fr; }
+    .sidebar { position: fixed; top: 0; left: 0; bottom: 0; height: 100vh; width: 260px; z-index: 1200; transform: translateX(-100%); transition: transform 0.25s ease; box-shadow: 10px 0 30px rgba(0,0,0,0.15); padding-top: 80px; }
+    .sidebar.open { transform: translateX(0); }
+    .menu-toggle-sb { display: flex; align-items: center; justify-content: center; }
+    .sidebar-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1100; }
+    .sidebar-backdrop.show { display: block; }
+    .main-content { padding: 22px 18px 50px; }
+  }
+  @media (max-width: 640px) {
+    .stat-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+    .stat-card { padding: 14px; flex-direction: column; }
+    .stat-num { font-size: 1.4rem; }
+    .user-chip .uname, .user-chip .uward { display: none; }
+    .user-chip { padding: 4px; }
+    .brand-text p { display: none; }
+    .page-title-row { flex-direction: column; align-items: stretch; }
+    .filter-bar { flex-direction: column; align-items: stretch; }
+    .filter-field select, .filter-field input { width: 100%; min-width: 0; }
+    .filter-clear { margin-left: 0; }
+    .panel-header { padding: 14px 16px; }
+    .pagination { flex-direction: column; align-items: flex-start; }
+  }
+  @media (max-width: 420px) { .stat-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ===== TOP STRIP ===== -->
+<div class="top-strip">
+  <div class="top-strip-inner">
+    <div class="top-strip-left">
+      <a href="index.html" data-lang="ne">← गृहपृष्ठमा फर्कनुहोस्</a>
+      <a href="index.html" data-lang="en">← Back to Home</a>
+    </div>
+    <div class="top-strip-right">
+      <a href="tel:061500000">०६१-५०००००</a>
+      <div class="lang-toggle">
+        <button id="btn-ne" class="active" onclick="setLang('ne')">नेपाली</button>
+        <button id="btn-en" onclick="setLang('en')">English</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP BAR ===== -->
+<div class="app-bar">
+  <div class="app-bar-inner">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <button class="menu-toggle-sb" onclick="toggleSidebar()" aria-label="Toggle menu">
+        <svg class="icon" style="font-size:1.4rem;" viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
+      <a href="index.html" class="brand">
+        <div class="brand-logo">
+          <svg class="icon" style="font-size:1.3rem;" viewBox="0 0 24 24"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>
+        </div>
+        <div class="brand-text">
+          <h1 data-lang="ne">नागरिक आवाज</h1>
+          <h1 data-lang="en">Nagarik Aawaz</h1>
+          <p data-lang="ne">वडा कार्यालय पोर्टल</p>
+          <p data-lang="en">WARD OFFICIAL PORTAL</p>
+        </div>
+      </a>
+    </div>
+    <div class="app-bar-actions">
+      <button class="icon-btn" aria-label="Notifications">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="dot"></span>
+      </button>
+      <div class="user-chip">
+        <div class="user-avatar">रा</div>
+        <div>
+          <div class="uname" data-lang="ne">राम बहादुर थापा</div>
+          <div class="uname" data-lang="en">Ram B. Thapa</div>
+          <div class="uward" data-lang="ne">वडा अध्यक्ष, वडा नं. ८</div>
+          <div class="uward" data-lang="en">Ward Chair, Ward 8</div>
+        </div>
+        <svg class="icon" style="font-size:0.8rem; color:var(--gray);" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sidebar-backdrop" id="sbBackdrop" onclick="toggleSidebar()"></div>
+
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-label" data-lang="ne">मुख्य मेनु</div>
+    <div class="sb-label" data-lang="en">MAIN MENU</div>
+    <a href="dashboard-ward.html" class="sb-link active">
+      <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/></svg>
+      <span data-lang="ne">गुनासो व्यवस्थापन</span><span data-lang="en">Manage Complaints</span>
+    </a>
+    <a href="#field" class="sb-link">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+      <span data-lang="ne">फिल्ड अधिकारीहरू</span><span data-lang="en">Field Officers</span>
+    </a>
+    <a href="#escalated" class="sb-link">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M18 13V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v14l4-4h6"/><circle cx="18" cy="18" r="3"/><path d="M18 16v2"/><path d="M18 21v.01"/></svg>
+      <span data-lang="ne">महानगरमा पठाइएका</span><span data-lang="en">Escalated to Metro</span>
+    </a>
+    <a href="budget.html" class="sb-link">
+      <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/></svg>
+      <span data-lang="ne">वडा बजेट</span><span data-lang="en">Ward Budget</span>
+    </a>
+    <a href="#reports" class="sb-link">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+      <span data-lang="ne">प्रतिवेदनहरू</span><span data-lang="en">Reports</span>
+    </a>
+
+    <div class="sb-divider"></div>
+    <div class="sb-label" data-lang="ne">खाता</div>
+    <div class="sb-label" data-lang="en">ACCOUNT</div>
+    <a href="#settings" class="sb-link">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      <span data-lang="ne">सेटिङ</span><span data-lang="en">Settings</span>
+    </a>
+    <div class="sb-logout">
+      <div class="sb-divider"></div>
+      <a href="login.html" class="sb-link">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span data-lang="ne">लग-आउट</span><span data-lang="en">Logout</span>
+      </a>
+    </div>
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
+
+    <div class="page-title-row">
+      <div class="page-title">
+        <h2 data-lang="ne">वडा नं. ८ — गुनासो व्यवस्थापन</h2>
+        <h2 data-lang="en">Ward 8 — Complaint Management</h2>
+        <p data-lang="ne">आफ्नो क्षेत्राधिकार भित्रका गुनासोहरू समीक्षा, असाइन र व्यवस्थापन गर्नुहोस्।</p>
+        <p data-lang="en">Review, assign, and manage grievances within your jurisdiction.</p>
+      </div>
+      <a href="#export" class="btn btn-outline">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        <span data-lang="ne">रिपोर्ट निर्यात गर्नुहोस्</span><span data-lang="en">Export Report</span>
+      </a>
+    </div>
+
+    <!-- ===== STAT CARDS ===== -->
+    <div class="stat-grid">
+      <div class="stat-card pending">
+        <div><div class="stat-num">९</div><div class="stat-label" data-lang="ne">समीक्षा बाँकी</div><div class="stat-label" data-lang="en">Pending Review</div></div>
+        <div class="s-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      </div>
+      <div class="stat-card field">
+        <div><div class="stat-num">१४</div><div class="stat-label" data-lang="ne">फिल्डमा खटिएका</div><div class="stat-label" data-lang="en">Assigned to Field</div></div>
+        <div class="s-icon"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg></div>
+      </div>
+      <div class="stat-card escalated">
+        <div><div class="stat-num">३</div><div class="stat-label" data-lang="ne">महानगरमा पठाइएका</div><div class="stat-label" data-lang="en">Escalated to Metro</div></div>
+        <div class="s-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M18 13V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v14l4-4h6"/><circle cx="18" cy="18" r="3"/></svg></div>
+      </div>
+      <div class="stat-card resolved">
+        <div><div class="stat-num">५२</div><div class="stat-label" data-lang="ne">कुल समाधान भएका</div><div class="stat-label" data-lang="en">Total Resolved</div></div>
+        <div class="s-icon"><svg class="icon" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
+      </div>
+    </div>
+
+    <!-- ===== FILTER BAR ===== -->
+    <div class="filter-bar">
+      <div class="filter-field filter-search-wrap" style="justify-content:flex-end;">
+        <label><span data-lang="ne">खोज्नुहोस्</span><span data-lang="en">Search</span></label>
+        <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="search" placeholder="ID, शीर्षक..." data-lang="ne">
+        <input type="search" placeholder="Search by ID, title..." data-lang="en">
+      </div>
+      <div class="filter-field">
+        <label><span data-lang="ne">श्रेणी</span><span data-lang="en">Category</span></label>
+        <select>
+          <option data-lang="ne">सबै श्रेणी</option><option data-lang="en">All Categories</option>
+          <option data-lang="ne">सडक तथा बाटो</option><option data-lang="en">Roads</option>
+          <option data-lang="ne">फोहोरमैला</option><option data-lang="en">Waste</option>
+          <option data-lang="ne">खानेपानी</option><option data-lang="en">Water</option>
+          <option data-lang="ne">सडक बत्ती</option><option data-lang="en">Lighting</option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label><span data-lang="ne">अत्यावश्यकता</span><span data-lang="en">Urgency</span></label>
+        <select>
+          <option data-lang="ne">सबै</option><option data-lang="en">All</option>
+          <option data-lang="ne">उच्च</option><option data-lang="en">High</option>
+          <option data-lang="ne">मध्यम</option><option data-lang="en">Medium</option>
+          <option data-lang="ne">सामान्य</option><option data-lang="en">Low</option>
+        </select>
+      </div>
+      <div class="filter-field">
+        <label><span data-lang="ne">स्थिती</span><span data-lang="en">Status</span></label>
+        <select>
+          <option data-lang="ne">सबै स्थिती</option><option data-lang="en">All Status</option>
+          <option data-lang="ne">समीक्षामा</option><option data-lang="en">Pending</option>
+          <option data-lang="ne">प्रक्रियामा</option><option data-lang="en">In Progress</option>
+          <option data-lang="ne">समाधान भएको</option><option data-lang="en">Resolved</option>
+        </select>
+      </div>
+      <button class="btn btn-outline btn-sm filter-clear">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+        <span data-lang="ne">फिल्टर हटाउनुहोस्</span><span data-lang="en">Clear Filters</span>
+      </button>
+    </div>
+
+    <!-- ===== MANAGEMENT TABLE ===== -->
+    <div class="panel">
+      <div class="panel-header">
+        <h3>
+          <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+          <span data-lang="ne">वडा भित्रका गुनासोहरू</span><span data-lang="en">Local Complaints</span>
+        </h3>
+      </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th data-lang="ne">आईडी</th><th data-lang="en">ID</th>
+              <th data-lang="ne">शीर्षक र स्थान</th><th data-lang="en">Title &amp; Location</th>
+              <th data-lang="ne">श्रेणी</th><th data-lang="en">Category</th>
+              <th data-lang="ne">अत्यावश्यकता</th><th data-lang="en">Urgency</th>
+              <th data-lang="ne">स्थिती</th><th data-lang="en">Status</th>
+              <th data-lang="ne">कार्यहरू</th><th data-lang="en">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="cell-id">NA-2082-10231</td>
+              <td>
+                <div class="cell-title" data-lang="ne">बाटोमा ठूलो खाल्डो</div>
+                <div class="cell-title" data-lang="en">Large pothole on main road</div>
+                <div class="cell-sub" data-lang="ne">नया बजार, वडा ८</div>
+                <div class="cell-sub" data-lang="en">Naya Bazar, Ward 8</div>
+              </td>
+              <td><span class="cat-pill" data-lang="ne">सडक</span><span class="cat-pill" data-lang="en">Roads</span></td>
+              <td><span class="urgency-tag high"><span class="dot"></span><span data-lang="ne">उच्च</span><span data-lang="en">High</span></span></td>
+              <td>
+                <select class="status-select">
+                  <option data-lang="ne">समीक्षामा</option><option data-lang="en">Pending</option>
+                  <option selected data-lang="ne">प्रक्रियामा</option><option selected data-lang="en">In Progress</option>
+                  <option data-lang="ne">समाधान भएको</option><option data-lang="en">Resolved</option>
+                </select>
+              </td>
+              <td>
+                <div class="row-actions">
+                  <button class="action-btn assign" aria-label="Assign field officer" title="Assign Field Officer">
+                    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+                  </button>
+                  <button class="action-btn escalate" aria-label="Escalate to metro" title="Escalate to Metro">
+                    <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </button>
+                  <button class="action-btn" aria-label="View">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-id">NA-2082-10219</td>
+              <td>
+                <div class="cell-title" data-lang="ne">ढल अवरुद्ध, पानी जम्मा</div>
+                <div class="cell-title" data-lang="en">Blocked drain, water pooling</div>
+                <div class="cell-sub" data-lang="ne">गल्ली ४, वडा ८</div>
+                <div class="cell-sub" data-lang="en">Galli 4, Ward 8</div>
+              </td>
+              <td><span class="cat-pill" data-lang="ne">ढल निकास</span><span class="cat-pill" data-lang="en">Drainage</span></td>
+              <td><span class="urgency-tag medium"><span class="dot"></span><span data-lang="ne">मध्यम</span><span data-lang="en">Medium</span></span></td>
+              <td>
+                <select class="status-select">
+                  <option selected data-lang="ne">समीक्षामा</option><option selected data-lang="en">Pending</option>
+                  <option data-lang="ne">प्रक्रियामा</option><option data-lang="en">In Progress</option>
+                  <option data-lang="ne">समाधान भएको</option><option data-lang="en">Resolved</option>
+                </select>
+              </td>
+              <td>
+                <div class="row-actions">
+                  <button class="action-btn assign" aria-label="Assign field officer" title="Assign Field Officer">
+                    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+                  </button>
+                  <button class="action-btn escalate" aria-label="Escalate to metro" title="Escalate to Metro">
+                    <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </button>
+                  <button class="action-btn" aria-label="View">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-id">NA-2082-10205</td>
+              <td>
+                <div class="cell-title" data-lang="ne">सडक बत्ती बिग्रिएको</div>
+                <div class="cell-title" data-lang="en">Street light not working</div>
+                <div class="cell-sub" data-lang="ne">मुख्य चोक, वडा ८</div>
+                <div class="cell-sub" data-lang="en">Main Chowk, Ward 8</div>
+              </td>
+              <td><span class="cat-pill" data-lang="ne">सडक बत्ती</span><span class="cat-pill" data-lang="en">Lighting</span></td>
+              <td><span class="urgency-tag low"><span class="dot"></span><span data-lang="ne">सामान्य</span><span data-lang="en">Low</span></span></td>
+              <td>
+                <select class="status-select">
+                  <option data-lang="ne">समीक्षामा</option><option data-lang="en">Pending</option>
+                  <option data-lang="ne">प्रक्रियामा</option><option data-lang="en">In Progress</option>
+                  <option selected data-lang="ne">समाधान भएको</option><option selected data-lang="en">Resolved</option>
+                </select>
+              </td>
+              <td>
+                <div class="row-actions">
+                  <button class="action-btn assign" aria-label="Assign field officer" title="Assign Field Officer">
+                    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+                  </button>
+                  <button class="action-btn escalate" aria-label="Escalate to metro" title="Escalate to Metro">
+                    <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </button>
+                  <button class="action-btn" aria-label="View">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-id">NA-2082-10188</td>
+              <td>
+                <div class="cell-title" data-lang="ne">पुल भत्किने जोखिम</div>
+                <div class="cell-title" data-lang="en">Foot-bridge structurally unsafe</div>
+                <div class="cell-sub" data-lang="ne">खोल्सी किनार, वडा ८</div>
+                <div class="cell-sub" data-lang="en">Kholsi Bank, Ward 8</div>
+              </td>
+              <td><span class="cat-pill" data-lang="ne">सडक</span><span class="cat-pill" data-lang="en">Roads</span></td>
+              <td><span class="urgency-tag high"><span class="dot"></span><span data-lang="ne">उच्च</span><span data-lang="en">High</span></span></td>
+              <td><span class="badge b-escalated"><span class="dot"></span><span data-lang="ne">महानगरमा पठाइयो</span><span data-lang="en">Escalated</span></span></td>
+              <td>
+                <div class="row-actions">
+                  <button class="action-btn" aria-label="View" title="View Details">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td class="cell-id">NA-2082-10174</td>
+              <td>
+                <div class="cell-title" data-lang="ne">सार्वजनिक धारा भाँचिएको</div>
+                <div class="cell-title" data-lang="en">Public tap stand broken</div>
+                <div class="cell-sub" data-lang="ne">पसल टोल, वडा ८</div>
+                <div class="cell-sub" data-lang="en">Pasal Tole, Ward 8</div>
+              </td>
+              <td><span class="cat-pill" data-lang="ne">खानेपानी</span><span class="cat-pill" data-lang="en">Water</span></td>
+              <td><span class="urgency-tag medium"><span class="dot"></span><span data-lang="ne">मध्यम</span><span data-lang="en">Medium</span></span></td>
+              <td>
+                <select class="status-select">
+                  <option data-lang="ne">समीक्षामा</option><option data-lang="en">Pending</option>
+                  <option selected data-lang="ne">प्रक्रियामा</option><option selected data-lang="en">In Progress</option>
+                  <option data-lang="ne">समाधान भएको</option><option data-lang="en">Resolved</option>
+                </select>
+              </td>
+              <td>
+                <div class="row-actions">
+                  <button class="action-btn assign" aria-label="Assign field officer" title="Assign Field Officer">
+                    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+                  </button>
+                  <button class="action-btn escalate" aria-label="Escalate to metro" title="Escalate to Metro">
+                    <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
+                  </button>
+                  <button class="action-btn" aria-label="View">
+                    <svg class="icon" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="pagination">
+        <p><span data-lang="ne">२६ मध्ये १–५ देखाइँदै</span><span data-lang="en">Showing 1–5 of 26</span></p>
+        <div class="page-btns">
+          <button class="page-btn active">1</button>
+          <button class="page-btn">2</button>
+          <button class="page-btn">3</button>
+          <button class="page-btn">
+            <svg class="icon" viewBox="0 0 24 24" style="width:0.8em;height:0.8em;"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+  function setLang(lang) {
+    document.body.classList.toggle('lang-mode-en', lang === 'en');
+    document.getElementById('btn-ne').classList.toggle('active', lang === 'ne');
+    document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+    localStorage.setItem('nagarikAawazLang', lang);
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const saved = localStorage.getItem('nagarikAawazLang');
+    if (saved === 'en') setLang('en');
+  });
+  function toggleSidebar() {
+    document.getElementById('sidebar').classList.toggle('open');
+    document.getElementById('sbBackdrop').classList.toggle('show');
+  }
+</script>
+
+</body>
+</html>

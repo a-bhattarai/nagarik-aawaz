@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Nagarik Aawaz | Dashboard</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="stylecitizen.css">
+</head>
+
+<body>
+
+<!-- ==========================================
+     HEADER
+========================================== -->
+
+<header class="header">
+
+    <div class="header-container">
+
+        <!-- LEFT -->
+
+        <div class="logo-area">
+
+            <a href="index.html" class="logo-link">
+
+                <img
+                    src="images/logo.png"
+                    alt="Nagarik Aawaz Logo"
+                    class="logo"
+                >
+
+                <div class="logo-text">
+
+                    <h1 class="lang-ne">
+                        नागरिक आवाज
+                    </h1>
+
+                    <h1 class="lang-en">
+                        Nagarik Aawaz
+                    </h1>
+
+                </div>
+
+            </a>
+
+        </div>
+
+
+        <!-- RIGHT -->
+
+        <div class="header-actions">
+
+            <!-- Language -->
+
+            <div class="language-switch">
+
+                <button
+                    id="btn-ne"
+                    class="active"
+                    onclick="setLang('ne')">
+
+                    नेपाली
+
+                </button>
+
+                <button
+                    id="btn-en"
+                    onclick="setLang('en')">
+
+                    EN
+
+                </button>
+
+            </div>
+
+            <!-- Notification -->
+
+            <button class="icon-btn">
+
+                <svg
+                    width="22"
+                    height="22"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    viewBox="0 0 24 24">
+
+                    <path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+
+                    <path d="M13.73 21a2 2 0 01-3.46 0"/>
+
+                </svg>
+
+            </button>
+
+            <!-- Profile -->
+
+            <button class="profile-btn">
+
+                <img
+                    src="images/profile.png"
+                    alt="Profile"
+                >
+
+                <span class="lang-ne">
+                    प्रोफाइल
+                </span>
+
+                <span class="lang-en">
+                    Profile
+                </span>
+
+            </button>
+
+        </div>
+
+    </div>
+
+</header>
+
+<!-- ==========================================
+     MAIN
+========================================== -->
+
+<main class="dashboard">
+
+<!-- ==========================================
+     PAGE TITLE
+========================================== -->
+
+<section class="dashboard-title">
+
+    <div>
+
+        <h2 class="lang-ne">
+            ड्यासबोर्ड
+        </h2>
+
+        <h2 class="lang-en">
+            Dashboard
+        </h2>
+
+        <p class="lang-ne">
+            नागरिक गुनासोहरूको समग्र विवरण
+        </p>
+
+        <p class="lang-en">
+            Overview of submitted complaints
+        </p>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+     STATISTICS
+========================================== -->
+
+<section class="stats-grid">
+
+    <!-- Card 1 -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            📄
+
+        </div>
+
+        <div>
+
+            <h3 id="totalComplaints">
+
+                254
+
+            </h3>
+
+            <p class="lang-ne">
+
+                कुल उजुरी
+
+            </p>
+
+            <p class="lang-en">
+
+                Total Complaints
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Card 2 -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            ⏳
+
+        </div>
+
+        <div>
+
+            <h3>
+
+                71
+
+            </h3>
+
+            <p class="lang-ne">
+
+                प्रक्रियामा
+
+            </p>
+
+            <p class="lang-en">
+
+                In Progress
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Card 3 -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            ✅
+
+        </div>
+
+        <div>
+
+            <h3>
+
+                148
+
+            </h3>
+
+            <p class="lang-ne">
+
+                समाधान
+
+            </p>
+
+            <p class="lang-en">
+
+                Resolved
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <!-- Card 4 -->
+
+    <div class="stat-card">
+
+        <div class="stat-icon">
+
+            ❗
+
+        </div>
+
+        <div>
+
+            <h3>
+
+                35
+
+            </h3>
+
+            <p class="lang-ne">
+
+                नयाँ
+
+            </p>
+
+            <p class="lang-en">
+
+                New
+
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- ==========================================
+     RECENT COMPLAINTS
+========================================== -->
+
+<section class="table-section">
+
+<div class="section-header">
+
+    <h2 class="lang-ne">
+        पछिल्ला उजुरीहरू
+    </h2>
+
+    <h2 class="lang-en">
+        Recent Complaints
+    </h2>
+
+</div>
+
+<div class="table-wrapper">
+
+<table class="complaint-table">
+
+<thead>
+
+<tr>
+
+<th>ID</th>
+
+<th class="lang-ne">शीर्षक</th>
+<th class="lang-en">Title</th>
+<th class="lang-ne">श्रेणी</th>
+<th class="lang-en">Category</th>
+
+<th class="lang-ne">मिति</th>
+<th class="lang-en">Date</th>
+
+<th class="lang-ne">स्थिति</th>
+<th class="lang-en">Status</th>
+
+<th class="lang-ne">कार्य</th>
+<th class="lang-en">Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<!-- ===========================
+     ROW 1
+=========================== -->
+
+<tr>
+
+<td>#1001</td>
+
+<td class="lang-ne">
+सडकमा खाल्डाखुल्डी
+</td>
+
+<td class="lang-en">
+Road Damage
+</td>
+
+<td class="lang-ne">
+पूर्वाधार
+</td>
+
+<td class="lang-en">
+Infrastructure
+</td>
+
+<td>
+2026-07-07
+</td>
+
+<td>
+
+<span class="status progress">
+
+<span class="lang-ne">
+प्रक्रियामा
+</span>
+
+<span class="lang-en">
+In Progress
+</span>
+
+</span>
+
+</td>
+
+<td>
+
+<button class="table-btn">
+
+<span class="lang-ne">
+हेर्नुहोस्
+</span>
+
+<span class="lang-en">
+View
+</span>
+
+</button>
+
+</td>
+
+</tr>
+
+<!-- ===========================
+     ROW 2
+=========================== -->
+
+<tr>
+
+<td>#1002</td>
+
+<td class="lang-ne">
+फोहोर व्यवस्थापन
+</td>
+
+<td class="lang-en">
+Waste Collection
+</td>
+
+<td class="lang-ne">
+सरसफाइ
+</td>
+
+<td class="lang-en">
+Sanitation
+</td>
+
+<td>
+2026-07-06
+</td>
+
+<td>
+
+<span class="status resolved">
+
+<span class="lang-ne">
+समाधान
+</span>
+
+<span class="lang-en">
+Resolved
+</span>
+
+</span>
+
+</td>
+
+<td>
+
+<button class="table-btn">
+
+<span class="lang-ne">
+हेर्नुहोस्
+</span>
+
+<span class="lang-en">
+View
+</span>
+
+</button>
+
+</td>
+
+</tr>
+
+<!-- ===========================
+     ROW 3
+=========================== -->
+
+<tr>
+
+<td>#1003</td>
+
+<td class="lang-ne">
+बत्ती बिग्रिएको
+</td>
+
+<td class="lang-en">
+Street Light Repair
+</td>
+
+<td class="lang-ne">
+विद्युत
+</td>
+
+<td class="lang-en">
+Electricity
+</td>
+
+<td>
+2026-07-05
+</td>
+
+<td>
+
+<span class="status pending">
+
+<span class="lang-ne">
+नयाँ
+</span>
+
+<span class="lang-en">
+Pending
+</span>
+
+</span>
+
+</td>
+
+<td>
+
+<button class="table-btn">
+
+<span class="lang-ne">
+हेर्नुहोस्
+</span>
+
+<span class="lang-en">
+View
+</span>
+
+</button>
+
+</td>
+
+</tr>
+
+<!-- ===========================
+     ROW 4
+=========================== -->
+
+<tr>
+
+<td>#1004</td>
+
+<td class="lang-ne">
+ढल निकास समस्या
+</td>
+
+<td class="lang-en">
+Drainage Issue
+</td>
+
+<td class="lang-ne">
+पूर्वाधार
+</td>
+
+<td class="lang-en">
+Infrastructure
+</td>
+
+<td>
+2026-07-04
+</td>
+
+<td>
+
+<span class="status progress">
+
+<span class="lang-ne">
+प्रक्रियामा
+</span>
+
+<span class="lang-en">
+In Progress
+</span>
+
+</span>
+
+</td>
+
+<td>
+
+<button class="table-btn">
+
+<span class="lang-ne">
+हेर्नुहोस्
+</span>
+
+<span class="lang-en">
+View
+</span>
+
+</button>
+
+</td>
+
+</tr>
+
+<!-- ===========================
+     ROW 5
+=========================== -->
+
+<tr>
+
+<td>#1005</td>
+
+<td class="lang-ne">
+सार्वजनिक पार्क सफाइ
+</td>
+
+<td class="lang-en">
+Public Park Cleaning
+</td>
+
+<td class="lang-ne">
+सरसफाइ
+</td>
+
+<td class="lang-en">
+Sanitation
+</td>
+
+<td>
+2026-07-03
+</td>
+
+<td>
+
+<span class="status resolved">
+
+<span class="lang-ne">
+समाधान
+</span>
+
+<span class="lang-en">
+Resolved
+</span>
+
+</span>
+
+</td>
+
+<td>
+
+<button class="table-btn">
+
+<span class="lang-ne">
+हेर्नुहोस्
+</span>
+
+<span class="lang-en">
+View
+</span>
+
+</button>
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</section>
+
+<!-- ==========================================
+     QUICK ACTIONS
+========================================== -->
+
+<section class="quick-actions">
+
+<div class="section-header">
+
+<h2 class="lang-ne">
+द्रुत कार्यहरू
+</h2>
+
+<h2 class="lang-en">
+Quick Actions
+</h2>
+
+</div>
+
+<div class="actions-grid">
+
+<a href="complaint.html" class="action-card">
+
+<div class="action-icon">
+📝
+</div>
+
+<h3 class="lang-ne">
+नयाँ उजुरी
+</h3>
+
+<h3 class="lang-en">
+New Complaint
+</h3>
+
+</a>
+
+<a href="track.html" class="action-card">
+
+<div class="action-icon">
+🔍
+</div>
+
+<h3 class="lang-ne">
+उजुरी ट्र्याक गर्नुहोस्
+</h3>
+
+<h3 class="lang-en">
+Track Complaint
+</h3>
+
+</a>
+
+<a href="profile.html" class="action-card">
+
+<div class="action-icon">
+👤
+</div>
+
+<h3 class="lang-ne">
+मेरो प्रोफाइल
+</h3>
+
+<h3 class="lang-en">
+My Profile
+</h3>
+
+</a>
+
+</div>
+
+</section>
+
+</main>
+
+<!-- ==========================================
+     FOOTER
+========================================== -->
+
+<footer class="footer">
+
+<p class="lang-ne">
+© २०२६ नागरिक आवाज । सबै अधिकार सुरक्षित।
+</p>
+
+<p class="lang-en">
+© 2026 Nagarik Aawaz. All Rights Reserved.
+</p>
+
+</footer>
+
+<script src="scriptcitizen.js"></script>
+
+</body>
+</html>
