@@ -25,36 +25,6 @@ function setLang(lang) {
 }
 
 /* ── 2. Mobile nav ── */
-function initMobileNav() {
-  const toggle   = document.getElementById('menuToggle');
-  const navLinks = document.getElementById('navLinks');
-  const iconOpen = document.getElementById('iconHamburger');
-  const iconX    = document.getElementById('iconClose');
-
-  toggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('open');
-    toggle.setAttribute('aria-expanded', String(isOpen));
-    iconOpen.style.display = isOpen ? 'none'  : 'block';
-    iconX.style.display    = isOpen ? 'block' : 'none';
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!toggle.contains(e.target) && !navLinks.contains(e.target)) {
-      navLinks.classList.remove('open');
-      toggle.setAttribute('aria-expanded', 'false');
-      iconOpen.style.display = 'block';
-      iconX.style.display    = 'none';
-    }
-  });
-
-  window.addEventListener('resize', () => {
-    if (window.innerWidth > 768) {
-      navLinks.classList.remove('open');
-      iconOpen.style.display = 'block';
-      iconX.style.display    = 'none';
-    }
-  });
-}
 
 /* ── 2. Form state ── */
 let currentStep    = 1;
@@ -120,6 +90,13 @@ function showStep(step) {
   if (target) target.classList.add('active');
   updateStepper(step);
   currentStep = step;
+
+  // Leaflet renders blank if its container was hidden when initialized.
+  // Recalculate map size every time step 2 becomes visible.
+  if (step === 2 && map) {
+    setTimeout(() => map.invalidateSize(), 150);
+  }
+
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -588,20 +565,8 @@ function resetForm() {
   clearErrors();
   showStep(1);
   updateStepper(1);
-  function showStep(step) {
-  document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
-  const target = document.getElementById('step-' + step);
-  if (target) target.classList.add('active');
-  updateStepper(step);
-  currentStep = step;
+  
 
-  // Fix: Leaflet needs a size recalculation after the map step becomes visible
-  if (step === 2 && map) {
-    setTimeout(() => map.invalidateSize(), 150);
-  }
-
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
 
   // Re-initialise dot 1 to active state
   const dot1 = document.getElementById('dot-1');
@@ -611,19 +576,18 @@ function resetForm() {
 }
 
 /* ── 13. Init ── */
-// document.addEventListener('DOMContentLoaded', () => {
-//   // ── Auth guard ─────────────────────────────────────────────────
-//   // Uses the same key that login.html saves the token under
-//   // const token = localStorage.getItem('nagarikAawazToken');
-//   // if (!token) {
-//   //   window.location.href = 'complaint.html';
-//   //   return; // stop everything else from running
-//   // }
+document.addEventListener('DOMContentLoaded', () => {
+  // Auth guard — redirect to login if no token
+  const token = localStorage.getItem('nagarikAawazToken');
+  if (!token) {
+    window.location.href = 'login.html'; // was wrongly pointing to complaint.html
+    return;
+  }
 
-//   // Restore language preference
-//   const savedLang = localStorage.getItem('nagarikAawazLang');
-//   if (savedLang === 'en') setLang('en');
+  // Restore language preference
+  const savedLang = localStorage.getItem('nagarikAawazLang');
+  if (savedLang === 'en') setLang('en');
 
-//   // Boot Leaflet map
-//   initMap();
-// });
+  // Boot Leaflet map
+  initMap();
+});
