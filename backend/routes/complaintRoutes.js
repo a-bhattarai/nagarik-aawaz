@@ -54,6 +54,10 @@ router.get('/', protect, async (req, res) => {
       filter.submittedBy = req.user.id;
     } else if (req.user.role === 'ward_official') {
       filter['location.ward'] = req.user.ward;
+    } else if (req.user.role === 'metro_admin' && req.query.ward) {
+      // Optional ward filter — only metro_admin can use it, since
+      // ward_official is already locked to their own ward above.
+      filter['location.ward'] = Number(req.query.ward);
     }
 
     let complaints = await Complaint.find(filter).sort({ createdAt: -1 });
