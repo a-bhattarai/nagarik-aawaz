@@ -1,0 +1,1058 @@
+<!DOCTYPE html>
+<html lang="ne">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>महानगर ड्यासबोर्ड | Metro Dashboard — Nagarik Aawaz</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="stylemetro.css">
+</head>
+<body>
+
+<!-- ===== TOP STRIP ===== -->
+<div class="top-strip">
+  <div class="top-strip-inner">
+    <div class="top-strip-left"></div>
+    <div class="top-strip-right">
+      <a href="tel:061500000" class="top-strip-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l.95-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        ०६१-५०००००
+      </a>
+      <div class="lang-toggle">
+        <button id="btn-ne" class="active" onclick="setLang('ne')" aria-label="नेपाली">नेपाली</button>
+        <button id="btn-en" onclick="setLang('en')" aria-label="English">English</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== APP BAR ===== -->
+<header class="app-bar">
+  <div class="app-bar-inner">
+
+    <div class="app-bar-left">
+      <button class="menu-toggle-sb" id="menuToggleSb" onclick="toggleSidebar()" aria-label="Toggle menu" aria-expanded="false">
+        <svg id="sbIconOpen" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+          <line x1="3" y1="6"  x2="21" y2="6"/>
+          <line x1="3" y1="12" x2="21" y2="12"/>
+          <line x1="3" y1="18" x2="21" y2="18"/>
+        </svg>
+        <svg id="sbIconClose" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" style="display:none">
+          <line x1="18" y1="6"  x2="6"  y2="18"/>
+          <line x1="6"  y1="6"  x2="18" y2="18"/>
+        </svg>
+      </button>
+
+      <a href="index.html" class="brand">
+        <div class="brand-logo">
+          <img src="logo1.jpg" alt="Nagarik Aawaz Logo">
+        </div>
+        <div class="brand-text">
+          <h1 data-lang="ne">नागरिक आवाज</h1>
+          <h1 data-lang="en">Nagarik Aawaz</h1>
+          <p data-lang="ne">महानगरपालिका पोर्टल</p>
+          <p data-lang="en">METROPOLITAN PORTAL</p>
+        </div>
+      </a>
+    </div>
+
+    <div class="app-bar-right">
+
+      <!-- Notifications -->
+      <div class="notif-wrap" id="notifWrap">
+        <button class="icon-btn" aria-label="Notifications" onclick="toggleNotifications(event)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-dot"></span>
+        </button>
+
+        <div class="notif-dropdown" id="notifDropdown">
+          <div class="notif-dropdown-header">
+            <span data-lang="ne">सूचनाहरू</span>
+            <span data-lang="en">Notifications</span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon notif-critical">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+            </div>
+            <div class="notif-content">
+              <p data-lang="ne">नयाँ गम्भीर एस्कलेसन: पुल भत्किने जोखिम, वडा ८</p>
+              <p data-lang="en">New critical escalation: Foot-bridge unsafe, Ward 8</p>
+              <span class="notif-time" data-lang="ne">१० मिनेट अघि</span>
+              <span class="notif-time" data-lang="en">10 minutes ago</span>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon notif-budget">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+              </svg>
+            </div>
+            <div class="notif-content">
+              <p data-lang="ne">वडा १४ को बजेट अनुरोध स्वीकृतिको लागि पर्खाइमा</p>
+              <p data-lang="en">Ward 14 budget request awaiting your approval</p>
+              <span class="notif-time" data-lang="ne">२ घण्टा अघि</span>
+              <span class="notif-time" data-lang="en">2 hours ago</span>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon notif-ward">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/>
+              </svg>
+            </div>
+            <div class="notif-content">
+              <p data-lang="ne">वडा नं. १२ ले साप्ताहिक प्रगति प्रतिवेदन बुझायो</p>
+              <p data-lang="en">Ward 12 submitted its weekly progress report</p>
+              <span class="notif-time" data-lang="ne">५ घण्टा अघि</span>
+              <span class="notif-time" data-lang="en">5 hours ago</span>
+            </div>
+          </div>
+          <a href="#" class="notif-footer-link">
+            <span data-lang="ne">सबै सूचना हेर्नुहोस्</span>
+            <span data-lang="en">View all notifications</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="user-chip">
+        <div class="user-avatar">शा</div>
+        <div class="user-info">
+          <div class="uname" data-lang="ne">शान्ता अधिकारी</div>
+          <div class="uname" data-lang="en">Shanta Adhikari</div>
+          <div class="uward" data-lang="ne">प्रमुख प्रशासकीय अधिकृत</div>
+          <div class="uward" data-lang="en">Chief Administrative Officer</div>
+        </div>
+        
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<div class="sidebar-backdrop" id="sbBackdrop" onclick="toggleSidebar()"></div>
+
+<!-- ===== APP SHELL ===== -->
+<div class="app-shell">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="sb-section-label" data-lang="ne">मुख्य मेनु</div>
+    <div class="sb-section-label" data-lang="en">MAIN MENU</div>
+
+    <a href="dashboard-metro.html" class="sb-link active">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="7" height="9" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/>
+        <rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="16" width="7" height="5" rx="1.5"/>
+      </svg>
+      <span data-lang="ne">सिटी-वाइड ओभरभ्यू</span>
+      <span data-lang="en">City Overview</span>
+    </a>
+
+    <button type="button" class="sb-link" onclick="openEscalationsModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+        <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+      </svg>
+      <span data-lang="ne">गम्भीर उजुरीहरू</span>
+      <span data-lang="en">Escalations</span>
+    </button>
+
+    <button type="button" class="sb-link" onclick="openWardPerformanceModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/>
+      </svg>
+      <span data-lang="ne">वडा प्रदर्शन</span>
+      <span data-lang="en">Ward Performance</span>
+    </button>
+
+    <div class="sb-divider"></div>
+
+    <div class="sb-section-label" data-lang="ne">खाता</div>
+    <div class="sb-section-label" data-lang="en">ACCOUNT</div>
+
+    <button type="button" class="sb-link" onclick="openSettingsModal()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="3"/>
+        <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+      </svg>
+      <span data-lang="ne">सेटिङ</span>
+      <span data-lang="en">Settings</span>
+    </button>
+
+    <div class="sb-spacer"></div>
+    <div class="sb-divider"></div>
+
+    <a href="login.html" class="sb-link sb-logout">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      <span data-lang="ne">लग-आउट</span>
+      <span data-lang="en">Logout</span>
+    </a>
+
+  </aside>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="main-content">
+
+    <!-- Page title -->
+    <div class="page-title-row">
+      <div class="page-title">
+        <h2 data-lang="ne">सिटी-वाइड ड्यासबोर्ड</h2>
+        <h2 data-lang="en">City-Wide Dashboard</h2>
+        <p data-lang="ne">पोखरा महानगरपालिकाका सबै ३३ वडाको समग्र तथ्याङ्क, गम्भीर उजुरी र बजेट वितरण।</p>
+        <p data-lang="en">Aggregated statistics, critical escalations, and budget distribution across all 33 wards.</p>
+      </div>
+      <a href="#export" class="btn btn-outline">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/>
+          <line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        <span data-lang="ne">प्रतिवेदन निर्यात गर्नुहोस्</span>
+        <span data-lang="en">Export Report</span>
+      </a>
+    </div>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 1 — CITY-WIDE ANALYTICS GRID
+    ══════════════════════════════════════════ -->
+    <section class="section" aria-label="City analytics">
+      <div class="section-eyebrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+        </svg>
+        <span data-lang="ne">समग्र तथ्याङ्क</span>
+        <span data-lang="en">CITY-WIDE ANALYTICS</span>
+      </div>
+
+      <div class="stat-grid">
+
+        <div class="stat-card total">
+          <div class="stat-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-num" id="statTotal">१,९४८</div>
+            <div class="stat-label">
+              <span data-lang="ne">कुल गुनासो (सबै वडा)</span>
+              <span data-lang="en">Total Reports (All Wards)</span>
+            </div>
+            <div class="stat-trend trend-up">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                <polyline points="17 6 23 6 23 12"/>
+              </svg>
+              <span data-lang="ne">यो महिना १२% वृद्धि</span>
+              <span data-lang="en">+12% this month</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card critical">
+          <div class="stat-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-num" id="statEscalated">१७</div>
+            <div class="stat-label">
+              <span data-lang="ne">गम्भीर एस्कलेसन</span>
+              <span data-lang="en">Critical Escalations</span>
+            </div>
+            <div class="stat-trend trend-down">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="1 6 10.5 15.5 15.5 10.5 23 18"/>
+                <polyline points="17 18 23 18 23 12"/>
+              </svg>
+              <span data-lang="ne">अघिल्लो हप्ता ४ कम</span>
+              <span data-lang="en">−4 from last week</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card wards">
+          <div class="stat-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-num" id="statWards">३३/३३</div>
+            <div class="stat-label">
+              <span data-lang="ne">सक्रिय वडाहरू</span>
+              <span data-lang="en">Active Wards Reporting</span>
+            </div>
+            <div class="stat-trend trend-up">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+              </svg>
+              <span data-lang="ne">पूर्ण कभरेज</span>
+              <span data-lang="en">Full coverage</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card budget">
+          <div class="stat-icon-wrap">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+            </svg>
+          </div>
+          <div class="stat-body">
+            <div class="stat-num">६८%</div>
+            <div class="stat-label">
+              <span data-lang="ne">यो त्रैमासको बजेट खर्च</span>
+              <span data-lang="en">Quarterly Budget Utilized</span>
+            </div>
+            <div class="util-row">
+              <div class="util-track">
+                <div class="util-fill" style="width:68%;"></div>
+              </div>
+              <span class="util-pct">68%</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 2 — ACTIVE ESCALATIONS QUEUE + BUDGET
+    ══════════════════════════════════════════ -->
+    <section class="section" aria-label="Escalations and budget">
+      <div class="section-eyebrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span data-lang="ne">सक्रिय एस्कलेसन र बजेट</span>
+        <span data-lang="en">ACTIVE ESCALATIONS &amp; BUDGET</span>
+      </div>
+
+      <div class="content-grid" id="escalations">
+
+        <!-- Escalation queue -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+              </svg>
+              <span data-lang="ne">एस्कलेसन पंक्ति</span>
+              <span data-lang="en">Escalations</span>
+            </h3>
+            <button type="button" class="btn btn-outline btn-sm" onclick="openEscalationsModal()">
+              <span data-lang="ne">सबै हेर्नुहोस्</span>
+              <span data-lang="en">View All</span>
+            </button>
+          </div>
+
+          <div class="queue-list" id="queueList">
+
+            <div class="queue-item">
+              
+              <div class="queue-body">
+                <div class="queue-top">
+                  <div>
+                    <div class="queue-id">NA-2082-10188</div>
+                    <div class="queue-title">
+                      <span data-lang="ne">पुल भत्किने जोखिम — तुरुन्त मर्मत आवश्यक</span>
+                      <span data-lang="en">Foot-bridge structurally unsafe — urgent repair needed</span>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div class="queue-meta">
+                  <span class="meta-chip">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/>
+                    </svg>
+                    <span data-lang="ne">वडा ८ बाट</span>
+                    <span data-lang="en">From Ward 8</span>
+                  </span>
+                  <span class="meta-chip">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span data-lang="ne">२ दिन पहिले</span>
+                    <span data-lang="en">2 days ago</span>
+                  </span>
+                  
+                </div>
+                <div class="queue-actions">
+                  <button class="btn btn-primary btn-sm">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <span data-lang="ne">बजेट स्वीकृत गर्नुहोस्</span>
+                    <span data-lang="en">Authorize Budget</span>
+                  </button>
+                  <button class="btn btn-outline btn-sm" onclick="openComplaintDetailModal('NA-2082-10188')">
+                    <span data-lang="ne">विवरण हेर्नुहोस्</span>
+                    <span data-lang="en">View Details</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="queue-item">
+              
+              <div class="queue-body">
+                <div class="queue-top">
+                  <div>
+                    <div class="queue-id">NA-2082-10092</div>
+                    <div class="queue-title">
+                      <span data-lang="ne">मुख्य ढल लाइन क्षतिग्रस्त, ढिलो भए बाढीको जोखिम</span>
+                      <span data-lang="en">Main sewer line damaged, flood risk if delayed</span>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div class="queue-meta">
+                  <span class="meta-chip">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/>
+                    </svg>
+                    <span data-lang="ne">वडा १४ बाट</span>
+                    <span data-lang="en">From Ward 14</span>
+                  </span>
+                  <span class="meta-chip">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span data-lang="ne">४ दिन पहिले</span>
+                    <span data-lang="en">4 days ago</span>
+                  </span>
+                  
+                </div>
+                <div class="queue-actions">
+                  <button class="btn btn-primary btn-sm">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <span data-lang="ne">बजेट स्वीकृत गर्नुहोस्</span>
+                    <span data-lang="en">Authorize Budget</span>
+                  </button>
+                  <button class="btn btn-outline btn-sm" onclick="openComplaintDetailModal('NA-2082-10092')">
+                    <span data-lang="ne">विवरण हेर्नुहोस्</span>
+                    <span data-lang="en">View Details</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="queue-item">
+             
+              <div class="queue-body">
+                <div class="queue-top">
+                  <div>
+                    <div class="queue-id">NA-2082-10071</div>
+                    <div class="queue-title">
+                      <span data-lang="ne">खानेपानी ट्यांकी फुटेको, सम्पूर्ण टोलमा आपूर्ति बन्द</span>
+                      <span data-lang="en">Water tank ruptured, supply cut to entire area</span>
+                    </div>
+                  </div>
+                  
+                </div>
+                <div class="queue-meta">
+                  <span class="meta-chip">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/>
+                    </svg>
+                    <span data-lang="ne">वडा २१ बाट</span>
+                    <span data-lang="en">From Ward 21</span>
+                  </span>
+                  <span class="meta-chip">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                    </svg>
+                    <span data-lang="ne">५ दिन पहिले</span>
+                    <span data-lang="en">5 days ago</span>
+                  </span>
+                  
+                </div>
+                <div class="queue-actions">
+                  <button class="btn btn-primary btn-sm">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/>
+                    </svg>
+                    <span data-lang="ne">बजेट स्वीकृत गर्नुहोस्</span>
+                    <span data-lang="en">Authorize Budget</span>
+                  </button>
+                  <button class="btn btn-outline btn-sm" onclick="openComplaintDetailModal('NA-2082-10071')">
+                    <span data-lang="ne">विवरण हेर्नुहोस्</span>
+                    <span data-lang="en">View Details</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Quarterly budget utilization -->
+        <div class="panel">
+          <div class="panel-header">
+            <h3>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+              </svg>
+              <span data-lang="ne">त्रैमासिक बजेट खर्च</span>
+              <span data-lang="en">Quarterly Budget Use</span>
+            </h3>
+          </div>
+          <div class="panel-body budget-body">
+
+            <div class="budget-row">
+              <div class="budget-row-labels">
+                <span class="budget-cat">
+                  <span data-lang="ne">सडक तथा पूर्वाधार</span>
+                  <span data-lang="en">Roads &amp; Infrastructure</span>
+                </span>
+                <span class="budget-amount">रु. ८.२ क. / रु. १२ क.</span>
+              </div>
+              <div class="util-bar-wrap">
+                <div class="util-track"><div class="util-fill" style="width:68%;"></div></div>
+                <span class="util-pct">68%</span>
+              </div>
+            </div>
+
+            <div class="budget-row">
+              <div class="budget-row-labels">
+                <span class="budget-cat">
+                  <span data-lang="ne">खानेपानी तथा ढल निकास</span>
+                  <span data-lang="en">Water &amp; Drainage</span>
+                </span>
+                <span class="budget-amount">रु. ४.५ क. / रु. ६ क.</span>
+              </div>
+              <div class="util-bar-wrap">
+                <div class="util-track"><div class="util-fill" style="width:75%;"></div></div>
+                <span class="util-pct">75%</span>
+              </div>
+            </div>
+
+            <div class="budget-row">
+              <div class="budget-row-labels">
+                <span class="budget-cat">
+                  <span data-lang="ne">फोहोरमैला व्यवस्थापन</span>
+                  <span data-lang="en">Waste Management</span>
+                </span>
+                <span class="budget-amount">रु. १.८ क. / रु. ३ क.</span>
+              </div>
+              <div class="util-bar-wrap">
+                <div class="util-track"><div class="util-fill util-gold" style="width:60%;"></div></div>
+                <span class="util-pct util-pct-gold">60%</span>
+              </div>
+            </div>
+
+            <div class="budget-row">
+              <div class="budget-row-labels">
+                <span class="budget-cat">
+                  <span data-lang="ne">सडक बत्ती तथा सरसफाई</span>
+                  <span data-lang="en">Lighting &amp; Sanitation</span>
+                </span>
+                <span class="budget-amount">रु. १.१ क. / रु. २.५ क.</span>
+              </div>
+              <div class="util-bar-wrap">
+                <div class="util-track"><div class="util-fill util-blue" style="width:44%;"></div></div>
+                <span class="util-pct util-pct-blue">44%</span>
+              </div>
+            </div>
+
+            <div class="budget-total-row">
+              <span data-lang="ne">कुल त्रैमासिक बजेट</span>
+              <span data-lang="en">Total Quarterly Budget</span>
+              <span class="budget-total-value">रु. २३.५ करोड</span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 3 — RESOLVED ESCALATIONS
+    ══════════════════════════════════════════ -->
+    <section class="section" aria-label="Resolved escalations">
+      <div class="section-eyebrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+        </svg>
+        <span data-lang="ne">समाधान भएका एस्कलेसनहरू</span>
+        <span data-lang="en">RESOLVED ESCALATIONS</span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+            <span data-lang="ne">महानगरबाट समाधान भएका गुनासोहरू</span>
+            <span data-lang="en">Complaints Resolved by Metro</span>
+          </h3>
+          <span class="resolved-count-badge">
+            <span data-lang="ne">५ यो महिना</span>
+            <span data-lang="en">5 this month</span>
+          </span>
+        </div>
+
+        <div class="table-scroll">
+          <table class="ward-table resolved-table">
+            <thead>
+              <tr>
+                <th>
+                  <span data-lang="ne">आईडी</span>
+                  <span data-lang="en">ID</span>
+                </th>
+                <th>
+                  <span data-lang="ne">शीर्षक</span>
+                  <span data-lang="en">Title</span>
+                </th>
+                <th>
+                  <span data-lang="ne">वडा</span>
+                  <span data-lang="en">Ward</span>
+                </th>
+                <th>
+                  <span data-lang="ne">एस्कलेसन मिति</span>
+                  <span data-lang="en">Escalated On</span>
+                </th>
+                <th>
+                  <span data-lang="ne">समाधान मिति</span>
+                  <span data-lang="en">Resolved On</span>
+                </th>
+                <th>
+                  <span data-lang="ne">लागत</span>
+                  <span data-lang="en">Cost</span>
+                </th>
+                <th>
+                  <span data-lang="ne">विवरण</span>
+                  <span data-lang="en">Details</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="resolvedTableBody">
+
+              <tr>
+                <td class="cell-id-sm">NA-2082-09847</td>
+                <td>
+                  <span data-lang="ne">पुरानो विद्युत पोल बदल्ने काम</span>
+                  <span data-lang="en">Old electricity pole replacement</span>
+                </td>
+                <td class="td-num">
+                  <span class="ward-rank rank-top">३</span>
+                </td>
+                <td class="td-time">२०८२/०१/१५</td>
+                <td class="td-time">२०८२/०१/२०</td>
+                <td class="td-budget">रु. ६.५ लाख</td>
+                <td>
+                  <button class="btn-detail" onclick="openComplaintDetailModal('NA-2082-09847')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="cell-id-sm">NA-2082-09731</td>
+                <td>
+                  <span data-lang="ne">सडक पुनर्निर्माण, टोल ११</span>
+                  <span data-lang="en">Road reconstruction, Tole 11</span>
+                </td>
+                <td class="td-num">
+                  <span class="ward-rank rank-top">५</span>
+                </td>
+                <td class="td-time">२०८२/०१/०५</td>
+                <td class="td-time">२०८२/०१/१८</td>
+                <td class="td-budget">रु. १४ लाख</td>
+                <td>
+                  <button class="btn-detail" onclick="openComplaintDetailModal('NA-2082-09731')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+
+              <tr>
+                <td class="cell-id-sm">NA-2082-09612</td>
+                <td>
+                  <span data-lang="ne">नदी किनार सुरक्षा पर्खाल</span>
+                  <span data-lang="en">Riverbank protection wall</span>
+                </td>
+                <td class="td-num">
+                  <span class="ward-rank rank-top">२१</span>
+                </td>
+                <td class="td-time">२०८१/१२/२५</td>
+                <td class="td-time">२०८२/०१/१०</td>
+                <td class="td-budget">रु. ३२ लाख</td>
+                <td>
+                  <button class="btn-detail" onclick="openComplaintDetailModal('NA-2082-09612')">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════
+         SECTION 4 — WARD PERFORMANCE TABLE
+    ══════════════════════════════════════════ -->
+    <section class="section" id="wards" aria-label="Ward performance">
+      <div class="section-eyebrow">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/>
+        </svg>
+        <span data-lang="ne">वडा प्रदर्शन</span>
+        <span data-lang="en">WARD PERFORMANCE</span>
+      </div>
+
+      <div class="panel">
+        <div class="panel-header">
+          <h3>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+            </svg>
+            <span data-lang="ne">शीर्ष वडा प्रदर्शन</span>
+            <span data-lang="en">Top Ward Performance</span>
+          </h3>
+          <button type="button" class="panel-link" onclick="openWardPerformanceModal()">
+            <span data-lang="ne">३३ वडा सबै हेर्नुहोस्</span>
+            <span data-lang="en">View All 33 Wards</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </button>
+        </div>
+
+        <div class="table-scroll">
+          <table class="ward-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>
+                  <span data-lang="ne">वडा</span>
+                  <span data-lang="en">Ward</span>
+                </th>
+                <th>
+                  <span data-lang="ne">कुल गुनासो</span>
+                  <span data-lang="en">Total</span>
+                </th>
+                <th>
+                  <span data-lang="ne">एस्कलेसन</span>
+                  <span data-lang="en">Escalations</span>
+                </th>
+                <th>
+                  <span data-lang="ne">समाधान दर</span>
+                  <span data-lang="en">Resolution Rate</span>
+                </th>
+                <th>
+                  <span data-lang="ne">बजेट विनियोजित</span>
+                  <span data-lang="en">Budget Allocated</span>
+                </th>
+                <th>
+                  <span data-lang="ne">बजेट खर्च</span>
+                  <span data-lang="en">Budget Used</span>
+                </th>
+                <th>
+                  <span data-lang="ne">औसत समय</span>
+                  <span data-lang="en">Avg. Time</span>
+                </th>
+              </tr>
+            </thead>
+            <tbody id="wardTableBody">
+
+              <tr>
+                <td><span class="ward-rank">१</span></td>
+                <td class="ward-name-cell">
+                  <span data-lang="ne">वडा नं. १२</span>
+                  <span data-lang="en">Ward 12</span>
+                </td>
+                <td class="td-num">७४</td>
+                <td class="td-num escalation-count">२</td>
+                <td>
+                  <div class="resolution-bar-wrap">
+                    <div class="resolution-track">
+                      <div class="resolution-fill fill-green" style="width:94%;"></div>
+                    </div>
+                    <span class="resolution-pct pct-green">94%</span>
+                  </div>
+                </td>
+                <td class="td-budget">रु. १.२ क.</td>
+                <td class="td-budget-used">रु. ०.९ क.</td>
+                <td class="td-time">
+                  <span data-lang="ne">२.१ दिन</span>
+                  <span data-lang="en">2.1 days</span>
+                </td>
+              </tr>
+
+              <tr>
+                <td><span class="ward-rank">२</span></td>
+                <td class="ward-name-cell">
+                  <span data-lang="ne">वडा नं. ५</span>
+                  <span data-lang="en">Ward 5</span>
+                </td>
+                <td class="td-num">६१</td>
+                <td class="td-num escalation-count">१</td>
+                <td>
+                  <div class="resolution-bar-wrap">
+                    <div class="resolution-track">
+                      <div class="resolution-fill fill-green" style="width:90%;"></div>
+                    </div>
+                    <span class="resolution-pct pct-green">90%</span>
+                  </div>
+                </td>
+                <td class="td-budget">रु. ८५ लाख</td>
+                <td class="td-budget-used">रु. ५८ लाख</td>
+                <td class="td-time">
+                  <span data-lang="ne">२.६ दिन</span>
+                  <span data-lang="en">2.6 days</span>
+                </td>
+              </tr>
+
+              <tr>
+                <td><span class="ward-rank rank-mid">३</span></td>
+                <td class="ward-name-cell">
+                  <span data-lang="ne">वडा नं. ८</span>
+                  <span data-lang="en">Ward 8</span>
+                </td>
+                <td class="td-num">५२</td>
+                <td class="td-num escalation-count">३</td>
+                <td>
+                  <div class="resolution-bar-wrap">
+                    <div class="resolution-track">
+                      <div class="resolution-fill fill-gold" style="width:81%;"></div>
+                    </div>
+                    <span class="resolution-pct pct-gold">81%</span>
+                  </div>
+                </td>
+                <td class="td-budget">रु. १.१ क.</td>
+                <td class="td-budget-used">रु. ०.७ क.</td>
+                <td class="td-time">
+                  <span data-lang="ne">३.८ दिन</span>
+                  <span data-lang="en">3.8 days</span>
+                </td>
+              </tr>
+
+              <tr>
+                <td><span class="ward-rank rank-mid">४</span></td>
+                <td class="ward-name-cell">
+                  <span data-lang="ne">वडा नं. १९</span>
+                  <span data-lang="en">Ward 19</span>
+                </td>
+                <td class="td-num">३९</td>
+                <td class="td-num escalation-count">१</td>
+                <td>
+                  <div class="resolution-bar-wrap">
+                    <div class="resolution-track">
+                      <div class="resolution-fill fill-gold" style="width:67%;"></div>
+                    </div>
+                    <span class="resolution-pct pct-gold">67%</span>
+                  </div>
+                </td>
+                <td class="td-budget">रु. ६५ लाख</td>
+                <td class="td-budget-used">रु. ४१ लाख</td>
+                <td class="td-time">
+                  <span data-lang="ne">५.२ दिन</span>
+                  <span data-lang="en">5.2 days</span>
+                </td>
+              </tr>
+
+              <tr>
+                <td><span class="ward-rank rank-low">५</span></td>
+                <td class="ward-name-cell">
+                  <span data-lang="ne">वडा नं. १४</span>
+                  <span data-lang="en">Ward 14</span>
+                </td>
+                <td class="td-num">५८</td>
+                <td class="td-num escalation-count escalation-high">५</td>
+                <td>
+                  <div class="resolution-bar-wrap">
+                    <div class="resolution-track">
+                      <div class="resolution-fill fill-red" style="width:52%;"></div>
+                    </div>
+                    <span class="resolution-pct pct-red">52%</span>
+                  </div>
+                </td>
+                <td class="td-budget">रु. ९८ लाख</td>
+                <td class="td-budget-used">रु. ५५ लाख</td>
+                <td class="td-time">
+                  <span data-lang="ne">७.४ दिन</span>
+                  <span data-lang="en">7.4 days</span>
+                </td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MODAL 1 — ALL ESCALATIONS LIST
+════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="escalationsOverlay" onclick="closeEscalationsModal()">
+  <div class="modal-box modal-wide" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+          <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+        </svg>
+        <span data-lang="ne">सबै एस्कलेसनहरू</span>
+        <span data-lang="en">All Escalations</span>
+      </h3>
+      <button class="modal-close" onclick="closeEscalationsModal()" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body" id="escalationsModalBody">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MODAL 2 — COMPLAINT DETAIL (photo, desc, map, landmark)
+════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="complaintDetailOverlay" onclick="closeComplaintDetailModal()">
+  <div class="modal-box modal-wide" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="complaintDetailTitle">
+        <span data-lang="ne">गुनासो विवरण</span>
+        <span data-lang="en">Complaint Detail</span>
+      </h3>
+      <button class="modal-close" onclick="closeComplaintDetailModal()" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body" id="complaintDetailBody">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MODAL 3 — ALL 33 WARDS PERFORMANCE
+════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="wardPerfOverlay" onclick="closeWardPerformanceModal()">
+  <div class="modal-box modal-extra-wide" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/>
+        </svg>
+        <span data-lang="ne">सबै ३३ वडाको प्रदर्शन</span>
+        <span data-lang="en">All 33 Wards Performance</span>
+      </h3>
+      <button class="modal-close" onclick="closeWardPerformanceModal()" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body" id="wardPerfModalBody">
+      <!-- Populated by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     MODAL 4 — SETTINGS
+════════════════════════════════════════════════════════════════ -->
+<div class="modal-overlay" id="settingsOverlay" onclick="closeSettingsModal()">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="3"/>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+        </svg>
+        <span data-lang="ne">सेटिङ</span>
+        <span data-lang="en">Settings</span>
+      </h3>
+      <button class="modal-close" onclick="closeSettingsModal()" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-row">
+        <div>
+          <p class="settings-label" data-lang="ne">इमेल सूचना</p>
+          <p class="settings-label" data-lang="en">Email Notifications</p>
+          <p class="settings-sub" data-lang="ne">गम्भीर एस्कलेसनको लागि इमेल</p>
+          <p class="settings-sub" data-lang="en">Get emailed for critical escalations</p>
+        </div>
+        <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div>
+          <p class="settings-label" data-lang="ne">साप्ताहिक प्रतिवेदन</p>
+          <p class="settings-label" data-lang="en">Weekly Summary Report</p>
+          <p class="settings-sub" data-lang="ne">हरेक सोमबार समग्र वडा प्रतिवेदन</p>
+          <p class="settings-sub" data-lang="en">Receive a ward summary every Monday</p>
+        </div>
+        <label class="switch"><input type="checkbox"><span class="switch-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div>
+          <p class="settings-label" data-lang="ne">डार्क मोड</p>
+          <p class="settings-label" data-lang="en">Dark Mode</p>
+          <p class="settings-sub" data-lang="ne">चाँडै आउँदैछ</p>
+          <p class="settings-sub" data-lang="en">Coming soon</p>
+        </div>
+        <label class="switch"><input type="checkbox" disabled><span class="switch-slider"></span></label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeSettingsModal()">
+        <span data-lang="ne">रद्द गर्नुहोस्</span>
+        <span data-lang="en">Cancel</span>
+      </button>
+      <button class="btn btn-primary" onclick="closeSettingsModal()">
+        <span data-lang="ne">सुरक्षित गर्नुहोस्</span>
+        <span data-lang="en">Save Changes</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script src="scriptmetro.js"></script>
+</body>
+</html>
