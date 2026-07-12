@@ -78,7 +78,9 @@
         <p class="subtitle" data-lang="ne">गुनासो दर्ता गर्न आफ्नो व्यक्तिगत विवरण भर्नुहोस्।</p>
         <p class="subtitle" data-lang="en">Fill in your information to register your citizen account.</p>
       </div>
-
+<div id="registerAlert" class="error-msg">
+    <span></span>
+</div>
       <form id="registerForm">
 
         <!-- Full Name -->
@@ -89,7 +91,7 @@
           </label>
           <div class="input-wrap">
             <span class="input-icon"><i class="fa-solid fa-user"></i></span>
-            <input type="text" id="fullname" placeholder="John Doe" required>
+            <input type="text" id="fullName" placeholder="John Doe" required>
           </div>
         </div>
 
@@ -101,7 +103,7 @@
           </label>
           <div class="input-wrap">
             <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
-            <input type="email" id="email" placeholder="example@gmail.com" required>
+            <input type="email" id="regEmail" placeholder="example@gmail.com" required>
           </div>
         </div>
 
@@ -120,26 +122,20 @@
         <!-- Address -->
         <div class="form-group">
           <label>
-            <span data-lang="ne">ठेगाना</span>
-            <span data-lang="en">Address</span>
-          </label>
+    <span data-lang="ne">वडा</span>
+    <span data-lang="en">Ward</span>
+</label>
           <div class="input-wrap">
             <span class="input-icon"><i class="fa-solid fa-location-dot"></i></span>
-            <input type="text" id="address" placeholder="Pokhara" required>
+            <select id="wardSelect" required>
+    <option value="">
+        Select Ward
+    </option>
+</select>
           </div>
         </div>
 
-        <!-- Citizenship Number -->
-        <div class="form-group">
-          <label>
-            <span data-lang="ne">नागरिकता नम्बर</span>
-            <span data-lang="en">Citizenship Number</span>
-          </label>
-          <div class="input-wrap">
-            <span class="input-icon"><i class="fa-solid fa-id-card"></i></span>
-            <input type="text" id="citizenship" placeholder="66-01-78-12345" required>
-          </div>
-        </div>
+        
 
         <!-- Password -->
         <div class="form-group">
@@ -171,7 +167,10 @@
           </div>
         </div>
 
-        <button type="submit" class="btn btn-primary">
+        <button
+    type="submit"
+    id="registerBtn"
+    class="btn btn-primary">
           <i class="fa-solid fa-user-plus"></i>
           <span data-lang="ne">दर्ता गर्नुहोस्</span>
           <span data-lang="en">Create Account</span>
@@ -189,7 +188,7 @@
     <!-- =====================================================
          STEP 2 — OTP VERIFICATION
     ===================================================== -->
-    <div class="form-step" id="registerStep2">
+    <div class="form-step" id="stepOtp">
       <div class="auth-header">
         <div class="icon-circle">
           <i class="fa-solid fa-envelope-open-text fa-xl"></i>
@@ -199,6 +198,10 @@
         <h2 data-lang="en">Verify Your Email</h2>
         <p class="subtitle" data-lang="ne">तपाईंको इमेलमा पठाइएको ६ अङ्कको OTP प्रविष्ट गर्नुहोस्।</p>
         <p class="subtitle" data-lang="en">Enter the 6-digit OTP sent to your email.</p>
+        <p class="subtitle">
+    OTP has been sent to
+    <strong class="otp-email-target"></strong>
+</p>
       </div>
 
       <form id="otpForm">
@@ -209,6 +212,9 @@
           <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 4">
           <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 5">
           <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 6">
+          <div id="otpAlert" class="error-msg">
+    <span></span>
+</div>
         </div>
         <p class="error-msg" id="otpError" style="justify-content:center;">
           <span data-lang="ne">गलत वा अपूरा OTP — कृपया फेरि प्रयास गर्नुहोस्</span>
@@ -218,7 +224,7 @@
         <div class="resend">
           <span data-lang="ne">OTP प्राप्त भएन?</span>
           <span data-lang="en">Didn't receive OTP?</span>
-          <button type="button" class="resend-link disabled" id="resendBtn" onclick="resendOtp()">
+          <button type="button" class="resend-link disabled" id="resendOtpBtn" onclick="resendOtp()">
             <span data-lang="ne">पुनः पठाउनुहोस् <span id="timerNe">(३०)</span></span>
             <span data-lang="en">Resend <span id="timerEn">(30)</span></span>
           </button>
@@ -230,11 +236,11 @@
             <span data-lang="ne">पछाडि</span>
             <span data-lang="en">Back</span>
           </button>
-          <button type="submit" class="btn btn-primary">
-            <i class="fa-solid fa-circle-check"></i>
-            <span data-lang="ne">प्रमाणित गर्नुहोस्</span>
-            <span data-lang="en">Verify OTP</span>
-          </button>
+         <button type="submit" id="verifyOtpBtn" class="btn btn-primary">
+    <i class="fa-solid fa-circle-check"></i>
+    <span data-lang="ne">प्रमाणित गर्नुहोस्</span>
+    <span data-lang="en">Verify OTP</span>
+</button>
         </div>
       </form>
     </div>
@@ -242,7 +248,7 @@
     <!-- =====================================================
          STEP 3 — SUCCESS
     ===================================================== -->
-    <div class="form-step" id="registerSuccess">
+    <div class="form-step" id="stepSuccess">
       <div class="auth-header">
         <div class="success-circle">
           <i class="fa-solid fa-circle-check fa-2x"></i>

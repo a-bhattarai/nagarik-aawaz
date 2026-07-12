@@ -14,6 +14,8 @@
      11. Announcements
      12. Quick actions
      13. Responsive
+     14. Notification dropdown
+     15. Popup modals (Announcements / Profile / Settings)
 ================================================================ */
 
 /* ── 1. Design tokens ── */
@@ -285,7 +287,9 @@ body.lang-mode-en .top-strip-link[data-lang="en"] { display: inline; }
   font-size: 0.82rem;
   font-family: 'Poppins', sans-serif;
   flex-shrink: 0;
+  overflow: hidden;
 }
+.user-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .user-info { display: flex; flex-direction: column; }
 .uname { font-size: 0.84rem; font-weight: 600; line-height: 1.2; }
 .uward { font-size: 0.7rem; color: var(--gray); line-height: 1.2; }
@@ -344,6 +348,11 @@ body.lang-mode-en .top-strip-link[data-lang="en"] { display: inline; }
   font-weight: 500;
   transition: all 0.15s ease;
   white-space: nowrap;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
 }
 .sb-link svg { color: var(--gray); flex-shrink: 0; transition: color 0.15s; }
 .sb-link:hover { background: var(--green-light); color: var(--green-deep); }
@@ -395,6 +404,8 @@ body.lang-mode-en .top-strip-link[data-lang="en"] { display: inline; }
 }
 .btn-primary { background: var(--green-deep); color: #fff; box-shadow: 0 4px 14px rgba(27,94,60,0.22); }
 .btn-primary:hover { background: var(--green-main); transform: translateY(-1px); }
+.btn-outline { background: var(--white); color: var(--green-deep); border: 1.5px solid var(--border); }
+.btn-outline:hover { border-color: var(--green-accent); background: var(--green-light); }
 
 /* ── 8. Stat cards ── */
 .stat-grid {
@@ -610,6 +621,7 @@ body.lang-mode-en .top-strip-link[data-lang="en"] { display: inline; }
 }
 .ann-tag.urgent { background: var(--error-bg); color: var(--error); }
 .ann-tag.notice { background: var(--info-bg); color: var(--info); }
+.ann-tag.metro  { background: var(--green-light); color: var(--green-deep); }
 
 .ann-content h5 { font-size: 0.84rem; font-weight: 700; margin-bottom: 3px; color: var(--ink); }
 .ann-content p  { font-size: 0.78rem; color: var(--gray); line-height: 1.5; }
@@ -619,6 +631,15 @@ body.lang-mode-en .top-strip-link[data-lang="en"] { display: inline; }
   font-weight: 600;
   margin-top: 5px;
   font-family: 'Poppins', sans-serif;
+}
+.ann-source {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gray);
+  margin-bottom: 4px;
 }
 
 /* ── 12. Quick actions ── */
@@ -700,6 +721,8 @@ body.lang-mode-en .top-strip-link[data-lang="en"] { display: inline; }
   .panel-header { padding: 13px 14px; }
   .complaints-table thead th,
   .complaints-table tbody td { padding: 11px 13px; }
+
+  .notif-dropdown { width: calc(100vw - 32px); right: -8px; }
 }
 
 /* 1 stat column at 420px */
@@ -707,3 +730,182 @@ body.lang-mode-en .top-strip-link[data-lang="en"] { display: inline; }
   .stat-grid { grid-template-columns: 1fr; }
   .main-content { padding: 16px 14px 44px; }
 }
+
+/* ── 14. Notification dropdown (bell icon) ── */
+.notif-wrap { position: relative; }
+.notif-dropdown {
+  display: none;
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 340px;
+  max-width: calc(100vw - 32px);
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  z-index: 1300;
+}
+.notif-dropdown.open { display: block; }
+.notif-dropdown-header {
+  padding: 14px 18px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--border);
+}
+.notif-item {
+  display: flex;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+}
+.notif-item:last-of-type { border-bottom: none; }
+.notif-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.notif-icon.notif-progress { background: var(--warning-bg); color: var(--warning); }
+.notif-icon.notif-resolved { background: var(--green-light); color: var(--green-deep); }
+.notif-icon.notif-info     { background: var(--info-bg); color: var(--info); }
+.notif-content p { font-size: 0.82rem; color: var(--ink); line-height: 1.4; margin-bottom: 3px; }
+.notif-time { font-size: 0.72rem; color: var(--gray); }
+.notif-footer-link {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--green-deep);
+  background: var(--bg);
+}
+.notif-footer-link:hover { text-decoration: underline; }
+
+/* ── 15. Popup modals (Announcements / Profile / Settings) ── */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(31,42,36,0.45);
+  z-index: 1400;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+
+.modal-box {
+  background: var(--white);
+  border-radius: var(--radius-lg);
+  width: 100%;
+  max-width: 440px;
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  box-shadow: var(--shadow-md);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--green-deep);
+}
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: var(--bg);
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.modal-close:hover { background: var(--error-bg); color: var(--error); }
+
+.modal-body { padding: 20px 22px; display: flex; flex-direction: column; gap: 18px; }
+.modal-body.no-pad-top { padding-top: 0; }
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 22px;
+  border-top: 1px solid var(--border);
+}
+.modal-footer.footer-split { justify-content: space-between; }
+
+/* Settings toggle rows */
+.settings-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.settings-label { font-size: 0.9rem; font-weight: 600; color: var(--ink); }
+.settings-sub { font-size: 0.78rem; color: var(--gray); margin-top: 2px; }
+
+.switch { position: relative; display: inline-block; width: 42px; height: 24px; flex-shrink: 0; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.switch-slider { position: absolute; inset: 0; cursor: pointer; background: var(--border); border-radius: 999px; transition: 0.2s; }
+.switch-slider::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: var(--white); border-radius: 50%; transition: 0.2s; }
+.switch input:checked + .switch-slider { background: var(--green-deep); }
+.switch input:checked + .switch-slider::before { transform: translateX(18px); }
+
+/* Profile modal */
+.profile-pic-row { display: flex; align-items: center; gap: 16px; }
+.profile-pic-preview {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: var(--green-light);
+  border: 2px solid var(--green-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green-deep);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.4rem;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.profile-pic-preview img { width: 100%; height: 100%; object-fit: cover; }
+.profile-pic-actions { display: flex; flex-direction: column; gap: 6px; }
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group label { font-size: 0.78rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
+.form-group input {
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  font-family: inherit;
+  color: var(--ink);
+  background: var(--white);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.form-group input:focus { border-color: var(--green-accent); box-shadow: 0 0 0 3px rgba(76,175,125,0.15); }
+.form-group input:disabled { background: var(--bg); color: var(--gray); cursor: not-allowed; }
+
+.btn-danger-outline {
+  background: var(--white);
+  color: var(--error);
+  border: 1.5px solid var(--error-bg);
+}
+.btn-danger-outline:hover { background: var(--error-bg); border-color: var(--error); }
+
+/* Announcements modal source tag reused from .ann-tag (section 11) */

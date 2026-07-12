@@ -577,17 +577,15 @@ function resetForm() {
 
 /* ── 13. Init ── */
 document.addEventListener('DOMContentLoaded', () => {
-  // Auth guard — redirect to login if no token
+  // ── Auth guard ──────────────────────────────────────────────
   const token = localStorage.getItem('nagarikAawazToken');
   if (!token) {
-    window.location.href = 'login.html'; // was wrongly pointing to complaint.html
+    window.location.href = 'login.html';
     return;
   }
 
-  // Restore language preference
   const savedLang = localStorage.getItem('nagarikAawazLang');
   if (savedLang === 'en') setLang('en');
 
-  // Boot Leaflet map
   initMap();
 });

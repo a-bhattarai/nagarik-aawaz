@@ -15,6 +15,10 @@
 ================================================================ */
 
 const API_BASE = 'http://localhost:5000/api';
+const API      = 'http://localhost:5000/api';
+const getToken = () => localStorage.getItem('nagarikAawazToken');
+const authHdr  = () => ({ 'Authorization': `Bearer ${getToken()}` });
+function redirectToLogin() { window.location.href = 'login.html'; }
 
 /* ── 1. Language toggle ── */
 function setLang(lang) {
@@ -473,87 +477,149 @@ document.addEventListener('keydown', e => {
   closeSettingsModal();
 });
 
-/* ── 10. Backend integration hooks ─────────────────────────────────
+/* ── 10. Load escalations from backend ── */
+async function loadEscalations() {
+  try {
+    const res = await fetch(`${API}/complaints`, { headers: authHdr() });
+    if (res.status === 401) { redirectToLogin(); return []; }
+    const { complaints } = await res.json();
 
-   Replace STATIC_ESCALATIONS with a real fetch:
+    // Metro admin gets all — filter escalated client-side
+    const escalated = complaints.filter(c => c.status === 'escalated');
 
-   async function loadEscalations() {
-     const token = localStorage.getItem('nagarikAawazToken');
-     const res   = await fetch(`${API_BASE}/complaints?status=escalated`, {
-       headers: { Authorization: `Bearer ${token}` }
-     });
-     const { complaints } = await res.json();
-     // Map API fields to the shape expected by openEscalationsModal()
-     return complaints.map(c => ({
-       id:          c._id,
-       title_ne:    c.title,
-       title_en:    c.title,
-       desc_ne:     c.description,
-       desc_en:     c.description,
-       photo:       c.photo || null,
-       lat:         c.location?.lat  || null,
-       lng:         c.location?.lng  || null,
-       landmark_ne: c.location?.landmark || '—',
-       landmark_en: c.location?.landmark || '—',
-       ward:        c.location?.ward,
-       daysAgo:     Math.floor((Date.now() - new Date(c.updatedAt)) / 86400000),
-       estCost:     '—',
-       severity:    'high',
-     }));
-   }
+    // Map to the shape the modal functions expect
+    return escalated.map(c => ({
+      id:          c._id,
+      title_ne:    c.title,
+      title_en:    c.title,
+      desc_ne:     c.description,
+      desc_en:     c.description,
+      photo:       c.photo || null,
+      lat:         c.location?.lat  || null,
+      lng:         c.location?.lng  || null,
+      landmark_ne: c.location?.landmark || '—',
+      landmark_en: c.location?.landmark || '—',
+      ward:        c.location?.ward  || '—',
+      daysAgo:     Math.floor((Date.now() - new Date(c.updatedAt)) / 86400000),
+      estCost:     '—',
+      severity:    'high',
+      _mongoId:    c._id,
+    }));
+  } catch (err) {
+    console.error('Failed to load escalations:', err);
+    return [];
+  }
+}
 
-   Replace ALL_WARDS_DATA with:
+/* ── Load all complaints and compute per-ward stats ── */
+async function loadWardStats() {
+  try {
+    const [compRes, budRes] = await Promise.all([
+      fetch(`${API}/complaints`, { headers: authHdr() }),
+      fetch(`${API}/budgets`),   // public — no auth needed
+    ]);
 
-   async function loadWardStats() {
-     const token = localStorage.getItem('nagarikAawazToken');
-     const [compRes, budRes] = await Promise.all([
-       fetch(`${API_BASE}/complaints`, { headers: { Authorization: `Bearer ${token}` } }),
-       fetch(`${API_BASE}/budgets`,    { headers: { Authorization: `Bearer ${token}` } }),
-     ]);
-     const { complaints } = await compRes.json();
-     const { budgets }    = await budRes.json();
+    if (compRes.status === 401) { redirectToLogin(); return []; }
 
-     const byWard = {};
-     complaints.forEach(c => {
-       const w = c.location?.ward;
-       if (!w) return;
-       byWard[w] = byWard[w] || { total:0, resolved:0, escalated:0, resolvedDaysSum:0 };
-       byWard[w].total++;
-       if (c.status === 'resolved') {
-         byWard[w].resolved++;
-         byWard[w].resolvedDaysSum += (new Date(c.updatedAt) - new Date(c.createdAt)) / 86400000;
-       }
-       if (c.status === 'escalated') byWard[w].escalated++;
-     });
+    const { complaints } = await compRes.json();
+    const { budgets }    = budRes.ok ? await budRes.json() : { budgets: [] };
 
-     const budByWard = {};
-     budgets.forEach(b => { budByWard[b.ward] = b; });
+    // Aggregate by ward
+    const byWard = {};
+    complaints.forEach(c => {
+      const w = c.location?.ward;
+      if (!w) return;
+      byWard[w] = byWard[w] || { total: 0, resolved: 0, escalated: 0, msSum: 0, resolvedCount: 0 };
+      byWard[w].total++;
+      if (c.status === 'resolved') {
+        byWard[w].resolved++;
+        byWard[w].msSum += new Date(c.updatedAt) - new Date(c.createdAt);
+        byWard[w].resolvedCount++;
+      }
+      if (c.status === 'escalated') byWard[w].escalated++;
+    });
 
-     return Object.entries(byWard).map(([ward, s]) => ({
-       ward:      Number(ward),
-       total:     s.total,
-       resolved:  s.resolved,
-       escalated: s.escalated,
-       rate:      s.total ? Math.round((s.resolved / s.total) * 100) : 0,
-       allocated: budByWard[ward]?.allocatedAmount || 0,
-       used:      budByWard[ward]?.spentAmount     || 0,
-       avgDays:   s.resolved ? (s.resolvedDaysSum / s.resolved).toFixed(1) : '—',
-     }));
-   }
+    const budByWard = {};
+    budgets.forEach(b => { budByWard[b.ward] = b; });
 
-   Then update stat cards with real numbers too:
+    return Array.from({ length: 33 }, (_, i) => {
+      const ward = i + 1;
+      const s    = byWard[ward] || { total: 0, resolved: 0, escalated: 0, msSum: 0, resolvedCount: 0 };
+      const rate = s.total ? Math.round((s.resolved / s.total) * 100) : 0;
+      const avgMs = s.resolvedCount ? s.msSum / s.resolvedCount : 0;
+      return {
+        ward,
+        total:     s.total,
+        resolved:  s.resolved,
+        escalated: s.escalated,
+        rate,
+        allocated: budByWard[ward]?.allocatedAmount || 0,
+        used:      budByWard[ward]?.spentAmount     || 0,
+        avgDays:   s.resolvedCount ? (avgMs / 86400000).toFixed(1) : '—',
+      };
+    });
+  } catch (err) {
+    console.error('Failed to load ward stats:', err);
+    return [];
+  }
+}
 
-   const escalations = await loadEscalations();
-   document.getElementById('statTotal').textContent     = totalCount;
-   document.getElementById('statEscalated').textContent = escalations.length;
-   document.getElementById('statWards').textContent     = `${activeWardCount}/33`;
+/* ── Update top stat cards ── */
+function updateStatCards(escalations, wardStats) {
+  const total      = wardStats.reduce((s, w) => s + w.total, 0);
+  const totalBudget = wardStats.reduce((s, w) => s + w.allocated, 0);
+  const totalSpent  = wardStats.reduce((s, w) => s + w.used,      0);
+  const utilPct     = totalBudget > 0 ? Math.round((totalSpent / totalBudget) * 100) : 0;
+  const activeWards = wardStats.filter(w => w.total > 0).length;
 
-─────────────────────────────────────────────────────────────────── */
+  const setEl = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = val;
+  };
+  setEl('statTotal',     total);
+  setEl('statEscalated', escalations.length);
+  setEl('statWards',     `${activeWards}/33`);
+
+  // Update budget % bar
+  const utilFill = document.querySelector('.stat-card.budget .util-fill');
+  const utilPctEl = document.querySelector('.stat-card.budget .util-pct');
+  const statNumBudget = document.querySelector('.stat-card.budget .stat-num');
+  if (utilFill)    utilFill.style.width = `${utilPct}%`;
+  if (utilPctEl)   utilPctEl.textContent = `${utilPct}%`;
+  if (statNumBudget) statNumBudget.textContent = `${utilPct}%`;
+}
 
 /* ── 11. Init ── */
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Auth guard
+  if (!getToken()) { redirectToLogin(); return; }
+
   const savedLang = localStorage.getItem('nagarikAawazLang') || 'ne';
   if (savedLang === 'en') setLang('en');
 
+  // Load real data
+  const [escalations, wardStats] = await Promise.all([
+    loadEscalations(),
+    loadWardStats(),
+  ]);
+
+  // Make them available globally so modal functions can use them
+  window._LIVE_ESCALATIONS = escalations;
+  window._LIVE_WARD_STATS  = wardStats;
+
+  // Patch the modal functions to use live data instead of static
+  // (openEscalationsModal and openWardPerformanceModal reference
+  //  STATIC_ESCALATIONS and ALL_WARDS_DATA — override them here)
+  window.STATIC_ESCALATIONS = escalations;
+  window.ALL_WARDS_DATA     = wardStats;
+
+  updateStatCards(escalations, wardStats);
   animateBars();
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 900) {
+      document.getElementById('sidebar')?.classList.remove('open');
+      document.getElementById('sbBackdrop')?.classList.remove('show');
+    }
+  });
 });

@@ -288,7 +288,14 @@ main {
   color: var(--ink);
   margin-bottom: 7px;
 }
-
+select {
+    width: 100%;
+    padding: 11px 14px 11px 46px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    
+}
 .input-wrap { position: relative; }
 .input-icon {
   position: absolute;
@@ -306,7 +313,7 @@ main {
 input:not([type="checkbox"]),
 select {
   width: 100%;
-  padding: 11px 14px 11px 42px;
+  padding: 11px 14px 11px 46px;
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm);
   font-size: 0.95rem;

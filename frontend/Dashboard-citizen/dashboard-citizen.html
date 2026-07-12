@@ -14,9 +14,7 @@
 <!-- ===== TOP STRIP ===== -->
 <div class="top-strip">
   <div class="top-strip-inner">
-    <div class="top-strip-left">
-      
-    </div>
+    <div class="top-strip-left"></div>
     <div class="top-strip-right">
       <a href="tel:061500000" class="top-strip-link">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -50,12 +48,16 @@
         </svg>
       </button>
 
-      
+      <a href="dashboard-citizen.html" class="brand">
         <!--
-          Replace the div below with your actual logo:
-          <img src="assets/images/na-logo.png" alt="Nagarik Aawaz" class="brand-logo-img">
+          Logo slot — replace the SVG placeholder below with your real logo:
+          <div class="brand-logo"><img src="assets/images/na-logo.png" alt="Nagarik Aawaz" class="brand-logo-img"></div>
         -->
-        
+        <div class="brand-logo">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/>
+          </svg>
+        </div>
         <div class="brand-text">
           <h1 data-lang="ne">नागरिक आवाज</h1>
           <h1 data-lang="en">Nagarik Aawaz</h1>
@@ -67,13 +69,58 @@
 
     <!-- RIGHT: Notifications + User -->
     <div class="app-bar-right">
-      <button class="icon-btn" aria-label="Notifications" title="Notifications">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
-          <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-        </svg>
-        <span class="notif-dot"></span>
-      </button>
+
+      <div class="notif-wrap" id="notifWrap">
+        <button class="icon-btn" aria-label="Notifications" title="Notifications" onclick="toggleNotifications(event)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+          </svg>
+          <span class="notif-dot"></span>
+        </button>
+
+        <div class="notif-dropdown" id="notifDropdown">
+          <div class="notif-dropdown-header">
+            <span data-lang="ne">सूचनाहरू</span><span data-lang="en">Notifications</span>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon notif-progress">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            </div>
+            <div class="notif-content">
+              <p data-lang="ne">तपाईंको गुनासो NA-2082-10231 प्रक्रियामा राखियो</p>
+              <p data-lang="en">Your complaint NA-2082-10231 is now in progress</p>
+              <span class="notif-time" data-lang="ne">३ घण्टा अघि</span>
+              <span class="notif-time" data-lang="en">3 hours ago</span>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon notif-resolved">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            </div>
+            <div class="notif-content">
+              <p data-lang="ne">NA-2082-10198 समाधान भएको रूपमा चिन्ह लगाइयो</p>
+              <p data-lang="en">NA-2082-10198 has been marked as resolved</p>
+              <span class="notif-time" data-lang="ne">१ दिन अघि</span>
+              <span class="notif-time" data-lang="en">1 day ago</span>
+            </div>
+          </div>
+          <div class="notif-item">
+            <div class="notif-icon notif-info">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11 17v3a1 1 0 0 0 2 0v-3"/></svg>
+            </div>
+            <div class="notif-content">
+              <p data-lang="ne">वडा कार्यालयबाट नयाँ सूचना आयो</p>
+              <p data-lang="en">New announcement posted by your ward office</p>
+              <span class="notif-time" data-lang="ne">२ दिन अघि</span>
+              <span class="notif-time" data-lang="en">2 days ago</span>
+            </div>
+          </div>
+          <a href="#" class="notif-footer-link">
+            <span data-lang="ne">सबै सूचना हेर्नुहोस्</span><span data-lang="en">View all notifications</span>
+          </a>
+        </div>
+      </div>
 
       <div class="user-chip">
         <div class="user-avatar" id="userAvatar">सु</div>
@@ -129,35 +176,35 @@
       <span data-lang="en">Budget Tracker</span>
     </a>
 
-    <a href="#announcements" class="sb-link">
+    <button type="button" class="sb-link" onclick="openModal('announcementsOverlay')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 11l18-5v12L3 14v-3z"/><path d="M11 17v3a1 1 0 0 0 2 0v-3"/>
       </svg>
       <span data-lang="ne">सूचनाहरू</span>
       <span data-lang="en">Announcements</span>
-    </a>
+    </button>
 
     <div class="sb-divider"></div>
 
     <div class="sb-section-label" data-lang="ne">खाता</div>
     <div class="sb-section-label" data-lang="en">ACCOUNT</div>
 
-    <a href="#profile" class="sb-link">
+    <button type="button" class="sb-link" onclick="openModal('profileOverlay')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>
       </svg>
       <span data-lang="ne">मेरो प्रोफाइल</span>
       <span data-lang="en">My Profile</span>
-    </a>
+    </button>
 
-    <a href="#settings" class="sb-link">
+    <button type="button" class="sb-link" onclick="openModal('settingsOverlay')">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="3"/>
         <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
       </svg>
       <span data-lang="ne">सेटिङ</span>
       <span data-lang="en">Settings</span>
-    </a>
+    </button>
 
     <div class="sb-spacer"></div>
     <div class="sb-divider"></div>
@@ -616,6 +663,192 @@
 
   </main>
 </div><!-- /app-shell -->
+
+<!-- ===== ANNOUNCEMENTS POPUP (ward + metro notifications) ===== -->
+<div class="modal-overlay" id="announcementsOverlay" onclick="closeModal('announcementsOverlay')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l18-5v12L3 14v-3z"/><path d="M11 17v3a1 1 0 0 0 2 0v-3"/></svg>
+        <span data-lang="ne">सूचनाहरू</span><span data-lang="en">Announcements</span>
+      </h3>
+      <button class="modal-close" onclick="closeModal('announcementsOverlay')" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body no-pad-top">
+      <div class="ann-list">
+
+        <div class="ann-item">
+          <div class="ann-tag urgent">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div class="ann-content">
+            <span class="ann-source" data-lang="ne">वडा कार्यालय, वडा ८</span>
+            <span class="ann-source" data-lang="en">Ward Office, Ward 8</span>
+            <h5>
+              <span data-lang="ne">पानी आपूर्ति अवरुद्ध हुनेछ</span>
+              <span data-lang="en">Water supply interruption</span>
+            </h5>
+            <p>
+              <span data-lang="ne">शुक्रबार बिहान ६ देखि दिउँसो २ बजेसम्म पानी आपूर्ति बन्द रहनेछ।</span>
+              <span data-lang="en">Water supply off Friday 6 AM–2 PM for maintenance.</span>
+            </p>
+            <div class="ann-meta"><span data-lang="ne">२ घण्टा अघि</span><span data-lang="en">2 hours ago</span></div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <div class="ann-tag notice">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+          </div>
+          <div class="ann-content">
+            <span class="ann-source" data-lang="ne">वडा कार्यालय, वडा ८</span>
+            <span class="ann-source" data-lang="en">Ward Office, Ward 8</span>
+            <h5>
+              <span data-lang="ne">फोहोर संकलन समय परिवर्तन</span>
+              <span data-lang="en">Waste collection time change</span>
+            </h5>
+            <p>
+              <span data-lang="ne">यस महिनादेखि फोहोर संकलन बिहान ६ बजे हुनेछ।</span>
+              <span data-lang="en">Collection moves from 7 AM to 6 AM this month.</span>
+            </p>
+            <div class="ann-meta"><span data-lang="ne">१ दिन अघि</span><span data-lang="en">1 day ago</span></div>
+          </div>
+        </div>
+
+        <div class="ann-item">
+          <div class="ann-tag metro">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/><path d="M9 21v-6h6v6"/></svg>
+          </div>
+          <div class="ann-content">
+            <span class="ann-source" data-lang="ne">महानगरपालिका कार्यालय</span>
+            <span class="ann-source" data-lang="en">Metropolitan Office</span>
+            <h5>
+              <span data-lang="ne">वार्षिक बजेट सार्वजनिक भयो</span>
+              <span data-lang="en">Annual budget published</span>
+            </h5>
+            <p>
+              <span data-lang="ne">आ.व. २०८२/८३ को वडागत बजेट अब बजेट ट्र्याकरमा हेर्न सकिन्छ।</span>
+              <span data-lang="en">FY 2025/26 ward-wise budget is now available on the Budget Tracker.</span>
+            </p>
+            <div class="ann-meta"><span data-lang="ne">५ दिन अघि</span><span data-lang="en">5 days ago</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-primary" onclick="closeModal('announcementsOverlay')">
+        <span data-lang="ne">बन्द गर्नुहोस्</span><span data-lang="en">Close</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== MY PROFILE POPUP ===== -->
+<div class="modal-overlay" id="profileOverlay" onclick="closeModal('profileOverlay')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+        <span data-lang="ne">मेरो प्रोफाइल</span><span data-lang="en">My Profile</span>
+      </h3>
+      <button class="modal-close" onclick="closeModal('profileOverlay')" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <div class="profile-pic-row">
+        <div class="profile-pic-preview" id="profilePicPreview">सु</div>
+        <div class="profile-pic-actions">
+          <label class="btn btn-outline" style="cursor:pointer;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+            <span data-lang="ne">फोटो परिवर्तन गर्नुहोस्</span><span data-lang="en">Change Photo</span>
+            <input type="file" accept="image/*" style="display:none;" onchange="handleProfilePicChange(this)">
+          </label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label data-lang="ne">पूरा नाम</label><label data-lang="en">Full Name</label>
+        <input type="text" value="सुनिता गुरुङ" id="profileNameInput">
+      </div>
+
+      <div class="form-group">
+        <label data-lang="ne">इमेल</label><label data-lang="en">Email</label>
+        <input type="email" value="sunita.gurung@example.com" id="profileEmailInput">
+      </div>
+
+      <div class="form-group">
+        <label data-lang="ne">फोन नम्बर</label><label data-lang="en">Phone Number</label>
+        <input type="tel" value="98XXXXXXXX" id="profilePhoneInput">
+      </div>
+
+      <div class="form-group">
+        <label data-lang="ne">वडा नम्बर</label><label data-lang="en">Ward Number</label>
+        <input type="text" value="वडा नं. ८" disabled>
+      </div>
+
+    </div>
+    <div class="modal-footer footer-split">
+      <button class="btn btn-danger-outline" onclick="logoutUser()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        <span data-lang="ne">लग-आउट</span><span data-lang="en">Logout</span>
+      </button>
+      <button class="btn btn-primary" onclick="closeModal('profileOverlay')">
+        <span data-lang="ne">सुरक्षित गर्नुहोस्</span><span data-lang="en">Save Changes</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SETTINGS POPUP ===== -->
+<div class="modal-overlay" id="settingsOverlay" onclick="closeModal('settingsOverlay')">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span data-lang="ne">सेटिङ</span><span data-lang="en">Settings</span>
+      </h3>
+      <button class="modal-close" onclick="closeModal('settingsOverlay')" aria-label="Close">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="settings-row">
+        <div>
+          <p class="settings-label" data-lang="ne">इमेल सूचना</p><p class="settings-label" data-lang="en">Email Notifications</p>
+          <p class="settings-sub" data-lang="ne">गुनासोको स्थिती परिवर्तन हुँदा इमेल पाउनुहोस्</p><p class="settings-sub" data-lang="en">Get emailed when your complaint status changes</p>
+        </div>
+        <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div>
+          <p class="settings-label" data-lang="ne">SMS सूचना</p><p class="settings-label" data-lang="en">SMS Notifications</p>
+          <p class="settings-sub" data-lang="ne">फोनमा एसएमएस मार्फत अपडेट पाउनुहोस्</p><p class="settings-sub" data-lang="en">Get status updates via text message</p>
+        </div>
+        <label class="switch"><input type="checkbox"><span class="switch-slider"></span></label>
+      </div>
+      <div class="settings-row">
+        <div>
+          <p class="settings-label" data-lang="ne">वडा सूचना</p><p class="settings-label" data-lang="en">Ward Announcements</p>
+          <p class="settings-sub" data-lang="ne">वडा कार्यालयका सूचनाहरू यहाँ देखाउनुहोस्</p><p class="settings-sub" data-lang="en">Show announcements from your ward office</p>
+        </div>
+        <label class="switch"><input type="checkbox" checked><span class="switch-slider"></span></label>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('settingsOverlay')">
+        <span data-lang="ne">रद्द गर्नुहोस्</span><span data-lang="en">Cancel</span>
+      </button>
+      <button class="btn btn-primary" onclick="closeModal('settingsOverlay')">
+        <span data-lang="ne">सुरक्षित गर्नुहोस्</span><span data-lang="en">Save Changes</span>
+      </button>
+    </div>
+  </div>
+</div>
 
 <script src="scriptcitizen.js"></script>
 </body>
