@@ -60,6 +60,13 @@ router.get('/', protect, async (req, res) => {
       filter['location.ward'] = Number(req.query.ward);
     }
 
+    // Optional status filter — safe for any role, since it only narrows
+    // down complaints the user could already see, never expands access.
+    const validStatuses = ['pending', 'in-progress', 'resolved', 'escalated'];
+    if (req.query.status && validStatuses.includes(req.query.status)) {
+      filter.status = req.query.status;
+    }
+
     let complaints = await Complaint.find(filter).sort({ createdAt: -1 });
 
     complaints = await Promise.all(complaints.map(async (c) => {
