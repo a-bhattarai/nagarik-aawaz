@@ -1,3 +1,4 @@
+const path = require("path");
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "8.8.4.4"]);
 require("dotenv").config();
@@ -8,6 +9,7 @@ const app = express();
 connectDB();
 app.use(express.json({ limit: "10mb" }));
 app.use(cors());
+app.use(express.static(path.join(__dirname, "public")));
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/budgets", require("./routes/budgetRoutes"));
 app.use("/api/complaints", require("./routes/complaintRoutes"));
