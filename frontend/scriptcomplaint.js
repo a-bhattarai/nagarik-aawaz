@@ -424,33 +424,11 @@ function submitComplaint() {
   btn.disabled   = true;
   btn.innerHTML  = `<span class="spinner"></span> <span>${isNe ? 'पेश हुँदैछ...' : 'Submitting...'}</span>`;
 
-  /* ── Backend hook ─────────────────────────────────────────────────
-     Replace the setTimeout below with a real API call:
 
-     const formData = new FormData();
-     formData.append('title',    document.getElementById('complaintTitle').value.trim());
-     formData.append('ward',     document.getElementById('wardSelect').value);
-     formData.append('desc',     document.getElementById('complaintDesc').value.trim());
-     formData.append('landmark', document.getElementById('landmark').value.trim());
-     formData.append('lat',      markerLat);
-     formData.append('lng',      markerLng);
-     if (uploadedPhotos.length) formData.append('photo', uploadedPhotos[0].file);
-
-     fetch('/api/complaints', { method: 'POST', body: formData })
-       .then(res => res.json())
-       .then(data => {
-         if (data.ticketId) showSuccess(data.ticketId);
-         else throw new Error('No ticket ID');
-       })
-       .catch(() => {
-         btn.disabled  = false;
-         btn.innerHTML = origHTML;
-         document.getElementById('alert-3').classList.add('show');
-       });
-  ─────────────────────────────────────────────────────────────────── */
 
   // Demo — simulate API delay
-  // ── Real API call ──────────────────────────────────────────────
+ 
+  // ── Real API call ────────────────────────────────────────────
   const token    = localStorage.getItem('nagarikAawazToken');
   const photoB64 = uploadedPhotos.length > 0 ? uploadedPhotos[0].dataUrl : null;
 
@@ -474,29 +452,34 @@ function submitComplaint() {
   })
   .then(res => res.json().then(data => ({ status: res.status, data })))
   .then(({ status, data }) => {
-    if (status === 201) {
-      // Store the real MongoDB _id so dashboard-citizen.html can use it
-      const realId = data.complaint._id;
-      localStorage.setItem('lastComplaintId', realId);
-
-      // Show a friendly ticket number alongside the real _id
-      const friendlyId = 'NA-' + (new Date().getFullYear() + 57) + '-' + realId.slice(-5).toUpperCase();
-      showSuccess(friendlyId);
-    } else {
-      // 400 / 401 / 500 — show the backend error message
-      throw new Error(data.message || 'Submission failed. Please try again.');
-    }
-  })
-  .catch(err => {
     btn.disabled  = false;
     btn.innerHTML = origHTML;
 
-    // Reuse the existing step-3 alert banner
-    const alertEl  = document.getElementById('alert-3');
-    const alertMsg = document.getElementById('alert-3-msg');
-    alertMsg.textContent = err.message;
+    if (status === 201) {
+      // Save real _id so dashboard-citizen can look it up
+      localStorage.setItem('nagarikAawazLastComplaintId', data.complaint._id);
+
+      // Generate a friendly display ID alongside the real _id
+      const year       = new Date().getFullYear() + 57;
+      const friendlyId = `NA-${year}-${data.complaint._id.slice(-5).toUpperCase()}`;
+      showSuccess(friendlyId);
+    } else if (status === 401) {
+      window.location.href = 'login.html';
+    } else {
+      const alertEl = document.getElementById('alert-3');
+      document.getElementById('alert-3-msg').textContent =
+        data.message || (isNe ? 'पेश गर्न असफल भयो।' : 'Submission failed. Please try again.');
+      alertEl.classList.add('show');
+      alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  })
+  .catch(() => {
+    btn.disabled  = false;
+    btn.innerHTML = origHTML;
+    const alertEl = document.getElementById('alert-3');
+    document.getElementById('alert-3-msg').textContent =
+      isNe ? 'नेटवर्क त्रुटि। पुन: प्रयास गर्नुहोस्।' : 'Network error. Please try again.';
     alertEl.classList.add('show');
-    alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   });
 }
 

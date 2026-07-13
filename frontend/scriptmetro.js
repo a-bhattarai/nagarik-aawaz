@@ -14,8 +14,8 @@
      11. Init
 ================================================================ */
 
-const API_BASE = 'http://localhost:5000/api';
-const API      = 'http://localhost:5000/api';
+const API_BASE = 'http://localhost:5001/api';
+const API      = 'http://localhost:5001/api';
 const getToken = () => localStorage.getItem('nagarikAawazToken');
 const authHdr  = () => ({ 'Authorization': `Bearer ${getToken()}` });
 function redirectToLogin() { window.location.href = 'login.html'; }
