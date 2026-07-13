@@ -89,87 +89,81 @@ function animateBars() {
   bars.forEach(bar => obs.observe(bar));
 }
 
+
+async function loadAllComplaints() {
+  try {
+    const res = await fetch(`${API}/complaints`, { headers: authHdr() });
+    if (res.status === 401) { redirectToLogin(); return; }
+    const { complaints } = await res.json();
+    renderAllComplaintsTable(complaints);
+  } catch (err) {
+    console.error('Failed to load all complaints:', err);
+  }
+}
+
+function renderAllComplaintsTable(complaints) {
+  const tbody   = document.getElementById('allComplaintsBody');
+  const countEl = document.getElementById('allComplaintCount');
+  const en = isEn();
+  if (!tbody) return;
+
+  if (countEl) countEl.textContent = en ? `${complaints.length} complaints` : `${complaints.length} गुनासोहरू`;
+
+  const STATUS_LABELS = {
+    'pending':     { ne: 'समीक्षामा',    en: 'Pending' },
+    'in-progress': { ne: 'प्रक्रियामा',  en: 'In Progress' },
+    'resolved':    { ne: 'समाधान भएको', en: 'Resolved' },
+    'escalated':   { ne: 'एस्कलेट',      en: 'Escalated' },
+  };
+
+  if (!complaints.length) {
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--gray);">
+      ${en ? 'No complaints yet.' : 'हालसम्म कुनै गुनासो छैन।'}
+    </td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = complaints.map(c => {
+    const label = STATUS_LABELS[c.status] || { ne: c.status, en: c.status };
+    const badgeClass = c.status === 'escalated' ? 'b-escalated'
+      : c.status === 'resolved' ? 'b-resolved'
+      : c.status === 'in-progress' ? 'b-progress' : 'b-review';
+    const photoCell = c.photo
+      ? `<img src="${c.photo}" style="width:44px;height:44px;object-fit:cover;border-radius:8px;border:1px solid var(--border);" alt="Photo">`
+      : `<div style="width:44px;height:44px;border-radius:8px;border:1.5px dashed var(--border);background:var(--bg);"></div>`;
+
+    return `
+      <tr>
+        <td class="cell-id">${c._id.slice(-5).toUpperCase()}</td>
+        <td class="cell-title-col">
+          <div class="cell-title">${c.title}</div>
+          <div class="cell-sub">${c.location?.landmark || '—'}</div>
+        </td>
+        <td class="td-num">${c.location?.ward ?? '—'}</td>
+        <td class="cell-desc" style="max-width:200px;">
+          <span style="font-size:0.82rem;color:var(--gray);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${c.description}</span>
+        </td>
+        <td>${photoCell}</td>
+        <td><span class="badge ${badgeClass}"><span class="badge-dot"></span>${en ? label.en : label.ne}</span></td>
+        <td>
+          <button class="action-btn" onclick="openComplaintDetailModal('${c._id}')" title="View">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </td>
+      </tr>`;
+  }).join('');
+}
+
+
 /* ── 5. Static escalation data (replace with backend fetch) ──────
    Each complaint has: id, title_ne, title_en, desc_ne, desc_en,
    photo (URL or null), lat, lng, landmark_ne, landmark_en,
    ward, daysAgo, estCost
 ────────────────────────────────────────────────────────────────── */
-const STATIC_ESCALATIONS = [
-  {
-    id:          'NA-2082-10188',
-    title_ne:    'पुल भत्किने जोखिम — तुरुन्त मर्मत आवश्यक',
-    title_en:    'Foot-bridge structurally unsafe — urgent repair needed',
-    desc_ne:     'पुलको मुख्य बीम पूर्ण रूपले क्षतिग्रस्त भएको छ। आगामी वर्षाले बाढीको जोखिम थप बढाउनेछ। तुरुन्त मर्मतको आवश्यकता छ।',
-    desc_en:     'The main beam of the footbridge is completely damaged. The upcoming monsoon will increase flood risk significantly. Immediate repair is required.',
-    photo:       null,
-    lat:         28.2082,
-    lng:         83.9880,
-    landmark_ne: 'खोल्सी किनार, मूल पुल नजिक',
-    landmark_en: 'Kholsi Bank, near main bridge',
-    ward:        8,
-    daysAgo:     2,
-    estCost:     'रु. ४२ लाख / NPR 4.2M',
-    severity:    'critical',
-  },
-  {
-    id:          'NA-2082-10092',
-    title_ne:    'मुख्य ढल लाइन क्षतिग्रस्त, ढिलो भए बाढीको जोखिम',
-    title_en:    'Main sewer line damaged, flood risk if delayed',
-    desc_ne:     'मुख्य ढल लाइन भाँचिएको छ र पानी सडकमा बग्दैछ। ढिलो भएमा बाढी आउने सम्भावना छ।',
-    desc_en:     'The main sewer line is broken and water is flowing onto the road. Delay could cause flooding in the area.',
-    photo:       null,
-    lat:         28.1950,
-    lng:         83.9760,
-    landmark_ne: 'नया बजार, ढल ट्यांकी नजिक',
-    landmark_en: 'Naya Bazar, near drainage tank',
-    ward:        14,
-    daysAgo:     4,
-    estCost:     'रु. १८ लाख / NPR 1.8M',
-    severity:    'high',
-  },
-  {
-    id:          'NA-2082-10071',
-    title_ne:    'खानेपानी ट्यांकी फुटेको, सम्पूर्ण टोलमा आपूर्ति बन्द',
-    title_en:    'Water tank ruptured, supply cut to entire area',
-    desc_ne:     'खानेपानी ट्यांकीमा ठूलो चिरा परेको छ। यसले गर्दा वरपरका ५०० परिवारलाई पानी आपूर्ति बन्द भएको छ।',
-    desc_en:     'A large crack has appeared in the water supply tank. This has cut off water supply to around 500 nearby families.',
-    photo:       null,
-    lat:         28.2150,
-    lng:         83.9920,
-    landmark_ne: 'माथिल्लो टोल, पानी ट्यांकी नजिक',
-    landmark_en: 'Upper Tole, near water tank',
-    ward:        21,
-    daysAgo:     5,
-    estCost:     'रु. ९ लाख / NPR 900K',
-    severity:    'high',
-  },
-];
+ let STATIC_ESCALATIONS = []; // populated for real by loadEscalations() on page load
 
 /* All 33 wards static data (replace with backend fetch) */
-const ALL_WARDS_DATA = Array.from({ length: 33 }, (_, i) => {
-  const ward = i + 1;
-  // Seed some variation
-  const total      = Math.floor(Math.random() * 60) + 20;
-  const resolved   = Math.floor(total * (0.5 + Math.random() * 0.45));
-  const escalated  = Math.floor(Math.random() * 5);
-  const rate       = Math.round((resolved / total) * 100);
-  const allocated  = (Math.floor(Math.random() * 80) + 40) * 100000; // in NPR
-  const used       = Math.floor(allocated * (0.4 + Math.random() * 0.45));
-  const avgDays    = (1.5 + Math.random() * 6).toFixed(1);
-  return { ward, total, resolved, escalated, rate, allocated, used, avgDays };
-});
-
-/* Override with known real data */
-const KNOWN = {
-  12: { total:74, resolved:70, escalated:2, rate:94, allocated:1200000, used:900000,  avgDays:'2.1' },
-   5: { total:61, resolved:55, escalated:1, rate:90, allocated:850000,  used:580000,  avgDays:'2.6' },
-   8: { total:52, resolved:42, escalated:3, rate:81, allocated:1100000, used:700000,  avgDays:'3.8' },
-  19: { total:39, resolved:26, escalated:1, rate:67, allocated:650000,  used:410000,  avgDays:'5.2' },
-  14: { total:58, resolved:30, escalated:5, rate:52, allocated:980000,  used:550000,  avgDays:'7.4' },
-};
-ALL_WARDS_DATA.forEach(w => {
-  if (KNOWN[w.ward]) Object.assign(w, KNOWN[w.ward]);
-});
+let ALL_WARDS_DATA = []; // populated for real by loadWardStats() on page load
 
 function fmtNPR(n) {
   if (n >= 10000000) return `रु. ${(n/10000000).toFixed(1)} क.`;
@@ -261,133 +255,90 @@ function openEscalationsModal() {
   document.body.style.overflow = 'hidden';
 }
 
+function renderQueueList(escalations) {
+  const list = document.getElementById('queueList');
+  if (!list) return;
+  const en = isEn();
+
+  if (!escalations.length) {
+    list.innerHTML = `<div style="padding:24px;text-align:center;color:var(--gray);">
+      ${en ? 'No active escalations right now.' : 'हाल कुनै सक्रिय एस्कलेसन छैन।'}
+    </div>`;
+    return;
+  }
+
+  list.innerHTML = escalations.map(c => `
+    <div class="queue-item">
+      <div class="queue-body">
+        <div class="queue-top">
+          <div>
+            <div class="queue-id">${c.id}</div>
+            <div class="queue-title">${en ? c.title_en : c.title_ne}</div>
+          </div>
+        </div>
+        <div class="queue-meta">
+          <span class="meta-chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/></svg>
+            ${en ? 'Ward' : 'वडा'} ${c.ward}
+          </span>
+          <span class="meta-chip">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            ${c.daysAgo} ${en ? 'days ago' : 'दिन पहिले'}
+          </span>
+        </div>
+        <div class="queue-actions">
+          <button class="btn btn-outline btn-sm" onclick="openComplaintDetailModal('${c.id}')">
+            ${en ? 'View Details' : 'विवरण हेर्नुहोस्'}
+          </button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
 function closeEscalationsModal() {
   document.getElementById('escalationsOverlay').classList.remove('open');
   document.body.style.overflow = '';
 }
 
 /* ── 7. Modal — Single Complaint Detail ── */
-function openComplaintDetailModal(id) {
+async function openComplaintDetailModal(id) {
   const en = isEn();
-  const complaint = STATIC_ESCALATIONS.find(c => c.id === id);
+  let complaint = STATIC_ESCALATIONS.find(c => c.id === id);
   const body  = document.getElementById('complaintDetailBody');
   const title = document.getElementById('complaintDetailTitle');
 
   if (!complaint) {
-    /* If not in static list, show placeholder (backend would fetch it) */
-    title.textContent = id;
-    body.innerHTML = `
-      <div style="text-align:center; padding:32px 16px; color:var(--gray);">
-        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:12px;color:var(--border);">
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-          <polyline points="14 2 14 8 20 8"/>
-        </svg>
-        <p style="font-weight:600;">${en ? 'Connect backend to load details' : 'विवरण लोड गर्न ब्याकेन्ड जोड्नुहोस्'}</p>
-        <p style="font-size:0.82rem;margin-top:6px;">GET /api/complaints/${id}</p>
-      </div>`;
+    // Not in the escalation list — fetch it directly (works for the
+    // new "All Complaints" table too, which covers every ward).
+    title.textContent = en ? 'Loading…' : 'लोड हुँदैछ...';
+    body.innerHTML = '';
     document.getElementById('complaintDetailOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
-    return;
+
+    try {
+      const res = await fetch(`${API}/complaints/${id}`, { headers: authHdr() });
+      const { complaint: c } = await res.json();
+      complaint = {
+        id: c._id, title_ne: c.title, title_en: c.title,
+        desc_ne: c.description, desc_en: c.description,
+        photo: c.photo || null,
+        lat: c.location?.lat || null, lng: c.location?.lng || null,
+        landmark_ne: c.location?.landmark || '—', landmark_en: c.location?.landmark || '—',
+        ward: c.location?.ward || '—',
+        daysAgo: Math.floor((Date.now() - new Date(c.updatedAt)) / 86400000),
+      };
+    } catch (err) {
+      body.innerHTML = `<p style="color:var(--error);">${en ? 'Failed to load complaint.' : 'गुनासो लोड गर्न असफल।'}</p>`;
+      return;
+    }
   }
-
-  title.textContent = `${complaint.id} — ${en ? complaint.title_en : complaint.title_ne}`;
-
-  body.innerHTML = `
-    <div style="display:flex;flex-direction:column;gap:18px;">
-
-      <!-- Photo -->
-      ${complaint.photo
-        ? `<img src="${complaint.photo}" style="width:100%;max-height:240px;object-fit:cover;border-radius:var(--radius-md);border:1px solid var(--border);" alt="Photo">`
-        : `<div class="esc-photo-placeholder" style="height:120px;">
-             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-               <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-               <circle cx="12" cy="13" r="4"/>
-             </svg>
-             ${en ? 'No photo submitted' : 'फोटो उपलब्ध छैन'}
-           </div>`
-      }
-
-      <!-- Title + description -->
-      <div>
-        <div style="font-size:0.68rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
-          ${en ? 'TITLE' : 'शीर्षक'}
-        </div>
-        <div style="font-weight:700;font-size:0.95rem;color:var(--ink);">
-          ${en ? complaint.title_en : complaint.title_ne}
-        </div>
-      </div>
-
-      <div>
-        <div style="font-size:0.68rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">
-          ${en ? 'DESCRIPTION' : 'विवरण'}
-        </div>
-        <p style="font-size:0.88rem;color:var(--gray);line-height:1.7;">
-          ${en ? complaint.desc_en : complaint.desc_ne}
-        </p>
-      </div>
-
-      <!-- Location chips -->
-      <div>
-        <div style="font-size:0.68rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">
-          ${en ? 'LOCATION' : 'स्थान'}
-        </div>
-        <div style="display:flex;flex-wrap:wrap;gap:8px;">
-          <span class="esc-meta-chip">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/>
-            </svg>
-            ${en ? 'Ward' : 'वडा'} ${complaint.ward}
-          </span>
-          <span class="esc-meta-chip">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>
-            </svg>
-            ${en ? complaint.landmark_en : complaint.landmark_ne}
-          </span>
-          ${complaint.lat && complaint.lng ? `
-            <span class="esc-meta-chip">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-              </svg>
-              ${complaint.lat.toFixed(5)}, ${complaint.lng.toFixed(5)}
-            </span>` : ''}
-        </div>
-      </div>
-
-      <!-- Map link -->
-      ${complaint.lat && complaint.lng ? `
-        <a class="esc-map-link"
-           href="https://www.openstreetmap.org/?mlat=${complaint.lat}&mlon=${complaint.lng}&zoom=17"
-           target="_blank" rel="noopener">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
-            <line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>
-          </svg>
-          ${en ? 'View location on OpenStreetMap' : 'OpenStreetMap मा स्थान हेर्नुहोस्'}
-        </a>` : ''}
-
-      
-
-      <!-- Authorize button -->
-      <button class="btn btn-primary" style="width:100%;">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="10"/>
-        </svg>
-        ${en ? 'Authorize Budget for This Complaint' : 'यस गुनासोको लागि बजेट स्वीकृत गर्नुहोस्'}
-      </button>
-
-    </div>
-  `;
-
-  document.getElementById('complaintDetailOverlay').classList.add('open');
-  document.body.style.overflow = 'hidden';
-}
 
 function closeComplaintDetailModal() {
   document.getElementById('complaintDetailOverlay').classList.remove('open');
   document.body.style.overflow = '';
 }
-
+}
 /* ── 8. Modal — All 33 Wards Performance ── */
 function openWardPerformanceModal() {
   const en   = isEn();
@@ -604,17 +555,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   ]);
 
   // Make them available globally so modal functions can use them
-  window._LIVE_ESCALATIONS = escalations;
-  window._LIVE_WARD_STATS  = wardStats;
+STATIC_ESCALATIONS = escalations;   // now the SAME variable every function reads
+ALL_WARDS_DATA     = wardStats;
 
-  // Patch the modal functions to use live data instead of static
-  // (openEscalationsModal and openWardPerformanceModal reference
-  //  STATIC_ESCALATIONS and ALL_WARDS_DATA — override them here)
-  window.STATIC_ESCALATIONS = escalations;
-  window.ALL_WARDS_DATA     = wardStats;
+renderQueueList(escalations);       // new — see below, replaces the static HTML queue
+loadAllComplaints();                // new — see "All Complaints" section below
 
-  updateStatCards(escalations, wardStats);
-  animateBars();
+updateStatCards(escalations, wardStats);
+animateBars();
 
   window.addEventListener('resize', () => {
     if (window.innerWidth > 900) {

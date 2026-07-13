@@ -33,6 +33,56 @@ function updateStatNumbers(lang) {
   });
 }
 
+async function viewComplaintDetail(id) {
+  const token = localStorage.getItem('nagarikAawazToken');
+  const en = document.body.classList.contains('lang-mode-en');
+  const body  = document.getElementById('complaintViewBody');
+  const title = document.getElementById('complaintViewTitle');
+
+  title.textContent = en ? 'Loading…' : 'लोड हुँदैछ...';
+  body.innerHTML = '';
+  openModal('complaintViewOverlay');
+
+  try {
+    const res = await fetch(`${API}/complaints/${id}`, { headers: { 'Authorization': `Bearer ${token}` } });
+    const { complaint: c } = await res.json();
+    const s = STATUS_BADGE[c.status] || STATUS_BADGE.pending;
+
+    title.textContent = `NA-${c._id.slice(-5).toUpperCase()} — ${c.title}`;
+    body.innerHTML = `
+      ${c.photo
+        ? `<img src="${c.photo}" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;border:1px solid var(--border);" alt="Photo">`
+        : `<div style="width:100%;height:80px;background:var(--bg);border:1.5px dashed var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:0.82rem;">${en ? 'No photo submitted' : 'फोटो छैन'}</div>`}
+      <div style="margin-top:14px;">
+        <div style="font-size:0.68rem;font-weight:700;color:var(--gray);text-transform:uppercase;margin-bottom:4px;">${en ? 'DESCRIPTION' : 'विवरण'}</div>
+        <p style="font-size:0.88rem;color:var(--ink);line-height:1.6;">${c.description}</p>
+      </div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
+        <div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;">
+          <div style="font-size:0.66rem;font-weight:700;color:var(--gray);text-transform:uppercase;">${en ? 'WARD' : 'वडा'}</div>
+          <div style="font-weight:700;">${c.location?.ward ?? '—'}</div>
+        </div>
+        <div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;">
+          <div style="font-size:0.66rem;font-weight:700;color:var(--gray);text-transform:uppercase;">${en ? 'STATUS' : 'स्थिती'}</div>
+          <div style="font-weight:700;">${en ? s.en : s.ne}</div>
+        </div>
+      </div>
+      ${c.location?.landmark ? `
+        <div style="margin-top:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;">
+          <div style="font-size:0.66rem;font-weight:700;color:var(--gray);text-transform:uppercase;">${en ? 'LANDMARK' : 'चिनारी स्थान'}</div>
+          <div style="font-weight:600;">${c.location.landmark}</div>
+        </div>` : ''}
+      ${c.location?.lat ? `
+        <a href="https://www.openstreetmap.org/?mlat=${c.location.lat}&mlon=${c.location.lng}&zoom=17" target="_blank" rel="noopener"
+           style="display:inline-flex;align-items:center;gap:6px;margin-top:12px;font-size:0.82rem;font-weight:600;color:var(--info);">
+           ${en ? 'Open on map' : 'नक्सामा हेर्नुहोस्'} (${c.location.lat.toFixed(4)}, ${c.location.lng.toFixed(4)})
+        </a>` : ''}
+    `;
+  } catch (err) {
+    body.innerHTML = `<p style="color:var(--error);">${en ? 'Failed to load complaint.' : 'गुनासो लोड गर्न असफल।'}</p>`;
+  }
+}
+
 /* ── 3. Mobile sidebar ── */
 function toggleSidebar() {
   const sidebar   = document.getElementById('sidebar');
@@ -158,35 +208,89 @@ document.addEventListener('DOMContentLoaded', () => {
   // Logout (sidebar link)
   setupLogout();
 
-  /* ── Backend hook ─────────────────────────────────────────────────
-     When your backend is ready, replace the static HTML table rows
-     with a real fetch call. Example:
-
-     const token = localStorage.getItem('nagarikAawazToken');
-
-     fetch('/api/complaints/mine', {
-       headers: { 'Authorization': `Bearer ${token}` }
-     })
-     .then(res => res.json())
-     .then(data => renderComplaintsTable(data.complaints))
-     .catch(err => console.error('Failed to load complaints:', err));
-
-     function renderComplaintsTable(complaints) {
-       const tbody = document.querySelector('.complaints-table tbody');
-       tbody.innerHTML = complaints.map(c => `
-         <tr>
-           <td class="cell-id">NA-${c._id.slice(-8).toUpperCase()}</td>
-           <td class="cell-title-col">
-             <div class="cell-title">${c.title}</div>
-             <div class="cell-sub">Ward ${c.location.ward}</div>
-           </td>
-           <td class="cell-date">${new Date(c.createdAt).toLocaleDateString()}</td>
-           <td>${badgeHTML(c.status)}</td>
-           <td class="cell-action">
-             <button class="action-btn" onclick="viewComplaint('${c._id}')">...</button>
-           </td>
-         </tr>
-       `).join('');
-     }
-  ─────────────────────────────────────────────────────────────────── */
+loadMyComplaints();
 });
+
+const API = 'http://localhost:5001/api';
+
+const STATUS_BADGE = {
+  'pending':     { cls: 'b-review',   ne: 'समीक्षामा',      en: 'Under Review' },
+  'in-progress': { cls: 'b-progress', ne: 'प्रक्रियामा',    en: 'In Progress' },
+  'resolved':    { cls: 'b-resolved', ne: 'समाधान भयो',    en: 'Resolved' },
+  'escalated':   { cls: 'b-rejected', ne: 'एस्कलेट भयो',   en: 'Escalated' }
+};
+
+function badgeHTML(status) {
+  const s = STATUS_BADGE[status] || STATUS_BADGE.pending;
+  return `<span class="badge ${s.cls}"><span class="badge-dot"></span>
+    <span data-lang="ne">${s.ne}</span><span data-lang="en">${s.en}</span></span>`;
+}
+
+function loadMyComplaints() {
+  const token = localStorage.getItem('nagarikAawazToken');
+
+  fetch(`${API}/complaints`, {
+    headers: { 'Authorization': `Bearer ${token}` }
+  })
+    .then(res => res.json())
+    .then(data => {
+      const complaints = data.complaints || [];
+      renderComplaintsTable(complaints);
+      updateStatCards(complaints);
+    })
+    .catch(err => console.error('Failed to load complaints:', err));
+}
+
+function renderComplaintsTable(complaints) {
+  const tbody = document.querySelector('.complaints-table tbody');
+  if (!complaints.length) {
+    tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; padding:24px; color:var(--gray);">
+      <span data-lang="ne">तपाईंले हालसम्म कुनै गुनासो पेश गर्नुभएको छैन।</span>
+      <span data-lang="en">You haven't filed any complaints yet.</span>
+    </td></tr>`;
+    return;
+  }
+  tbody.innerHTML = complaints.map(c => `
+    <tr>
+      <td class="cell-id">NA-${c._id.slice(-8).toUpperCase()}</td>
+      <td class="cell-title-col">
+        <div class="cell-title">${c.title}</div>
+        <div class="cell-sub">Ward ${c.location.ward}${c.location.landmark ? ', ' + c.location.landmark : ''}</div>
+      </td>
+      <td class="cell-date">${new Date(c.createdAt).toLocaleDateString()}</td>
+      <td>${badgeHTML(c.status)}</td>
+      <td class="cell-action">
+        <button class="action-btn" aria-label="View complaint" onclick="viewComplaintDetail('${c._id}')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function updateStatCards(complaints) {
+  const counts = { total: complaints.length, progress: 0, resolved: 0, escalated: 0 };
+  complaints.forEach(c => {
+    if (c.status === 'in-progress') counts.progress++;
+    if (c.status === 'resolved') counts.resolved++;
+    if (c.status === 'escalated') counts.escalated++;
+  });
+
+  const setNum = (selector, val) => {
+    const el = document.querySelector(selector);
+    if (el) { el.dataset.ne = toNepaliDigits(val); el.dataset.en = val; }
+  };
+  setNum('.stat-card.total .stat-num', counts.total);
+  setNum('.stat-card.progress .stat-num', counts.progress);
+  setNum('.stat-card.resolved .stat-num', counts.resolved);
+  setNum('.stat-card.rejected .stat-num', counts.escalated); // see note below
+
+  updateStatNumbers(document.body.classList.contains('lang-mode-en') ? 'en' : 'ne');
+}
+
+function toNepaliDigits(n) {
+  const map = {'0':'०','1':'१','2':'२','3':'३','4':'४','5':'५','6':'६','7':'७','8':'८','9':'९'};
+  return String(n).split('').map(d => map[d] ?? d).join('');
+}

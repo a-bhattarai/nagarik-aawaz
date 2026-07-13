@@ -469,6 +469,69 @@ body.lang-mode-en th[data-lang="en"] { display: table-cell; }
 }
 .trend-up   { color: var(--green-deep); }
 .trend-down { color: var(--error); }
+/* complaints table */
+
+.complaints-table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+.col-id{
+    width:70px;
+}
+
+.col-title{
+    width:290px;
+}
+
+.col-ward{
+    width:90px;
+}
+
+.col-description{
+    width:320px;
+}
+
+.col-photo{
+    width:90px;
+}
+
+.col-status{
+    width:120px;
+}
+
+.col-actions{
+    width:80px;
+}
+.cell-title{
+    font-weight:600;
+    line-height:1.35;
+    white-space:normal;
+}
+.cell-desc{
+    color:#666;
+    font-size:.9rem;
+
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+    overflow:hidden;
+}
+.td-num{
+    text-align:center;
+    font-weight:600;
+}
+.complaints-table td{
+    vertical-align:middle;
+    padding:16px 14px;
+}
+td:last-child{
+    text-align:center;
+}
+
+.badge{
+    margin-right:10px;
+}
 
 /* Utilization bar (inside stat card) */
 .util-row {
@@ -484,6 +547,7 @@ body.lang-mode-en th[data-lang="en"] { display: table-cell; }
   background: var(--border);
   overflow: hidden;
 }
+
 .util-fill {
   height: 100%;
   border-radius: 999px;

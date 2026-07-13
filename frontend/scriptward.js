@@ -6,7 +6,7 @@
    The status-select options in HTML must use these exact values.
 ================================================================ */
 
-const API      = 'http://localhost:5000/api';
+const API      = 'http://localhost:5001/api';
 const getToken = () => localStorage.getItem('nagarikAawazToken');
 const authHdr  = () => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` });
 
@@ -84,16 +84,60 @@ const MODAL_CONTENT = {
   },
 };
 
-function openModal(key) {
-  const data    = MODAL_CONTENT[key];
+async function openModal(key) {
   const overlay = document.getElementById('modalOverlay');
-  const isEn    = document.body.classList.contains('lang-mode-en');
+  const en = document.body.classList.contains('lang-mode-en');
   if (!overlay) return;
-  document.getElementById('modalTitle').textContent = isEn ? data.title_en : data.title_ne;
-  document.getElementById('modalBody').innerHTML    =
-    `<p style="color:var(--gray);font-size:0.88rem;">${isEn ? 'This section will be connected to the backend shortly.' : 'यो खण्ड चाँडै ब्याकेन्डसँग जोडिनेछ।'}</p>`;
+
+  document.getElementById('modalTitle').textContent = en ? MODAL_CONTENT[key].title_en : MODAL_CONTENT[key].title_ne;
+  const bodyEl = document.getElementById('modalBody');
+  bodyEl.innerHTML = `<p style="color:var(--gray);">${en ? 'Loading…' : 'लोड हुँदैछ...'}</p>`;
   overlay.classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  if (key === 'escalated') {
+    try {
+      const res = await fetch(`${API}/complaints`, { headers: authHdr() });
+      const { complaints } = await res.json();
+      const escalated = complaints.filter(c => c.status === 'escalated');
+      bodyEl.innerHTML = escalated.length ? escalated.map(c => `
+        <div style="padding:12px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;">
+          <div style="font-weight:700;font-size:0.85rem;color:var(--green-deep);">${c._id.slice(-5).toUpperCase()}</div>
+          <div style="font-weight:600;margin:4px 0;">${c.title}</div>
+          <div style="font-size:0.82rem;color:var(--gray);">${c.location?.landmark || '—'}</div>
+        </div>
+      `).join('') : `<p style="color:var(--gray);">${en ? 'No complaints escalated yet.' : 'हालसम्म कुनै एस्कलेट भएको छैन।'}</p>`;
+    } catch { bodyEl.innerHTML = `<p style="color:var(--error);">${en ? 'Failed to load.' : 'लोड गर्न असफल।'}</p>`; }
+
+  } else if (key === 'budget') {
+    try {
+      const res = await fetch(`${API}/budgets?ward=8`);
+      const { budgets } = await res.json();
+      const b = budgets && budgets[0];
+      bodyEl.innerHTML = b ? `
+        <div style="display:flex;flex-direction:column;gap:12px;">
+          <div><strong>${en ? 'Fiscal Year' : 'आर्थिक वर्ष'}:</strong> ${b.fiscalYear}</div>
+          <div><strong>${en ? 'Allocated' : 'विनियोजित'}:</strong> रु. ${b.allocatedAmount.toLocaleString()}</div>
+          <div><strong>${en ? 'Spent' : 'खर्च भएको'}:</strong> रु. ${b.spentAmount.toLocaleString()}</div>
+          <div><strong>${en ? 'Remaining' : 'बाँकी'}:</strong> रु. ${(b.allocatedAmount - b.spentAmount).toLocaleString()}</div>
+        </div>` : `<p style="color:var(--gray);">${en ? 'No budget record found for Ward 8 yet.' : 'वडा ८ को लागि बजेट रेकर्ड फेला परेन।'}</p>`;
+    } catch { bodyEl.innerHTML = `<p style="color:var(--error);">${en ? 'Failed to load budget.' : 'बजेट लोड गर्न असफल।'}</p>`; }
+
+  } else if (key === 'reports') {
+    try {
+      const res = await fetch(`${API}/complaints`, { headers: authHdr() });
+      const { complaints } = await res.json();
+      const resolved = complaints.filter(c => c.status === 'resolved').length;
+      bodyEl.innerHTML = `
+        <p style="margin-bottom:10px;">${en ? 'Quick summary for Ward 8:' : 'वडा ८ को छोटो सारांश:'}</p>
+        <div>${en ? 'Total complaints' : 'कुल गुनासो'}: <strong>${complaints.length}</strong></div>
+        <div>${en ? 'Resolved' : 'समाधान भएका'}: <strong>${resolved}</strong></div>
+        <p style="margin-top:14px;color:var(--gray);font-size:0.82rem;">${en ? 'Downloadable PDF reports coming soon.' : 'डाउनलोड योग्य PDF प्रतिवेदन चाँडै आउनेछ।'}</p>`;
+    } catch { bodyEl.innerHTML = `<p style="color:var(--error);">${en ? 'Failed to load.' : 'लोड गर्न असफल।'}</p>`; }
+
+  } else {
+    bodyEl.innerHTML = `<p style="color:var(--gray);">${en ? 'Settings coming soon.' : 'सेटिङ चाँडै आउनेछ।'}</p>`;
+  }
 }
 
 function closeModal() {
@@ -280,10 +324,43 @@ async function loadComplaints() {
     if (res.status === 401) { redirectToLogin(); return; }
     const { complaints } = await res.json();
     renderComplaints(complaints);
+    renderEscalatedSection(complaints);
     updateStats(complaints);
   } catch (err) {
     console.error('Failed to load complaints:', err);
   }
+}
+
+function renderEscalatedSection(complaints) {
+  const tbody = document.getElementById('escalatedSectionBody');
+  const countEl = document.getElementById('escalatedCount');
+  if (!tbody) return;
+  const en = document.body.classList.contains('lang-mode-en');
+  const escalated = complaints.filter(c => c.status === 'escalated');
+
+  if (countEl) countEl.textContent = en ? `${escalated.length} escalated` : `${toNe(escalated.length)} एस्कलेट भएका`;
+
+  if (!escalated.length) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;padding:20px;color:var(--gray);">
+      ${en ? 'No complaints escalated yet.' : 'हालसम्म कुनै गुनासो एस्कलेट भएको छैन।'}</td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = escalated.map(c => `
+    <tr>
+      <td class="cell-id">${c._id.slice(-5).toUpperCase()}</td>
+      <td class="cell-title-col">
+        <div class="cell-title">${c.title}</div>
+        <div class="cell-landmark">${c.location?.landmark || '—'}</div>
+      </td>
+      <td class="cell-desc"><span class="desc-text">${c.description}</span></td>
+      <td>
+        <button class="action-btn btn-view" onclick="viewComplaint('${c._id}')" title="View">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </td>
+    </tr>
+  `).join('');
 }
 
 /* ── Update stat cards ── */

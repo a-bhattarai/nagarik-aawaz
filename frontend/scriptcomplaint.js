@@ -1,22 +1,29 @@
 /* ================================================================
-   NAGARIK AAWAZ — complaint.js
-   Sections:
-     1.  Language toggle
-     2.  Form state
-     3.  Stepper
-     4.  Validation
-     5.  Step navigation
-     6.  Character count
-     7.  Photo upload (1 photo max — replaces on new upload)
-     8.  Leaflet map
-     9.  Review map
-     10. Review panel builder
-     11. Submit
-     12. Reset form
-     13. Init
+   NAGARIK AAWAZ — scriptcomplaint.js
+   Fixes in this version:
+     - Port changed to 5001
+     - map.invalidateSize() called every time step-2 becomes visible
+     - Location marker is NOW OPTIONAL (photo is the only required field
+       in step 2, matching the backend model where lat/lng default null)
+     - Review map only shown when marker was actually placed
+     - Auth guard redirects to login.html if no token
 ================================================================ */
 
-/* ── 1. Language toggle ── */
+const API = 'http://localhost:5001/api';
+
+/* ── State ── */
+let currentStep    = 1;
+let markerLat      = null;
+let markerLng      = null;
+let uploadedPhotos = [];   // max 1 entry: { file, dataUrl }
+let map            = null;
+let marker         = null;
+let reviewMap      = null;
+
+const POKHARA_LAT = 28.2096;
+const POKHARA_LNG = 83.9856;
+
+/* ── Language ── */
 function setLang(lang) {
   document.body.classList.toggle('lang-mode-en', lang === 'en');
   document.getElementById('btn-ne').classList.toggle('active', lang === 'ne');
@@ -24,36 +31,23 @@ function setLang(lang) {
   localStorage.setItem('nagarikAawazLang', lang);
 }
 
-/* ── 2. Mobile nav ── */
+function isEn() {
+  return document.body.classList.contains('lang-mode-en');
+}
 
-/* ── 2. Form state ── */
-let currentStep    = 1;
-let markerLat      = null;
-let markerLng      = null;
-let uploadedPhotos = [];   // max 1 entry: [{ file, dataUrl }]
-let map            = null;
-let marker         = null;
-let reviewMap      = null;
-let reviewMarker   = null;
+/* ── Character count ── */
+function updateCharCount(fieldId, countId, max) {
+  const len = document.getElementById(fieldId).value.length;
+  const el  = document.getElementById(countId);
+  el.textContent = len + ' / ' + max;
+  el.classList.toggle('warn', len > max * 0.9);
+  el.classList.toggle('over', len >= max);
+}
 
-const POKHARA_LAT = 28.2096;
-const POKHARA_LNG = 83.9856;
-
-const PIN_SVG_HTML = `
-  <div style="
-    background:#1B5E3C;
-    width:22px;height:22px;
-    border-radius:50% 50% 50% 0;
-    transform:rotate(-45deg);
-    border:3px solid #fff;
-    box-shadow:0 2px 8px rgba(0,0,0,0.3);
-  "></div>`;
-
-/* ── 3. Stepper ── */
+/* ── Stepper ── */
 function updateStepper(step) {
-  const DONE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-    stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-    <polyline points="20 6 9 17 4 12"/></svg>`;
+  const DONE_SVG = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+    stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
 
   for (let i = 1; i <= 3; i++) {
     const dot   = document.getElementById('dot-' + i);
@@ -61,29 +55,34 @@ function updateStepper(step) {
     const lblEn = document.getElementById('lbl-' + i + '-en');
 
     dot.classList.remove('active', 'done');
-    if (lbl)   lbl.classList.remove('active', 'done');
-    if (lblEn) lblEn.classList.remove('active', 'done');
+    lbl?.classList.remove('active', 'done');
+    lblEn?.classList.remove('active', 'done');
 
     if (i < step) {
       dot.classList.add('done');
       dot.innerHTML = DONE_SVG;
-      if (lbl)   lbl.classList.add('done');
-      if (lblEn) lblEn.classList.add('done');
+      lbl?.classList.add('done');
+      lblEn?.classList.add('done');
     } else if (i === step) {
       dot.classList.add('active');
       dot.textContent = i;
-      if (lbl)   lbl.classList.add('active');
-      if (lblEn) lblEn.classList.add('active');
+      lbl?.classList.add('active');
+      lblEn?.classList.add('active');
     } else {
       dot.textContent = i;
     }
 
     if (i <= 2) {
-      document.getElementById('conn-' + i).classList.toggle('done', i < step);
+      document.getElementById('conn-' + i)?.classList.toggle('done', i < step);
     }
   }
 }
 
+/* ── Show step ──
+   KEY FIX: after making step-2 visible, call map.invalidateSize()
+   so Leaflet recalculates the container dimensions. Without this
+   the map renders as a grey blank tile.
+── */
 function showStep(step) {
   document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
   const target = document.getElementById('step-' + step);
@@ -91,42 +90,42 @@ function showStep(step) {
   updateStepper(step);
   currentStep = step;
 
-  // Leaflet renders blank if its container was hidden when initialized.
-  // Recalculate map size every time step 2 becomes visible.
-  if (step === 2 && map) {
-    setTimeout(() => map.invalidateSize(), 150);
+  if (step === 2) {
+    if (!map) initMap();
+    setTimeout(() => {
+      if (map) map.invalidateSize();
+    }, 350); // Gives CSS animation (300ms) time to finish
   }
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-/* ── 4. Validation ── */
+/* ── Validation ── */
 function clearErrors() {
   document.querySelectorAll('.form-group.has-error').forEach(g => g.classList.remove('has-error'));
 }
 
 function setError(groupId) {
-  const g = document.getElementById(groupId);
-  if (g) g.classList.add('has-error');
+  document.getElementById(groupId)?.classList.add('has-error');
 }
 
 function validateStep1() {
   clearErrors();
-  let valid    = true;
-  const isNe   = !document.body.classList.contains('lang-mode-en');
-  const title  = document.getElementById('complaintTitle').value.trim();
-  const ward   = document.getElementById('wardSelect').value;
-  const desc   = document.getElementById('complaintDesc').value.trim();
+  let valid = true;
 
-  if (title.length < 5)  { setError('fg-title'); valid = false; }
+  const title = document.getElementById('complaintTitle').value.trim();
+  const ward  = document.getElementById('wardSelect').value;
+  const desc  = document.getElementById('complaintDesc').value.trim();
+
+  if (title.length < 5) { setError('fg-title'); valid = false; }
   if (!ward)             { setError('fg-ward');  valid = false; }
   if (desc.length < 30)  { setError('fg-desc');  valid = false; }
 
   const alertEl = document.getElementById('alert-1');
   if (!valid) {
-    document.getElementById('alert-1-msg').textContent = isNe
-      ? 'कृपया सबै अनिवार्य फिल्डहरू भर्नुहोस्।'
-      : 'Please fill in all required fields.';
+    document.getElementById('alert-1-msg').textContent = isEn()
+      ? 'Please fill in all required fields.'
+      : 'कृपया सबै अनिवार्य फिल्डहरू भर्नुहोस्।';
     alertEl.classList.add('show');
   } else {
     alertEl.classList.remove('show');
@@ -136,17 +135,22 @@ function validateStep1() {
 
 function validateStep2() {
   clearErrors();
-  let valid  = true;
-  const isNe = !document.body.classList.contains('lang-mode-en');
+  let valid = true;
 
-  if (uploadedPhotos.length === 0)          { setError('fg-photo');    valid = false; }
-  if (markerLat === null || markerLng === null) { setError('fg-location'); valid = false; }
+  // Photo is required
+  if (uploadedPhotos.length === 0) {
+    setError('fg-photo');
+    valid = false;
+  }
+
+  // NOTE: location marker is OPTIONAL — lat/lng are nullable in the backend model.
+  // We do NOT block progression if no marker was placed. The ward field from step 1 is enough.
 
   const alertEl = document.getElementById('alert-2');
   if (!valid) {
-    document.getElementById('alert-2-msg').textContent = isNe
-      ? 'कृपया फोटो र स्थान दुवै थप्नुहोस्।'
-      : 'Please add a photo and mark the location.';
+    document.getElementById('alert-2-msg').textContent = isEn()
+      ? 'Please upload a photo of the issue.'
+      : 'कृपया समस्याको फोटो अपलोड गर्नुहोस्।';
     alertEl.classList.add('show');
   } else {
     alertEl.classList.remove('show');
@@ -154,42 +158,38 @@ function validateStep2() {
   return valid;
 }
 
-/* ── 5. Step navigation ── */
+/* ── Step navigation ── */
 function goToStep(step) {
   if (step === 2 && !validateStep1()) return;
   if (step === 3 && !validateStep2()) return;
   if (step === 3) buildReviewPanel();
   showStep(step);
-  if (step === 3) setTimeout(() => initReviewMap(), 200);
+  if (step === 3) setTimeout(() => initReviewMap(), 250);
 }
 
-/* ── 6. Character count ── */
-function updateCharCount(fieldId, countId, max) {
-  const len = document.getElementById(fieldId).value.length;
-  const el  = document.getElementById(countId);
-  el.textContent = len + ' / ' + max;
-  el.classList.remove('warn', 'over');
-  if (len > max * 0.9) el.classList.add('warn');
-  if (len >= max)      el.classList.add('over');
-}
-
-/* ── 7. Photo upload — 1 photo max, new upload replaces old ── */
+/* ── Photo upload — 1 photo max ── */
 function handlePhotoUpload(input) {
   const files   = Array.from(input.files);
-  if (files.length === 0) return;
+  if (!files.length) return;
 
   const maxSize = 5 * 1024 * 1024;
   const allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
-  const file    = files[0];   // only the first file is used
+  const file    = files[0];
 
-  if (!allowed.includes(file.type) || file.size > maxSize) {
+  if (!allowed.includes(file.type)) {
+    alert(isEn() ? 'Only JPEG, PNG or WEBP images are accepted.' : 'JPEG, PNG वा WEBP मात्र स्वीकार्य छ।');
+    input.value = '';
+    return;
+  }
+  if (file.size > maxSize) {
+    alert(isEn() ? 'Image must be under 5 MB.' : 'फोटो ५ MB भन्दा सानो हुनुपर्छ।');
     input.value = '';
     return;
   }
 
-  const reader  = new FileReader();
+  const reader = new FileReader();
   reader.onload = (e) => {
-    uploadedPhotos = [{ file, dataUrl: e.target.result }]; // replace, not append
+    uploadedPhotos = [{ file, dataUrl: e.target.result }];
     renderPhotoThumbs();
     document.getElementById('fg-photo').classList.remove('has-error');
   };
@@ -217,38 +217,56 @@ function renderPhotoThumbs() {
   });
 }
 
-// Drag & drop on the drop zone
-const dropZone = document.getElementById('dropZone');
-dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
-dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
-dropZone.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dropZone.classList.remove('dragover');
-  if (e.dataTransfer.files.length) {
-    handlePhotoUpload({ files: e.dataTransfer.files, value: '' });
+/* ── Drag-and-drop ── */
+document.addEventListener('DOMContentLoaded', () => {
+  const dropZone = document.getElementById('dropZone');
+  if (dropZone) {
+    dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.classList.remove('dragover');
+      if (e.dataTransfer.files.length) handlePhotoUpload({ files: e.dataTransfer.files, value: '' });
+    });
   }
 });
 
-/* ── 8. Leaflet map ── */
+/* ── Leaflet map ── */
 function makePinIcon() {
   return L.divIcon({
     className: '',
-    html: PIN_SVG_HTML,
+    html: `<div style="
+      background:#1B5E3C;width:22px;height:22px;
+      border-radius:50% 50% 50% 0;transform:rotate(-45deg);
+      border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,0.3);
+    "></div>`,
     iconSize: [22, 22],
     iconAnchor: [11, 22],
     popupAnchor: [0, -24]
   });
 }
 
+// Rough bounding box around Pokhara Metropolitan City
+const POKHARA_BOUNDS = L.latLngBounds(
+  [28.10, 83.85],  // southwest corner
+  [28.32, 84.10]   // northeast corner
+);
+
 function initMap() {
-  map = L.map('complaint-map', { zoomControl: true })
-    .setView([POKHARA_LAT, POKHARA_LNG], 13);
+  if (map) return; // already initialised
+  map = L.map('complaint-map', {
+    zoomControl: true,
+    minZoom: 12,                 // can't zoom out past this
+    maxBounds: POKHARA_BOUNDS,   // can't pan outside this box
+    maxBoundsViscosity: 1.0      // "bounces back" hard at the edge instead of drifting past it
+  }).setView([POKHARA_LAT, POKHARA_LNG], 13);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
     maxZoom: 19
   }).addTo(map);
 
+  map.setMaxBounds(POKHARA_BOUNDS);
   map.on('click', (e) => placeMarker(e.latlng.lat, e.latlng.lng));
 }
 
@@ -256,8 +274,8 @@ function placeMarker(lat, lng) {
   if (marker) map.removeLayer(marker);
   marker = L.marker([lat, lng], { icon: makePinIcon() }).addTo(map);
   marker.bindPopup(
-    '<strong style="font-size:0.85rem;">चिन्ह लगाइएको स्थान</strong><br>'
-    + '<small>' + lat.toFixed(5) + ', ' + lng.toFixed(5) + '</small>'
+    `<strong style="font-size:0.85rem;">${isEn() ? 'Marked location' : 'चिन्ह लगाइएको स्थान'}</strong><br>
+     <small>${lat.toFixed(5)}, ${lng.toFixed(5)}</small>`
   ).openPopup();
 
   markerLat = lat;
@@ -265,40 +283,35 @@ function placeMarker(lat, lng) {
   document.getElementById('lat').value = lat.toFixed(6);
   document.getElementById('lng').value = lng.toFixed(6);
 
-  const isNe    = !document.body.classList.contains('lang-mode-en');
-  const coordEl = document.getElementById('mapCoords');
-  coordEl.innerHTML =
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-       stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0;">
-       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-       <circle cx="12" cy="10" r="3"/>
-     </svg>
-     <strong class="coord-value">${lat.toFixed(5)}, ${lng.toFixed(5)}</strong>
-     &nbsp;—&nbsp;
-     <span style="color:var(--green-accent);font-size:0.78rem;">
-       ${isNe ? 'स्थान चिन्ह लगाइयो ✓' : 'Location marked ✓'}
-     </span>`;
+  document.getElementById('mapCoords').innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round"
+      style="width:15px;height:15px;flex-shrink:0;">
+      <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+      <circle cx="12" cy="10" r="3"/>
+    </svg>
+    <strong style="color:var(--green-deep);font-family:'Poppins',sans-serif;">
+      ${lat.toFixed(5)}, ${lng.toFixed(5)}
+    </strong>
+    &nbsp;—&nbsp;
+    <span style="color:var(--green-accent);font-size:0.78rem;">
+      ${isEn() ? 'Location marked ✓' : 'स्थान चिन्ह लगाइयो ✓'}
+    </span>`;
 
-  document.getElementById('fg-location').classList.remove('has-error');
+  document.getElementById('fg-location')?.classList.remove('has-error');
 }
 
 function useMyLocation() {
   const btn = document.getElementById('gpsBtn');
   if (!navigator.geolocation) return;
 
-  const isNe = !document.body.classList.contains('lang-mode-en');
   btn.disabled = true;
   btn.innerHTML = `
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-      stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/>
-      <polyline points="12 6 12 12 16 14"/></svg>
-    <span>${isNe ? 'स्थान खोज्दैछ...' : 'Locating...'}</span>`;
-
-  const RESTORE_HTML = `
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-      stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
-    <span data-lang="ne">मेरो वर्तमान स्थान प्रयोग गर्नुहोस्</span>
-    <span data-lang="en">Use My Current Location</span>`;
+      stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+    <span>${isEn() ? 'Locating…' : 'स्थान खोज्दैछ…'}</span>`;
 
   navigator.geolocation.getCurrentPosition(
     (pos) => {
@@ -307,66 +320,95 @@ function useMyLocation() {
       map.setView([lat, lng], 16);
       placeMarker(lat, lng);
       btn.disabled = false;
-      btn.innerHTML = RESTORE_HTML;
+      btn.innerHTML = restoreGpsBtnHTML();
     },
     () => {
       btn.disabled = false;
-      btn.innerHTML = RESTORE_HTML;
-      alert(isNe
-        ? 'स्थान पहुँच अस्वीकार गरियो। कृपया नक्सामा क्लिक गरेर स्थान छनोट गर्नुहोस्।'
-        : 'Location access denied. Please click on the map to select a location.');
+      btn.innerHTML = restoreGpsBtnHTML();
+      alert(isEn()
+        ? 'Location access denied. Please click the map to pick a location.'
+        : 'स्थान पहुँच अस्वीकार गरियो। नक्सामा क्लिक गरेर स्थान छनोट गर्नुहोस्।');
     },
     { timeout: 10000 }
   );
 }
 
-/* ── 9. Review map ── */
+function restoreGpsBtnHTML() {
+  return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+    stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+    <span data-lang="ne">मेरो वर्तमान स्थान प्रयोग गर्नुहोस्</span>
+    <span data-lang="en">Use My Current Location</span>`;
+}
+
+/* ── Review map (read-only, non-interactive) ── */
 function initReviewMap() {
-  if (!markerLat || !markerLng) return;
-  document.getElementById('reviewMapWrap').style.display = 'block';
+  const wrap = document.getElementById('reviewMapWrap');
+  if (!markerLat || !markerLng) {
+    wrap.style.display = 'none';
+    return;
+  }
+  wrap.style.display = 'block';
+
   if (reviewMap) { reviewMap.remove(); reviewMap = null; }
 
   reviewMap = L.map('review-map', {
     zoomControl: false,
     dragging: false,
-    scrollWheelZoom: false
+    scrollWheelZoom: false,
+    doubleClickZoom: false,
+    touchZoom: false
   }).setView([markerLat, markerLng], 16);
 
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap contributors', maxZoom: 19
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
   }).addTo(reviewMap);
 
-  reviewMarker = L.marker([markerLat, markerLng], { icon: makePinIcon() }).addTo(reviewMap);
+  L.marker([markerLat, markerLng], { icon: makePinIcon() }).addTo(reviewMap);
 }
 
-/* ── 10. Review panel builder ── */
+/* ── Build review panel ── */
 function buildReviewPanel() {
-  const isNe     = !document.body.classList.contains('lang-mode-en');
+  const en       = isEn();
   const title    = document.getElementById('complaintTitle').value.trim();
   const ward     = document.getElementById('wardSelect').value;
   const desc     = document.getElementById('complaintDesc').value.trim();
   const landmark = document.getElementById('landmark').value.trim();
   const location = (markerLat && markerLng)
-    ? (markerLat.toFixed(5) + ', ' + markerLng.toFixed(5))
-    : '—';
+    ? `${markerLat.toFixed(5)}, ${markerLng.toFixed(5)}`
+    : (en ? 'Not marked (optional)' : 'चिन्ह लगाइएको छैन (ऐच्छिक)');
 
-  // Inline SVG helpers for review table
   const ICON = (path) =>
     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
       stroke-linecap="round" stroke-linejoin="round"
       style="width:14px;height:14px;vertical-align:-2px;">${path}</svg>`;
 
-  const ICON_EDIT  = ICON('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>');
-  const ICON_PIN   = ICON('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>');
-  const ICON_MAP   = ICON('<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>');
-  const ICON_FLAG  = ICON('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>');
-
   const rows = [
-    { label: isNe ? 'शीर्षक'              : 'Title',              value: title,     icon: ICON_EDIT },
-    { label: isNe ? 'वडा'                 : 'Ward',               value: (isNe ? 'वडा ' : 'Ward ') + ward, icon: ICON_PIN },
-    { label: isNe ? 'स्थान (निर्देशांक)' : 'Location (Coords)',  value: location,  icon: ICON_MAP  },
-    { label: isNe ? 'नजिकको चिनारी'      : 'Landmark',           value: landmark || (isNe ? 'उल्लेख गरिएन' : 'Not mentioned'), icon: ICON_FLAG },
-    { label: isNe ? 'विवरण'              : 'Description',         value: desc,      icon: ICON_EDIT }
+    {
+      label: en ? 'Title'       : 'शीर्षक',
+      value: title,
+      icon:  ICON('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>')
+    },
+    {
+      label: en ? 'Ward'        : 'वडा',
+      value: (en ? 'Ward ' : 'वडा ') + ward,
+      icon:  ICON('<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>')
+    },
+    {
+      label: en ? 'Location'    : 'स्थान (निर्देशांक)',
+      value: location,
+      icon:  ICON('<polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/>')
+    },
+    {
+      label: en ? 'Landmark'    : 'नजिकको चिनारी',
+      value: landmark || (en ? 'Not provided' : 'उल्लेख गरिएन'),
+      icon:  ICON('<path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/>')
+    },
+    {
+      label: en ? 'Description' : 'विवरण',
+      value: desc,
+      icon:  ICON('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>')
+    }
   ];
 
   document.getElementById('reviewTable').innerHTML = rows.map((r, idx) => `
@@ -386,13 +428,14 @@ function buildReviewPanel() {
   const reviewPhotos = document.getElementById('reviewPhotos');
   if (uploadedPhotos.length > 0) {
     reviewPhotos.innerHTML = `
-      <div class="section-label">${isNe ? 'अपलोड गरिएको फोटो' : 'UPLOADED PHOTO'}</div>
+      <div class="section-label" style="margin-top:16px;">
+        ${en ? 'UPLOADED PHOTO' : 'अपलोड गरिएको फोटो'}
+      </div>
       <div class="photo-preview-grid">
         ${uploadedPhotos.map(p => `
           <div class="photo-thumb">
             <img src="${p.dataUrl}" alt="Complaint photo">
-          </div>
-        `).join('')}
+          </div>`).join('')}
       </div>`;
   } else {
     reviewPhotos.innerHTML = '';
@@ -407,32 +450,29 @@ function escapeHtml(str) {
     .replace(/"/g, '&quot;');
 }
 
-/* ── 11. Submit ── */
+/* ── Submit ── */
 function submitComplaint() {
   const confirmCheck = document.getElementById('confirmCheck');
   const errConfirm   = document.getElementById('err-confirm');
-  const isNe         = !document.body.classList.contains('lang-mode-en');
+  const alertEl      = document.getElementById('alert-3');
+
+  errConfirm.style.display = 'none';
+  alertEl.classList.remove('show');
 
   if (!confirmCheck.checked) {
     errConfirm.style.display = 'flex';
     return;
   }
-  errConfirm.style.display = 'none';
 
   const btn      = document.getElementById('submitBtn');
   const origHTML = btn.innerHTML;
   btn.disabled   = true;
-  btn.innerHTML  = `<span class="spinner"></span> <span>${isNe ? 'पेश हुँदैछ...' : 'Submitting...'}</span>`;
+  btn.innerHTML  = `<span class="spinner"></span> <span>${isEn() ? 'Submitting…' : 'पेश हुँदैछ…'}</span>`;
 
-
-
-  // Demo — simulate API delay
- 
-  // ── Real API call ────────────────────────────────────────────
   const token    = localStorage.getItem('nagarikAawazToken');
   const photoB64 = uploadedPhotos.length > 0 ? uploadedPhotos[0].dataUrl : null;
 
-  fetch('http://localhost:5000/api/complaints', {
+  fetch(`${API}/complaints`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -456,19 +496,17 @@ function submitComplaint() {
     btn.innerHTML = origHTML;
 
     if (status === 201) {
-      // Save real _id so dashboard-citizen can look it up
+      // Store real _id for dashboard lookup
       localStorage.setItem('nagarikAawazLastComplaintId', data.complaint._id);
 
-      // Generate a friendly display ID alongside the real _id
       const year       = new Date().getFullYear() + 57;
       const friendlyId = `NA-${year}-${data.complaint._id.slice(-5).toUpperCase()}`;
       showSuccess(friendlyId);
     } else if (status === 401) {
       window.location.href = 'login.html';
     } else {
-      const alertEl = document.getElementById('alert-3');
       document.getElementById('alert-3-msg').textContent =
-        data.message || (isNe ? 'पेश गर्न असफल भयो।' : 'Submission failed. Please try again.');
+        data.message || (isEn() ? 'Submission failed. Please try again.' : 'पेश गर्न असफल भयो।');
       alertEl.classList.add('show');
       alertEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
@@ -476,13 +514,13 @@ function submitComplaint() {
   .catch(() => {
     btn.disabled  = false;
     btn.innerHTML = origHTML;
-    const alertEl = document.getElementById('alert-3');
     document.getElementById('alert-3-msg').textContent =
-      isNe ? 'नेटवर्क त्रुटि। पुन: प्रयास गर्नुहोस्।' : 'Network error. Please try again.';
+      isEn() ? 'Network error. Please check your connection.' : 'नेटवर्क त्रुटि। पुन: प्रयास गर्नुहोस्।';
     alertEl.classList.add('show');
   });
 }
 
+/* ── Success panel ── */
 function showSuccess(ticketId) {
   document.getElementById('ticketId').textContent = ticketId;
   localStorage.setItem('lastTicket', ticketId);
@@ -501,28 +539,21 @@ function showSuccess(ticketId) {
         stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
         <polyline points="20 6 9 17 4 12"/></svg>`;
     }
-    const conn = document.getElementById('conn-' + i);
-    if (conn) conn.classList.add('done');
+    document.getElementById('conn-' + i)?.classList.add('done');
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-function generateTicketId() {
-  const year = new Date().getFullYear() + 57; // approximate Nepali year
-  const rand = String(Math.floor(Math.random() * 90000) + 10000);
-  return 'NA-' + year + '-' + rand;
-}
-
-/* ── 12. Reset form ── */
+/* ── Reset form ── */
 function resetForm() {
   markerLat      = null;
   markerLng      = null;
   uploadedPhotos = [];
 
-  ['complaintTitle', 'complaintDesc', 'landmark', 'lat', 'lng'].forEach(id => {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('wardSelect').value = '';
+  ['complaintTitle', 'complaintDesc', 'landmark', 'lat', 'lng']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+
+  document.getElementById('wardSelect').value      = '';
   document.getElementById('title-count').textContent = '0 / 100';
   document.getElementById('desc-count').textContent  = '0 / 1000';
   document.getElementById('confirmCheck').checked    = false;
@@ -530,45 +561,46 @@ function resetForm() {
   document.getElementById('reviewPhotos').innerHTML     = '';
   document.getElementById('reviewMapWrap').style.display = 'none';
 
-  if (marker) { map.removeLayer(marker); marker = null; }
+  if (marker && map) { map.removeLayer(marker); marker = null; }
 
-  const isNe    = !document.body.classList.contains('lang-mode-en');
-  const coordEl = document.getElementById('mapCoords');
-  coordEl.innerHTML =
-    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+  document.getElementById('mapCoords').innerHTML = `
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
       stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px;flex-shrink:0;">
       <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
       <circle cx="12" cy="10" r="3"/>
     </svg>
-    <span>${isNe ? 'स्थान छनोट गरिएको छैन' : 'No location selected yet'}</span>`;
+    <span>${isEn() ? 'No location selected yet' : 'स्थान छनोट गरिएको छैन'}</span>`;
 
   document.getElementById('successPanel').classList.remove('active');
   document.querySelector('.form-card-header').style.display = '';
   document.querySelectorAll('.alert-banner').forEach(a => a.classList.remove('show'));
   clearErrors();
   showStep(1);
-  updateStepper(1);
-  
 
-
-  // Re-initialise dot 1 to active state
   const dot1 = document.getElementById('dot-1');
-  dot1.classList.add('active');
-  dot1.classList.remove('done');
-  dot1.textContent = '१';
+  if (dot1) { dot1.classList.add('active'); dot1.classList.remove('done'); dot1.textContent = '१'; }
+  document.getElementById('conn-1')?.classList.remove('done');
+  document.getElementById('conn-2')?.classList.remove('done');
 }
 
-/* ── 13. Init ── */
+function clearErrors() {
+  document.querySelectorAll('.form-group.has-error').forEach(g => g.classList.remove('has-error'));
+}
+
+/* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
-  // ── Auth guard ──────────────────────────────────────────────
+  // Auth guard
   const token = localStorage.getItem('nagarikAawazToken');
   if (!token) {
     window.location.href = 'login.html';
     return;
   }
 
+  // Language
   const savedLang = localStorage.getItem('nagarikAawazLang');
   if (savedLang === 'en') setLang('en');
 
+  // Init map immediately — it's safe even while step-2 is hidden.
+  // The invalidateSize() call in showStep(2) fixes the rendering.
   initMap();
 });

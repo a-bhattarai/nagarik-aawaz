@@ -722,6 +722,50 @@
       </div>
     </section>
 
+
+    <!-- ══════════════════════════════════════════
+     SECTION — ALL COMPLAINTS (ALL WARDS)
+══════════════════════════════════════════ -->
+<section class="section" aria-label="All complaints">
+  <div class="section-eyebrow">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+    <span data-lang="ne">सबै गुनासोहरू (सबै वडा)</span>
+    <span data-lang="en">ALL COMPLAINTS (ALL WARDS)</span>
+  </div>
+  <div class="panel">
+    <div class="panel-header">
+      <h3>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        <span data-lang="ne">सबै गुनासोहरू</span><span data-lang="en">All Complaints Filed</span>
+      </h3>
+      <span class="complaint-count" id="allComplaintCount"></span>
+    </div>
+    <div class="table-scroll">
+      <table class="complaints-table" id="allComplaintsTable">
+        <thead>
+          <tr>
+            <th><span data-lang="ne">आईडी</span><span data-lang="en">ID</span></th>
+            <th><span data-lang="ne">शीर्षक र स्थान</span><span data-lang="en">Title &amp; Location</span></th>
+            <th><span data-lang="ne">वडा नं.</span><span data-lang="en">Ward No.</span></th>
+            <th><span data-lang="ne">विवरण</span><span data-lang="en">Description</span></th>
+            <th><span data-lang="ne">फोटो</span><span data-lang="en">Photo</span></th>
+            <th><span data-lang="ne">स्थिती</span><span data-lang="en">Status</span></th>
+            <th><span data-lang="ne">कार्य</span><span data-lang="en">Actions</span></th>
+          </tr>
+        </thead>
+        <tbody id="allComplaintsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<th class="col-id">ID</th>
+<th class="col-title">Title & Location</th>
+<th class="col-ward">Ward No.</th>
+<th class="col-description">Description</th>
+<th class="col-photo">Photo</th>
+<th class="col-status">Status</th>
+<th class="col-actions">Actions</th>
+
     <!-- ══════════════════════════════════════════
          SECTION 4 — WARD PERFORMANCE TABLE
     ══════════════════════════════════════════ -->
