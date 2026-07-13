@@ -2,7 +2,7 @@
    NAGARIK AAWAZ — scriptregister.js
 ================================================================ */
 
-const API = 'http://localhost:5001/api';
+const API = 'http://localhost:5000/api';
 
 let registrationEmail = '';
 let otpTimerInterval;

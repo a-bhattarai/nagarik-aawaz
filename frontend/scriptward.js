@@ -6,7 +6,7 @@
    The status-select options in HTML must use these exact values.
 ================================================================ */
 
-const API      = 'http://localhost:5001/api';
+const API      = 'http://localhost:5000/api';
 const getToken = () => localStorage.getItem('nagarikAawazToken');
 const authHdr  = () => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` });
 

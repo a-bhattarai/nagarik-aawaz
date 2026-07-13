@@ -2,7 +2,7 @@
    NAGARIK AAWAZ — scriptlogin.js
 ================================================================ */
 
-const API = 'http://localhost:5001/api';
+const API = 'http://localhost:5000/api';
 
 // Stores email across forgot-password steps
 let forgotEmail = '';

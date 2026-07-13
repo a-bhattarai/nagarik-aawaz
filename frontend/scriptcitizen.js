@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
 loadMyComplaints();
 });
 
-const API = 'http://localhost:5001/api';
+const API = 'http://localhost:5000/api';
 
 const STATUS_BADGE = {
   'pending':     { cls: 'b-review',   ne: 'समीक्षामा',      en: 'Under Review' },
