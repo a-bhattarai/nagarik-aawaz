@@ -3,7 +3,7 @@
    Metro Dashboard with map links, status changes, and proper flow
 ================================================================ */
 
-const API  = 'http://localhost:5000/api';
+const API  = 'http://localhost:5001/api';
 const getToken = () => localStorage.getItem('nagarikAawazToken');
 const authHdr  = () => ({ 'Authorization': `Bearer ${getToken()}`, 'Content-Type': 'application/json' });
 function redirectToLogin() { window.location.href = 'login.html'; }
@@ -98,15 +98,15 @@ async function loadEscalations() {
     
     return escalated.map(c => ({
       id:          c._id,
-      title_ne:    c.title,
-      title_en:    c.title,
-      desc_ne:     c.description,
-      desc_en:     c.description,
+      title_ne:    escapeHtml(c.title),
+      title_en:    escapeHtml(c.title),
+      desc_ne:     escapeHtml(c.description),
+      desc_en:     escapeHtml(c.description),
       photo:       c.photo || null,
       lat:         c.location?.lat  || null,
       lng:         c.location?.lng  || null,
-      landmark_ne: c.location?.landmark || '—',
-      landmark_en: c.location?.landmark || '—',
+      landmark_ne: escapeHtml(c.location?.landmark || '—'),
+      landmark_en: escapeHtml(c.location?.landmark || '—'),
       ward:        c.location?.ward  || '—',
       daysAgo:     Math.floor((Date.now() - new Date(c.updatedAt)) / 86400000),
       estCost:     '—',
@@ -205,12 +205,12 @@ function renderAllComplaints(complaints) {
       <tr>
         <td class="cell-id">${c._id.slice(-5).toUpperCase()}</td>
         <td class="cell-title-col">
-          <div class="cell-title">${c.title}</div>
-          <div class="cell-sub">${c.location?.landmark || '—'}</div>
+          <div class="cell-title">${escapeHtml(c.title)}</div>
+          <div class="cell-sub">${escapeHtml(c.location?.landmark || '—')}</div>
         </td>
         <td class="td-num">${c.location?.ward ?? '—'}</td>
         <td class="cell-desc" style="max-width:200px;">
-          <span style="font-size:0.82rem;color:var(--gray);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${c.description}</span>
+          <span style="font-size:0.82rem;color:var(--gray);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">${escapeHtml(c.description)}</span>
         </td>
         <td>${photoCell}</td>
         <td>
@@ -242,7 +242,6 @@ async function metroChangeStatus(selectEl, complaintId) {
     });
     if (res.status === 401) { redirectToLogin(); return; }
     if (res.ok) {
-      // Reload data to reflect changes
       location.reload();
     }
   } catch (err) {
@@ -280,7 +279,7 @@ function renderQueueList(escalations) {
         <div class="queue-top">
           <div>
             <div class="queue-id">${c.id}</div>
-            <div class="queue-title">${en ? c.title_en : c.title_ne}</div>
+            <div class="queue-title">${escapeHtml(en ? c.title_en : c.title_ne)}</div>
           </div>
         </div>
         <div class="queue-meta">
@@ -368,7 +367,7 @@ function openEscalationsModal() {
       <div class="esc-modal-header">
         <div>
           <div class="esc-modal-id">${c.id}</div>
-          <div class="esc-modal-title">${en ? c.title_en : c.title_ne}</div>
+          <div class="esc-modal-title">${escapeHtml(en ? c.title_en : c.title_ne)}</div>
         </div>
       </div>
       <div class="esc-modal-body">
@@ -382,7 +381,7 @@ function openEscalationsModal() {
                ${en ? 'No photo uploaded' : 'फोटो उपलब्ध छैन'}
              </div>`
         }
-        <p class="esc-desc">${en ? c.desc_en : c.desc_ne}</p>
+        <p class="esc-desc">${escapeHtml(en ? c.desc_en : c.desc_ne)}</p>
         <div class="esc-meta-row">
           <span class="esc-meta-chip">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V8l7-5 7 5v13"/></svg>
@@ -390,7 +389,7 @@ function openEscalationsModal() {
           </span>
           <span class="esc-meta-chip">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            ${en ? c.landmark_en : c.landmark_ne}
+            ${escapeHtml(en ? c.landmark_en : c.landmark_ne)}
           </span>
           <span class="esc-meta-chip">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -451,15 +450,15 @@ async function openComplaintDetailModal(id) {
       <div style="display:flex;flex-direction:column;gap:16px;">
         ${c.photo ? `<img src="${c.photo}" style="width:100%;max-height:250px;object-fit:cover;border-radius:12px;border:1px solid var(--border);" alt="Photo">` : ''}
         <div>
-          <h4 style="font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:4px;">${c.title}</h4>
-          <p style="color:var(--gray);font-size:0.9rem;">${c.description}</p>
+          <h4 style="font-size:1.1rem;font-weight:700;color:var(--ink);margin-bottom:4px;">${escapeHtml(c.title)}</h4>
+          <p style="color:var(--gray);font-size:0.9rem;">${escapeHtml(c.description)}</p>
         </div>
         <div style="display:flex;flex-wrap:wrap;gap:10px;">
           <span style="background:var(--bg);border:1px solid var(--border);padding:4px 12px;border-radius:999px;font-size:0.82rem;">
             ${en ? 'Ward' : 'वडा'} ${c.location?.ward || '—'}
           </span>
           <span style="background:var(--bg);border:1px solid var(--border);padding:4px 12px;border-radius:999px;font-size:0.82rem;">
-            ${c.location?.landmark || '—'}
+            ${escapeHtml(c.location?.landmark || '—')}
           </span>
           <span style="background:var(--bg);border:1px solid var(--border);padding:4px 12px;border-radius:999px;font-size:0.82rem;">
             ${en ? s.en : s.ne}

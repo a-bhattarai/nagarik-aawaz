@@ -9,7 +9,7 @@
      - Auth guard redirects to login.html if no token
 ================================================================ */
 
-const API = 'http://localhost:5000/api';
+const API = 'http://localhost:5001/api';
 
 /* ── State ── */
 let currentStep    = 1;

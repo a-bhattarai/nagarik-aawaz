@@ -1,10 +1,10 @@
 /* ================================================================
    NAGARIK AAWAZ — dashboard-ward.js
-   Ward 8 Dashboard - Only shows Ward 8 complaints
+   Ward Dashboard — dynamically scoped to logged-in official's ward
 ================================================================ */
 
-const API      = 'http://localhost:5000/api';
-const WARD_NUMBER = 8; // This dashboard is for Ward 8
+const API      = 'http://localhost:5001/api';
+const WARD_NUMBER = Number(localStorage.getItem('nagarikAawazWard')) || 8;
 const getToken = () => localStorage.getItem('nagarikAawazToken');
 const authHdr  = () => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` });
 
@@ -85,23 +85,21 @@ async function openModal(key) {
     try {
       const res = await fetch(`${API}/complaints`, { headers: authHdr() });
       const { complaints } = await res.json();
-      // Filter only Ward 8 escalated complaints
       const escalated = complaints.filter(c => c.location?.ward === WARD_NUMBER && c.status === 'escalated');
       bodyEl.innerHTML = escalated.length ? escalated.map(c => `
         <div style="padding:12px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;">
           <div style="font-weight:700;font-size:0.85rem;color:var(--green-deep);">${c._id.slice(-5).toUpperCase()}</div>
-          <div style="font-weight:600;margin:4px 0;">${c.title}</div>
-          <div style="font-size:0.82rem;color:var(--gray);">${c.location?.landmark || '—'}</div>
+          <div style="font-weight:600;margin:4px 0;">${escapeHtml(c.title)}</div>
+          <div style="font-size:0.82rem;color:var(--gray);">${escapeHtml(c.location?.landmark || '—')}</div>
         </div>
       `).join('') : `<p style="color:var(--gray);">${en ? 'No complaints escalated yet.' : 'हालसम्म कुनै एस्कलेट भएको छैन।'}</p>`;
     } catch { bodyEl.innerHTML = `<p style="color:var(--error);">${en ? 'Failed to load.' : 'लोड गर्न असफल।'}</p>`; }
 
   } else if (key === 'budget') {
-    // Fake budget data for Ward 8
     bodyEl.innerHTML = `
       <div style="display:flex;flex-direction:column;gap:14px;">
         <div style="background:var(--green-light);border:1px solid var(--green-accent);border-radius:8px;padding:14px;">
-          <div style="font-weight:700;font-size:1.1rem;color:var(--green-deep);">${en ? 'Ward 8 Budget Overview' : 'वडा ८ बजेट विवरण'}</div>
+          <div style="font-weight:700;font-size:1.1rem;color:var(--green-deep);">${en ? `Ward ${WARD_NUMBER} Budget Overview` : `वडा ${WARD_NUMBER} बजेट विवरण`}</div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
           <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
@@ -221,7 +219,7 @@ async function escalateComplaint(complaintId) {
     if (res.status === 401) { redirectToLogin(); return; }
 
     if (res.ok) {
-      location.reload(); // Refresh to show updated status
+      location.reload();
     } else {
       const data = await res.json();
       alert(data.message || 'Escalation failed.');
@@ -250,7 +248,7 @@ async function viewComplaint(complaintId) {
     const statusLabel = STATUS_LABELS[complaint.status]?.[isEn ? 'en' : 'ne'] || complaint.status;
 
     document.getElementById('modalTitle').textContent =
-      `${complaint._id.slice(-5).toUpperCase()} — ${complaint.title}`;
+      `${complaint._id.slice(-5).toUpperCase()} — ${escapeHtml(complaint.title)}`;
 
     document.getElementById('modalBody').innerHTML = `
       <div style="display:flex;flex-direction:column;gap:16px;">
@@ -259,7 +257,7 @@ async function viewComplaint(complaintId) {
           : `<div style="width:100%;height:70px;background:var(--bg);border:1.5px dashed var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:0.82rem;">${isEn ? 'No photo submitted' : 'फोटो छैन'}</div>`}
         <div>
           <div style="font-size:0.66rem;font-weight:700;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px;">${isEn ? 'DESCRIPTION' : 'विवरण'}</div>
-          <p style="font-size:0.87rem;color:var(--gray);line-height:1.7;">${complaint.description}</p>
+          <p style="font-size:0.87rem;color:var(--gray);line-height:1.7;">${escapeHtml(complaint.description)}</p>
         </div>
         <div style="display:flex;gap:10px;flex-wrap:wrap;">
           <div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
@@ -274,7 +272,7 @@ async function viewComplaint(complaintId) {
         ${complaint.location?.landmark
           ? `<div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
                <div style="font-size:0.66rem;font-weight:700;color:var(--gray);text-transform:uppercase;margin-bottom:4px;">${isEn ? 'LANDMARK' : 'चिनारी स्थान'}</div>
-               <div style="font-weight:600;">${complaint.location.landmark}</div>
+               <div style="font-weight:600;">${escapeHtml(complaint.location.landmark)}</div>
              </div>` : ''}
         ${complaint.location?.lat
           ? `<a href="https://www.openstreetmap.org/?mlat=${complaint.location.lat}&mlon=${complaint.location.lng}&zoom=17"
@@ -300,7 +298,6 @@ async function loadComplaints() {
     });
     if (res.status === 401) { redirectToLogin(); return; }
     const { complaints } = await res.json();
-    // FILTER: Only show Ward 8 complaints
     const wardComplaints = complaints.filter(c => c.location?.ward === WARD_NUMBER);
     renderComplaints(wardComplaints);
     renderEscalatedSection(wardComplaints);
@@ -329,10 +326,10 @@ function renderEscalatedSection(complaints) {
     <tr>
       <td class="cell-id">${c._id.slice(-5).toUpperCase()}</td>
       <td class="cell-title-col">
-        <div class="cell-title">${c.title}</div>
-        <div class="cell-landmark">${c.location?.landmark || '—'}</div>
+        <div class="cell-title">${escapeHtml(c.title)}</div>
+        <div class="cell-landmark">${escapeHtml(c.location?.landmark || '—')}</div>
       </td>
-      <td class="cell-desc"><span class="desc-text">${c.description}</span></td>
+      <td class="cell-desc"><span class="desc-text">${escapeHtml(c.description)}</span></td>
       <td>
         <button class="action-btn btn-view" onclick="viewComplaint('${c._id}')" title="View">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
@@ -428,20 +425,20 @@ function renderComplaints(complaints) {
       <td class="cell-id">${c._id.slice(-5).toUpperCase()}</td>
       <td class="cell-title-col">
         <div class="cell-title">
-          <span data-lang="ne">${c.title}</span>
-          <span data-lang="en">${c.title}</span>
+          <span data-lang="ne">${escapeHtml(c.title)}</span>
+          <span data-lang="en">${escapeHtml(c.title)}</span>
         </div>
         <div class="cell-landmark">
           <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
           </svg>
-          <span data-lang="ne">${c.location?.landmark || '—'}, वडा ${c.location?.ward ?? '—'}</span>
-          <span data-lang="en">${c.location?.landmark || '—'}, Ward ${c.location?.ward ?? '—'}</span>
+          <span data-lang="ne">${escapeHtml(c.location?.landmark || '—')}, वडा ${c.location?.ward ?? '—'}</span>
+          <span data-lang="en">${escapeHtml(c.location?.landmark || '—')}, Ward ${c.location?.ward ?? '—'}</span>
         </div>
         ${c.location?.lat ? `<div class="cell-coords">${c.location.lat.toFixed(4)}, ${c.location.lng.toFixed(4)}</div>` : ''}
       </td>
       <td class="cell-desc">
-        <span class="desc-text">${c.description}</span>
+        <span class="desc-text">${escapeHtml(c.description)}</span>
       </td>
       <td class="cell-photo">
         <div class="photo-thumb-wrap">${photoCell}</div>

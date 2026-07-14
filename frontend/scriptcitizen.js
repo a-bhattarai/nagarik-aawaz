@@ -48,14 +48,14 @@ async function viewComplaintDetail(id) {
     const { complaint: c } = await res.json();
     const s = STATUS_BADGE[c.status] || STATUS_BADGE.pending;
 
-    title.textContent = `NA-${c._id.slice(-5).toUpperCase()} — ${c.title}`;
+    title.textContent = `NA-${c._id.slice(-5).toUpperCase()} — ${escapeHtml(c.title)}`;
     body.innerHTML = `
       ${c.photo
         ? `<img src="${c.photo}" style="width:100%;max-height:220px;object-fit:cover;border-radius:10px;border:1px solid var(--border);" alt="Photo">`
         : `<div style="width:100%;height:80px;background:var(--bg);border:1.5px dashed var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--gray);font-size:0.82rem;">${en ? 'No photo submitted' : 'फोटो छैन'}</div>`}
       <div style="margin-top:14px;">
         <div style="font-size:0.68rem;font-weight:700;color:var(--gray);text-transform:uppercase;margin-bottom:4px;">${en ? 'DESCRIPTION' : 'विवरण'}</div>
-        <p style="font-size:0.88rem;color:var(--ink);line-height:1.6;">${c.description}</p>
+        <p style="font-size:0.88rem;color:var(--ink);line-height:1.6;">${escapeHtml(c.description)}</p>
       </div>
       <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;">
         <div style="flex:1;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;">
@@ -70,7 +70,7 @@ async function viewComplaintDetail(id) {
       ${c.location?.landmark ? `
         <div style="margin-top:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px;">
           <div style="font-size:0.66rem;font-weight:700;color:var(--gray);text-transform:uppercase;">${en ? 'LANDMARK' : 'चिनारी स्थान'}</div>
-          <div style="font-weight:600;">${c.location.landmark}</div>
+          <div style="font-weight:600;">${escapeHtml(c.location.landmark)}</div>
         </div>` : ''}
       ${c.location?.lat ? `
         <a href="https://www.openstreetmap.org/?mlat=${c.location.lat}&mlon=${c.location.lng}&zoom=17" target="_blank" rel="noopener"
@@ -208,10 +208,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Logout (sidebar link)
   setupLogout();
 
-loadMyComplaints();
+  loadMyComplaints();
 });
 
-const API = 'http://localhost:5000/api';
+const API = 'http://localhost:5001/api';
 
 const STATUS_BADGE = {
   'pending':     { cls: 'b-review',   ne: 'समीक्षामा',      en: 'Under Review' },
@@ -254,8 +254,8 @@ function renderComplaintsTable(complaints) {
     <tr>
       <td class="cell-id">NA-${c._id.slice(-8).toUpperCase()}</td>
       <td class="cell-title-col">
-        <div class="cell-title">${c.title}</div>
-        <div class="cell-sub">Ward ${c.location.ward}${c.location.landmark ? ', ' + c.location.landmark : ''}</div>
+        <div class="cell-title">${escapeHtml(c.title)}</div>
+        <div class="cell-sub">Ward ${c.location.ward}${c.location.landmark ? ', ' + escapeHtml(c.location.landmark) : ''}</div>
       </td>
       <td class="cell-date">${new Date(c.createdAt).toLocaleDateString()}</td>
       <td>${badgeHTML(c.status)}</td>
@@ -285,7 +285,7 @@ function updateStatCards(complaints) {
   setNum('.stat-card.total .stat-num', counts.total);
   setNum('.stat-card.progress .stat-num', counts.progress);
   setNum('.stat-card.resolved .stat-num', counts.resolved);
-  setNum('.stat-card.rejected .stat-num', counts.escalated); // see note below
+  setNum('.stat-card.rejected .stat-num', counts.escalated);
 
   updateStatNumbers(document.body.classList.contains('lang-mode-en') ? 'en' : 'ne');
 }
