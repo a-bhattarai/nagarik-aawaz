@@ -1,12 +1,10 @@
 /* ================================================================
    NAGARIK AAWAZ — dashboard-ward.js
-
-   CRITICAL: Backend status enum values are:
-     'pending' | 'in-progress' | 'resolved' | 'escalated'
-   The status-select options in HTML must use these exact values.
+   Ward 8 Dashboard - Only shows Ward 8 complaints
 ================================================================ */
 
 const API      = 'http://localhost:5000/api';
+const WARD_NUMBER = 8; // This dashboard is for Ward 8
 const getToken = () => localStorage.getItem('nagarikAawazToken');
 const authHdr  = () => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` });
 
@@ -66,22 +64,10 @@ function markAllRead() {
 
 /* ── Modal helpers ── */
 const MODAL_CONTENT = {
-  escalated: {
-    title_ne: 'महानगरमा पठाइएका गुनासोहरू',
-    title_en: 'Complaints Escalated to Metro',
-  },
-  budget: {
-    title_ne: 'वडा बजेट',
-    title_en: 'Ward Budget',
-  },
-  reports: {
-    title_ne: 'प्रतिवेदनहरू',
-    title_en: 'Reports',
-  },
-  settings: {
-    title_ne: 'सेटिङ',
-    title_en: 'Settings',
-  },
+  escalated: { title_ne: 'महानगरमा पठाइएका गुनासोहरू', title_en: 'Complaints Escalated to Metro' },
+  budget: { title_ne: 'वडा बजेट', title_en: 'Ward Budget' },
+  reports: { title_ne: 'प्रतिवेदनहरू', title_en: 'Reports' },
+  settings: { title_ne: 'सेटिङ', title_en: 'Settings' },
 };
 
 async function openModal(key) {
@@ -99,7 +85,8 @@ async function openModal(key) {
     try {
       const res = await fetch(`${API}/complaints`, { headers: authHdr() });
       const { complaints } = await res.json();
-      const escalated = complaints.filter(c => c.status === 'escalated');
+      // Filter only Ward 8 escalated complaints
+      const escalated = complaints.filter(c => c.location?.ward === WARD_NUMBER && c.status === 'escalated');
       bodyEl.innerHTML = escalated.length ? escalated.map(c => `
         <div style="padding:12px;border:1px solid var(--border);border-radius:8px;margin-bottom:10px;">
           <div style="font-weight:700;font-size:0.85rem;color:var(--green-deep);">${c._id.slice(-5).toUpperCase()}</div>
@@ -110,27 +97,41 @@ async function openModal(key) {
     } catch { bodyEl.innerHTML = `<p style="color:var(--error);">${en ? 'Failed to load.' : 'लोड गर्न असफल।'}</p>`; }
 
   } else if (key === 'budget') {
-    try {
-      const res = await fetch(`${API}/budgets?ward=8`);
-      const { budgets } = await res.json();
-      const b = budgets && budgets[0];
-      bodyEl.innerHTML = b ? `
-        <div style="display:flex;flex-direction:column;gap:12px;">
-          <div><strong>${en ? 'Fiscal Year' : 'आर्थिक वर्ष'}:</strong> ${b.fiscalYear}</div>
-          <div><strong>${en ? 'Allocated' : 'विनियोजित'}:</strong> रु. ${b.allocatedAmount.toLocaleString()}</div>
-          <div><strong>${en ? 'Spent' : 'खर्च भएको'}:</strong> रु. ${b.spentAmount.toLocaleString()}</div>
-          <div><strong>${en ? 'Remaining' : 'बाँकी'}:</strong> रु. ${(b.allocatedAmount - b.spentAmount).toLocaleString()}</div>
-        </div>` : `<p style="color:var(--gray);">${en ? 'No budget record found for Ward 8 yet.' : 'वडा ८ को लागि बजेट रेकर्ड फेला परेन।'}</p>`;
-    } catch { bodyEl.innerHTML = `<p style="color:var(--error);">${en ? 'Failed to load budget.' : 'बजेट लोड गर्न असफल।'}</p>`; }
+    // Fake budget data for Ward 8
+    bodyEl.innerHTML = `
+      <div style="display:flex;flex-direction:column;gap:14px;">
+        <div style="background:var(--green-light);border:1px solid var(--green-accent);border-radius:8px;padding:14px;">
+          <div style="font-weight:700;font-size:1.1rem;color:var(--green-deep);">${en ? 'Ward 8 Budget Overview' : 'वडा ८ बजेट विवरण'}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
+            <div style="font-size:0.7rem;color:var(--gray);text-transform:uppercase;font-weight:600;">${en ? 'Total Allocated' : 'कुल विनियोजित'}</div>
+            <div style="font-weight:800;font-size:1.2rem;color:var(--ink);">रु. १.२ करोड</div>
+          </div>
+          <div style="background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:12px;">
+            <div style="font-size:0.7rem;color:var(--gray);text-transform:uppercase;font-weight:600;">${en ? 'Spent' : 'खर्च भएको'}</div>
+            <div style="font-weight:800;font-size:1.2rem;color:var(--warning);">रु. ८५ लाख</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:0.75rem;font-weight:600;color:var(--gray);margin-bottom:4px;">${en ? 'Utilization' : 'उपयोग दर'}</div>
+          <div style="height:8px;background:var(--border);border-radius:999px;overflow:hidden;">
+            <div style="height:100%;width:71%;background:linear-gradient(90deg,var(--green-deep),var(--green-accent));border-radius:999px;"></div>
+          </div>
+          <div style="text-align:right;font-size:0.8rem;font-weight:700;color:var(--green-deep);margin-top:3px;">71%</div>
+        </div>
+        <p style="font-size:0.78rem;color:var(--gray);">${en ? 'Fiscal Year 2082/83 — Remaining: रु. 35 लाख' : 'आ.व. २०८२/८३ — बाँकी: रु. ३५ लाख'}</p>
+      </div>`;
 
   } else if (key === 'reports') {
     try {
       const res = await fetch(`${API}/complaints`, { headers: authHdr() });
       const { complaints } = await res.json();
-      const resolved = complaints.filter(c => c.status === 'resolved').length;
+      const wardComplaints = complaints.filter(c => c.location?.ward === WARD_NUMBER);
+      const resolved = wardComplaints.filter(c => c.status === 'resolved').length;
       bodyEl.innerHTML = `
-        <p style="margin-bottom:10px;">${en ? 'Quick summary for Ward 8:' : 'वडा ८ को छोटो सारांश:'}</p>
-        <div>${en ? 'Total complaints' : 'कुल गुनासो'}: <strong>${complaints.length}</strong></div>
+        <p style="margin-bottom:10px;">${en ? `Quick summary for Ward ${WARD_NUMBER}:` : `वडा ${WARD_NUMBER} को छोटो सारांश:`}</p>
+        <div>${en ? 'Total complaints' : 'कुल गुनासो'}: <strong>${wardComplaints.length}</strong></div>
         <div>${en ? 'Resolved' : 'समाधान भएका'}: <strong>${resolved}</strong></div>
         <p style="margin-top:14px;color:var(--gray);font-size:0.82rem;">${en ? 'Downloadable PDF reports coming soon.' : 'डाउनलोड योग्य PDF प्रतिवेदन चाँडै आउनेछ।'}</p>`;
     } catch { bodyEl.innerHTML = `<p style="color:var(--error);">${en ? 'Failed to load.' : 'लोड गर्न असफल।'}</p>`; }
@@ -193,9 +194,6 @@ async function handleStatusChange(selectEl, complaintId) {
       row.dataset.status = newStatus;
       selectEl.dataset.origValue = newStatus;
     } else {
-      const data = await res.json();
-      console.error('Status update failed:', data.message);
-      // Revert dropdown
       selectEl.value = origValue;
     }
   } catch (err) {
@@ -223,28 +221,7 @@ async function escalateComplaint(complaintId) {
     if (res.status === 401) { redirectToLogin(); return; }
 
     if (res.ok) {
-      // Find the row and update UI
-      document.querySelectorAll('#tableBody tr').forEach(row => {
-        const idEl = row.querySelector('.cell-id');
-        if (!idEl || !idEl.textContent.includes(complaintId.slice(-5))) return;
-
-        row.dataset.status = 'escalated';
-
-        const statusCell = row.querySelector('td:nth-child(5)');
-        if (statusCell) {
-          statusCell.innerHTML = `
-            <span class="badge b-escalated">
-              <span class="badge-dot"></span>
-              <span data-lang="ne">महानगरमा पठाइयो</span>
-              <span data-lang="en">Escalated</span>
-            </span>`;
-          if (document.body.classList.contains('lang-mode-en')) {
-            statusCell.querySelector('[data-lang="ne"]').style.display = 'none';
-            statusCell.querySelector('[data-lang="en"]').style.display = 'inline';
-          }
-        }
-        row.querySelector('.btn-escalate')?.remove();
-      });
+      location.reload(); // Refresh to show updated status
     } else {
       const data = await res.json();
       alert(data.message || 'Escalation failed.');
@@ -302,7 +279,7 @@ async function viewComplaint(complaintId) {
         ${complaint.location?.lat
           ? `<a href="https://www.openstreetmap.org/?mlat=${complaint.location.lat}&mlon=${complaint.location.lng}&zoom=17"
                target="_blank" rel="noopener"
-               style="display:inline-flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:600;color:var(--info);">
+               style="display:inline-flex;align-items:center;gap:6px;font-size:0.8rem;font-weight:600;color:var(--info);text-decoration:none;">
                ${isEn ? 'Open on map' : 'नक्सामा हेर्नुहोस्'}
                (${complaint.location.lat.toFixed(4)}, ${complaint.location.lng.toFixed(4)})
              </a>` : ''}
@@ -323,9 +300,11 @@ async function loadComplaints() {
     });
     if (res.status === 401) { redirectToLogin(); return; }
     const { complaints } = await res.json();
-    renderComplaints(complaints);
-    renderEscalatedSection(complaints);
-    updateStats(complaints);
+    // FILTER: Only show Ward 8 complaints
+    const wardComplaints = complaints.filter(c => c.location?.ward === WARD_NUMBER);
+    renderComplaints(wardComplaints);
+    renderEscalatedSection(wardComplaints);
+    updateStats(wardComplaints);
   } catch (err) {
     console.error('Failed to load complaints:', err);
   }
@@ -403,13 +382,6 @@ function renderComplaints(complaints) {
     </td></tr>`;
     return;
   }
-
-  const STATUS_OPTS_NE = {
-    'pending':     'समीक्षामा',
-    'in-progress': 'प्रक्रियामा',
-    'resolved':    'समाधान',
-    'escalated':   'एस्कलेट',
-  };
 
   tbody.innerHTML = complaints.map(c => {
     const isEscalated = c.status === 'escalated';
@@ -490,8 +462,8 @@ function exportReport() {
 
 /* ── Populate user info ── */
 function populateUserInfo() {
-  const name = localStorage.getItem('nagarikAawazName') || '';
-  const ward = localStorage.getItem('nagarikAawazWard') || '';
+  const name = localStorage.getItem('nagarikAawazName') || 'राम बहादुर थापा';
+  const ward = localStorage.getItem('nagarikAawazWard') || '८';
 
   const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
   const avatarEl = document.querySelector('.user-avatar');
@@ -508,7 +480,6 @@ function populateUserInfo() {
 
 /* ── Init ── */
 document.addEventListener('DOMContentLoaded', () => {
-  // Auth guard
   if (!getToken()) { redirectToLogin(); return; }
 
   const savedLang = localStorage.getItem('nagarikAawazLang') || 'ne';
@@ -525,7 +496,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Close notif panel on outside click
   document.addEventListener('click', e => {
     const wrapper = document.querySelector('.notif-wrapper');
     if (notifOpen && wrapper && !wrapper.contains(e.target)) {
