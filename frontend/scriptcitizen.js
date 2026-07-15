@@ -2,7 +2,7 @@
    NAGARIK AAWAZ — dashboard-citizen.js
 ================================================================ */
 
-const API = 'http://localhost:5001/api';
+const API = 'http://localhost:5000/api';
 
 /* ── 1. Language toggle ── */
 function setLang(lang) {

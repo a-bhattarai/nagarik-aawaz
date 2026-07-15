@@ -12,7 +12,7 @@
 /* ────────────────────────────────────────────────────────────────
    1. CONFIG & HELPERS
    ──────────────────────────────────────────────────────────────── */
-const API = 'http://localhost:5001/api';
+const API = 'http://localhost:5000/api';
 var CURRENT_USER = null;
 
 function getToken() {

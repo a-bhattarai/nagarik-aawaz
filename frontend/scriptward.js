@@ -3,7 +3,7 @@
    Ward Dashboard — dynamically scoped to logged-in official's ward
 ================================================================ */
 
-const API = 'http://localhost:5001/api';
+const API = 'http://localhost:5000/api';
 var WARD_NUMBER = null;
 
 function getToken() { return localStorage.getItem('nagarikAawazToken'); }
