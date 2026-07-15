@@ -4,7 +4,7 @@
 ================================================================ */
 
 const API      = 'http://localhost:5001/api';
-const WARD_NUMBER = Number(localStorage.getItem('nagarikAawazWard')) || 8;
+let WARD_NUMBER = 8;   // Will be updated by loadCurrentUser()
 const getToken = () => localStorage.getItem('nagarikAawazToken');
 const authHdr  = () => ({ 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` });
 
@@ -457,22 +457,47 @@ function exportReport() {
     : 'ब्याकेन्ड तयार भएपछि निर्यात सुविधा उपलब्ध हुनेछ।');
 }
 
-/* ── Populate user info ── */
-function populateUserInfo() {
-  const name = localStorage.getItem('nagarikAawazName') || 'राम बहादुर थापा';
-  const ward = localStorage.getItem('nagarikAawazWard') || '८';
+/* ── Load current user from /api/auth/me ── */
+async function loadCurrentUser() {
+  const token = localStorage.getItem('nagarikAawazToken');
+  if (!token) return;
 
-  const initials = name.split(' ').map(w => w[0]).join('').slice(0, 2).toUpperCase();
-  const avatarEl = document.querySelector('.user-avatar');
-  if (avatarEl && initials) avatarEl.textContent = initials;
+  try {
+    const res = await fetch(`${API}/auth/me`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.status === 401) { redirectToLogin(); return; }
 
-  document.querySelectorAll('.uname[data-lang="ne"]').forEach(el => { if (name) el.textContent = name; });
-  document.querySelectorAll('.uname[data-lang="en"]').forEach(el => { if (name) el.textContent = name; });
+    const user = await res.json();
+    const initials = user.name.split(' ').map(w => w[0]).join('').slice(0, 2);
 
-  const h2Ne = document.querySelector('.page-title h2[data-lang="ne"]');
-  const h2En = document.querySelector('.page-title h2[data-lang="en"]');
-  if (h2Ne && ward) h2Ne.textContent = `वडा नं. ${ward} — गुनासो व्यवस्थापन`;
-  if (h2En && ward) h2En.textContent = `Ward ${ward} — Complaint Management`;
+    // Update WARD_NUMBER dynamically from API
+    WARD_NUMBER = Number(user.ward) || 8;
+
+    const avatar = document.getElementById('userAvatarWard');
+    if (avatar) avatar.textContent = initials;
+
+    document.querySelectorAll('.uname[data-lang="ne"]').forEach(el => { el.textContent = user.name; });
+    document.querySelectorAll('.uname[data-lang="en"]').forEach(el => { el.textContent = user.name; });
+
+    const titleNe = document.getElementById('userWardTitleNe');
+    const titleEn = document.getElementById('userWardTitleEn');
+    if (titleNe) titleNe.textContent = `वडा अध्यक्ष, वडा नं. ${toNe(user.ward)}`;
+    if (titleEn) titleEn.textContent = `Ward Chair, Ward ${user.ward}`;
+
+    const h2Ne = document.querySelector('.page-title h2[data-lang="ne"]');
+    const h2En = document.querySelector('.page-title h2[data-lang="en"]');
+    if (h2Ne) h2Ne.textContent = `वडा नं. ${toNe(user.ward)} — गुनासो व्यवस्थापन`;
+    if (h2En) h2En.textContent = `Ward ${user.ward} — Complaint Management`;
+
+    // Now load complaints with the correct ward
+    loadComplaints();
+
+  } catch (err) {
+    console.error('Failed to load ward user profile:', err);
+    // Fallback: still load complaints
+    loadComplaints();
+  }
 }
 
 /* ── Init ── */
@@ -483,8 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (savedLang === 'en') setLang('en');
   else updateStatNumbers('ne');
 
-  populateUserInfo();
-  loadComplaints();
+  loadCurrentUser(); // This fetches user, sets WARD_NUMBER, then calls loadComplaints()
 
   window.addEventListener('resize', () => {
     if (window.innerWidth > 900) {

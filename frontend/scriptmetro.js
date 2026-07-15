@@ -602,9 +602,45 @@ document.addEventListener('keydown', e => {
   closeSettingsModal();
 });
 
+/* ── 9.5 Load current user from /api/auth/me ── */
+async function loadCurrentUser() {
+  const token = localStorage.getItem('nagarikAawazToken');
+  if (!token) return;
+
+  try {
+    const res = await fetch(`${API}/auth/me`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    if (res.status === 401) { redirectToLogin(); return; }
+
+    const user = await res.json();
+    const initials = user.name.split(' ').map(w => w[0]).join('').slice(0, 2);
+
+    const avatar = document.getElementById('userAvatar');
+    if (avatar) avatar.textContent = initials;
+
+    document.querySelectorAll('.uname[data-lang="ne"]').forEach(el => { el.textContent = user.name; });
+    document.querySelectorAll('.uname[data-lang="en"]').forEach(el => { el.textContent = user.name; });
+
+    const ROLE_MAP = {
+      metro: { ne: 'प्रमुख प्रशासकीय अधिकृत', en: 'Chief Administrative Officer' }
+    };
+    const labels = ROLE_MAP[user.role] || { ne: user.role, en: user.role };
+    const roleNe = document.getElementById('userRoleNe');
+    const roleEn = document.getElementById('userRoleEn');
+    if (roleNe) roleNe.textContent = labels.ne;
+    if (roleEn) roleEn.textContent = labels.en;
+
+  } catch (err) {
+    console.error('Failed to load metro user profile:', err);
+  }
+}
+
 /* ── 10. Init ── */
 document.addEventListener('DOMContentLoaded', async () => {
   if (!getToken()) { redirectToLogin(); return; }
+
+  loadCurrentUser(); // ADD THIS LINE
 
   const savedLang = localStorage.getItem('nagarikAawazLang') || 'ne';
   if (savedLang === 'en') setLang('en');

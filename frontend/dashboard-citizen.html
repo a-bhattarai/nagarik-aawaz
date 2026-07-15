@@ -121,8 +121,8 @@
         <div class="user-info">
           <div class="uname" id="userName" data-lang="ne">समिक खड्का</div>
           <div class="uname" id="userNameEn" data-lang="en">Samika Khadka</div>
-          <div class="uward" data-lang="ne">वडा नं. ८</div>
-          <div class="uward" data-lang="en">Ward No. 8</div>
+          <div class="uward" id="userWardNe" data-lang="ne">वडा नं. ८</div>
+<div class="uward" id="userWardEn" data-lang="en">Ward No. 8</div>
         </div>
         
         
@@ -219,10 +219,11 @@
     <!-- Page title row -->
     <div class="page-title-row">
       <div class="page-title">
-        <h2 data-lang="ne">नमस्ते, समिक जी</h2>
-        <h2 data-lang="en">Welcome back, Samika</h2>
-        <p data-lang="ne">वडा नं. ८ — तपाईंका गुनासोको हालको अवस्था यहाँ हेर्नुहोस्।</p>
-        <p data-lang="en">Ward 8 — Here's a quick look at the status of your complaints.</p>
+        <h2 id="welcomeHeadingNe" data-lang="ne">नमस्ते, समिक जी</h2>
+        <h2 id="welcomeHeadingEn" data-lang="en">Welcome back, Samika</h2>
+        <p id="welcomeSubNe" data-lang="ne">वडा नं. ८ — तपाईंका गुनासोको हालको अवस्था यहाँ हेर्नुहोस्।</p>
+        <p id="welcomeSubEn" data-lang="en">Ward 8 — Here's a quick look at the status of your complaints.</p>        
+
       </div>
       <a href="complaint.html" class="btn btn-primary">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -781,7 +782,7 @@
 
       <div class="form-group">
         <label data-lang="ne">वडा नम्बर</label><label data-lang="en">Ward Number</label>
-        <input type="text" value="वडा नं. ८" disabled>
+        <input type="text" value="वडा नं. ८" id="profileWardInput" disabled>
       </div>
 
     </div>

@@ -123,12 +123,12 @@
       </div>
 
       <div class="user-chip">
-        <div class="user-avatar">शा</div>
+        <div class="user-avatar" id="userAvatar">शा</div>
         <div class="user-info">
           <div class="uname" data-lang="ne">शान्ता अधिकारी</div>
           <div class="uname" data-lang="en">Shanta Adhikari</div>
-          <div class="uward" data-lang="ne">प्रमुख प्रशासकीय अधिकृत</div>
-          <div class="uward" data-lang="en">Chief Administrative Officer</div>
+          <div class="uward" id="userRoleNe" data-lang="ne">प्रमुख प्रशासकीय अधिकृत</div>
+          <div class="uward" id="userRoleEn" data-lang="en">Chief Administrative Officer</div>
         </div>
       </div>
     </div>
@@ -461,16 +461,15 @@
         <div class="table-scroll">
           <table class="ward-table resolved-table">
             <thead>
-              <tr>
-                <th><span data-lang="ne">आईडी</span><span data-lang="en">ID</span></th>
-                <th><span data-lang="ne">शीर्षक</span><span data-lang="en">Title</span></th>
-                <th><span data-lang="ne">वडा</span><span data-lang="en">Ward</span></th>
-                <th><span data-lang="ne">एस्कलेसन मिति</span><span data-lang="en">Escalated On</span></th>
-                <th><span data-lang="ne">समाधान मिति</span><span data-lang="en">Resolved On</span></th>
-                <th><span data-lang="ne">लागत</span><span data-lang="en">Cost</span></th>
-                <th><span data-lang="ne">विवरण</span><span data-lang="en">Details</span></th>
-              </tr>
-            </thead>
+  <tr>
+    <th><span data-lang="ne">आईडी</span><span data-lang="en">ID</span></th>
+    <th><span data-lang="ne">शीर्षक</span><span data-lang="en">Title</span></th>
+    <th><span data-lang="ne">वडा</span><span data-lang="en">Ward</span></th>
+    <th><span data-lang="ne">एस्कलेसन मिति</span><span data-lang="en">Escalated On</span></th>
+    <th><span data-lang="ne">समाधान मिति</span><span data-lang="en">Resolved On</span></th>
+    <th><span data-lang="ne">विवरण</span><span data-lang="en">Details</span></th>
+  </tr>
+</thead>
             <tbody id="resolvedTableBody">
               <tr>
                 <td class="cell-id-sm">NA-2082-09847</td>
@@ -478,7 +477,7 @@
                 <td class="td-num"><span class="ward-rank rank-top">३</span></td>
                 <td class="td-time">२०८२/०१/१५</td>
                 <td class="td-time">२०८२/०१/२०</td>
-                <td class="td-budget">रु. ६.५ लाख</td>
+                
                 <td>
                   <button class="btn-detail" onclick="openComplaintDetailModal('NA-2082-09847')">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -493,7 +492,7 @@
                 <td class="td-num"><span class="ward-rank rank-top">५</span></td>
                 <td class="td-time">२०८२/०१/०५</td>
                 <td class="td-time">२०८२/०१/१८</td>
-                <td class="td-budget">रु. १४ लाख</td>
+                
                 <td>
                   <button class="btn-detail" onclick="openComplaintDetailModal('NA-2082-09731')">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -508,7 +507,7 @@
                 <td class="td-num"><span class="ward-rank rank-top">२१</span></td>
                 <td class="td-time">२०८१/१२/२५</td>
                 <td class="td-time">२०८२/०१/१०</td>
-                <td class="td-budget">रु. ३२ लाख</td>
+                
                 <td>
                   <button class="btn-detail" onclick="openComplaintDetailModal('NA-2082-09612')">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
