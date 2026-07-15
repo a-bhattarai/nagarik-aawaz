@@ -1,81 +1,80 @@
-const mongoose = require("mongoose");
+const express = require("express");
+const router = express.Router();
+const Budget = require("../models/Budget");
+const { protect, authorize } = require("../middleware/auth");
 
-// One breakdown entry = one project/category line item within a ward's
-// budget for a given fiscal year.
-const breakdownItemSchema = new mongoose.Schema(
-  {
-    category: {
-      type: String,
-      required: true,
-      trim: true, // e.g. "Road Maintenance", "Sanitation", "Education"
-    },
-    project: {
-      type: String,
-      trim: true,
-      default: null, // optional specific project name under the category
-    },
-    allocatedAmount: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    spentAmount: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
-  },
-  { _id: true }, // keep _id so individual breakdown items can be targeted for edits
-);
+// Get budgets
+router.get("/", protect, async (req, res) => {
+  try {
+    let filter = {};
 
-const budgetSchema = new mongoose.Schema(
-  {
-    ward: {
-      type: Number,
-      required: true,
-      min: 1,
-      max: 33,
-    },
-    fiscalYear: {
-      type: String, // e.g. "2081/82"
-      required: true,
-      trim: true,
-    },
-    allocatedAmount: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    spentAmount: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
-    breakdown: {
-      type: [breakdownItemSchema],
-      default: [],
-    },
-    lastUpdated: {
-      type: Date,
-      default: Date.now,
-    },
-    // Track which admin/officer last modified this record — useful for
-    // an audit trail on public budget data.
-    updatedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
-    },
-  },
-  { timestamps: true },
-);
+    if (req.user.role === "ward_official") {
+      filter.ward = req.user.ward;
+    } else if (req.query.ward) {
+      filter.ward = req.query.ward;
+    }
 
-// One budget document per ward per fiscal year.
-budgetSchema.index({ ward: 1, fiscalYear: 1 }, { unique: true });
+    const budgets = await Budget.find(filter);
 
-// Keep lastUpdated in sync automatically whenever the doc is saved.
-budgetSchema.pre("save", function () {
-  this.lastUpdated = new Date();
+    res.status(200).json({
+      count: budgets.length,
+      budgets,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-module.exports = mongoose.model("Budget", budgetSchema);  
+// Get single budget
+router.get("/:id", protect, async (req, res) => {
+  try {
+    const budget = await Budget.findById(req.params.id);
+
+    if (!budget) {
+      return res.status(404).json({ message: "Budget not found" });
+    }
+
+    if (req.user.role === "ward_official" && budget.ward !== req.user.ward) {
+      return res.status(403).json({ message: "Access denied" });
+    }
+
+    res.json({ budget });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Create budget
+router.post("/", protect, authorize("metro_admin"), async (req, res) => {
+  try {
+    const budget = await Budget.create(req.body);
+    res.status(201).json({ budget });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Update budget
+router.put("/:id", protect, authorize("metro_admin"), async (req, res) => {
+  try {
+    const budget = await Budget.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+
+    res.json({ budget });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// Delete budget
+router.delete("/:id", protect, authorize("metro_admin"), async (req, res) => {
+  try {
+    await Budget.findByIdAndDelete(req.params.id);
+    res.json({ message: "Budget deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+module.exports = router;
