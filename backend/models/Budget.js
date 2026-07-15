@@ -78,4 +78,4 @@ budgetSchema.pre("save", function () {
   this.lastUpdated = new Date();
 });
 
-module.exports = mongoose.model("Budget", budgetSchema);
+module.exports = mongoose.model("Budget", budgetSchema);  
