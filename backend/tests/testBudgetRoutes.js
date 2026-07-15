@@ -1,36 +1,3 @@
-/**
- * Smoke test script for budgetRoutes.js
- *
- * UPDATED to match the corrected permission model:
- *   - GET (list + single) requires login (was public before, now isn't).
- *   - Only metro_admin can create/edit/delete. ward_official is now
- *     VIEW-ONLY (it used to be able to create/update its own ward -
- *     that's been removed on purpose).
- *   - ward_official's view is locked server-side to their own ward,
- *     regardless of what ward/query they ask for.
- *   - citizen is view-only but can see every ward (transparency).
- *
- * WHY A SCRIPT INSTEAD OF JUST POSTMAN:
- * Repeatable one-command check every time you touch the Budget model or
- * routes. Use the Postman collection (budget.postman_collection.json) for
- * exploratory / manual testing and demoing to the team.
- *
- * HOW TO RUN:
- *   1. Make sure your server is running locally:  node server.js
- *   2. Set the env vars below to real tokens (get them from Person 2's
- *      /api/auth/login endpoint — this script does NOT create users):
- *      - WARD_OFFICIAL_TOKEN : JWT for a logged-in ward_official
- *      - METRO_ADMIN_TOKEN   : JWT for a logged-in metro_admin
- *      - CITIZEN_TOKEN       : JWT for a logged-in citizen
- *   3. Set TEST_WARD to match the ward_official token's `ward` claim.
- *      Set OTHER_WARD to any different ward number that has a record
- *      (or none, that's fine, we're only checking access, not content).
- *   4. Run:  node tests/testBudgetRoutes.js
- *
- * Assumes budgetRoutes.js is mounted at /api/budgets
- * (e.g. app.use('/api/budgets', require('./routes/budgetRoutes'))).
- */
-
 const BASE_URL = process.env.BASE_URL || "http://localhost:5000/api/budgets";
 const WARD_OFFICIAL_TOKEN = process.env.WARD_OFFICIAL_TOKEN || "";
 const METRO_ADMIN_TOKEN = process.env.METRO_ADMIN_TOKEN || "";
