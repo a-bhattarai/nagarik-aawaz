@@ -1,54 +1,83 @@
 {
   "info": {
-    "name": "Nagarik Aawaz - Budget API",
-    "description": "Manual test collection for budgetRoutes.js. Set {{base_url}}, {{ward_official_token}}, {{metro_admin_token}} in a Postman environment before running.",
+    "name": "Nagarik Aawaz - Budget API (Updated Permissions)",
+    "description": "Manual test collection for budgetRoutes.js with proper role-based access. Set {{base_url}}, {{ward_official_token}}, {{metro_admin_token}}, and {{citizen_token}} in a Postman environment before running.\n\nPERMISSIONS SUMMARY:\n- GET /api/budgets: Any authenticated user (ward_official forced to own ward)\n- GET /api/budgets/:id: Any authenticated user (ward_official can only view own ward)\n- POST /api/budgets: metro_admin ONLY\n- PUT /api/budgets/:id: metro_admin ONLY\n- DELETE /api/budgets/:id: metro_admin ONLY",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     { "key": "base_url", "value": "http://localhost:5000/api/budgets" },
-    { "key": "ward_official_token", "value": "" },
     { "key": "metro_admin_token", "value": "" },
-    { "key": "budget_id", "value": "" }
+    { "key": "ward_official_token", "value": "" },
+    { "key": "citizen_token", "value": "" },
+    { "key": "budget_id", "value": "" },
+    { "key": "ward_official_ward", "value": "5" }
   ],
   "item": [
     {
-      "name": "GET all budgets (public)",
+      "name": "GET all budgets (any authenticated user)",
       "request": {
         "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{metro_admin_token}}" }
+        ],
         "url": "{{base_url}}"
       }
     },
     {
-      "name": "GET budgets filtered by ward + fiscalYear (public)",
+      "name": "GET budgets filtered by ward (metro_admin/citizen only)",
       "request": {
         "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{metro_admin_token}}" }
+        ],
         "url": "{{base_url}}?ward=5&fiscalYear=2082/83"
       }
     },
     {
-      "name": "GET single budget by id (public)",
+      "name": "GET budgets as ward_official (forced to own ward)",
       "request": {
         "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{ward_official_token}}" }
+        ],
+        "url": "{{base_url}}?ward=10&fiscalYear=2082/83",
+        "description": "IMPORTANT: Even though ?ward=10 is requested, response will ONLY show ward {{ward_official_ward}} (the official's assigned ward)"
+      }
+    },
+    {
+      "name": "GET single budget by id (any authenticated user)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{metro_admin_token}}" }
+        ],
         "url": "{{base_url}}/{{budget_id}}"
       }
     },
     {
-      "name": "POST create budget (ward_official, own ward)",
+      "name": "GET single budget as ward_official (own ward - should succeed)",
       "request": {
-        "method": "POST",
+        "method": "GET",
         "header": [
-          { "key": "Content-Type", "value": "application/json" },
           { "key": "Authorization", "value": "Bearer {{ward_official_token}}" }
         ],
-        "url": "{{base_url}}",
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"ward\": 5,\n  \"fiscalYear\": \"2082/83\",\n  \"allocatedAmount\": 500000,\n  \"spentAmount\": 120000,\n  \"breakdown\": [\n    { \"category\": \"Road Maintenance\", \"project\": \"Ward Road Repair\", \"allocatedAmount\": 300000, \"spentAmount\": 100000 },\n    { \"category\": \"Sanitation\", \"allocatedAmount\": 200000, \"spentAmount\": 20000 }\n  ]\n}"
-        }
+        "url": "{{base_url}}/{{budget_id}}",
+        "description": "Will succeed only if budget.ward === {{ward_official_ward}}"
       }
     },
     {
-      "name": "POST create budget (metro_admin, any ward)",
+      "name": "GET single budget as ward_official (other ward - expect 403)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{ward_official_token}}" }
+        ],
+        "url": "{{base_url}}/{{budget_id}}",
+        "description": "Replace {{budget_id}} with an ID of a budget from a different ward. Expect 403 Forbidden."
+      }
+    },
+    {
+      "name": "POST create budget (metro_admin - success)",
       "request": {
         "method": "POST",
         "header": [
@@ -58,24 +87,62 @@
         "url": "{{base_url}}",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"ward\": 12,\n  \"fiscalYear\": \"2082/83\",\n  \"allocatedAmount\": 750000\n}"
-        }
+          "raw": "{\n  \"ward\": 12,\n  \"fiscalYear\": \"2083/84\",\n  \"allocatedAmount\": 750000,\n  \"spentAmount\": 250000,\n  \"breakdown\": [\n    { \"category\": \"Infrastructure\", \"project\": \"Road Construction\", \"allocatedAmount\": 500000, \"spentAmount\": 200000 },\n    { \"category\": \"Education\", \"project\": \"School Supplies\", \"allocatedAmount\": 250000, \"spentAmount\": 50000 }\n  ]\n}"
+        },
+        "postResponse": [
+          {
+            "key": "budget_id",
+            "value": "pm.response.json().budget._id",
+            "type": "string"
+          }
+        ]
       }
     },
     {
-      "name": "POST create budget - no token (expect 401)",
+      "name": "POST create budget (ward_official - expect 403)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{ward_official_token}}" }
+        ],
+        "url": "{{base_url}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ward\": {{ward_official_ward}},\n  \"fiscalYear\": \"2083/84\",\n  \"allocatedAmount\": 500000\n}"
+        },
+        "description": "Expect 403 Forbidden - ward_official cannot create budgets"
+      }
+    },
+    {
+      "name": "POST create budget (no token - expect 401)",
       "request": {
         "method": "POST",
         "header": [{ "key": "Content-Type", "value": "application/json" }],
         "url": "{{base_url}}",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"ward\": 5,\n  \"fiscalYear\": \"2082/83\",\n  \"allocatedAmount\": 500000\n}"
+          "raw": "{\n  \"ward\": 5,\n  \"fiscalYear\": \"2083/84\",\n  \"allocatedAmount\": 500000\n}"
         }
       }
     },
     {
-      "name": "PUT update budget (ward_official, own ward)",
+      "name": "PUT update budget (metro_admin - success)",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{metro_admin_token}}" }
+        ],
+        "url": "{{base_url}}/{{budget_id}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"spentAmount\": 350000,\n  \"allocatedAmount\": 800000\n}"
+        }
+      }
+    },
+    {
+      "name": "PUT update budget (ward_official - expect 403)",
       "request": {
         "method": "PUT",
         "header": [
@@ -85,27 +152,13 @@
         "url": "{{base_url}}/{{budget_id}}",
         "body": {
           "mode": "raw",
-          "raw": "{\n  \"spentAmount\": 150000\n}"
-        }
+          "raw": "{\n  \"spentAmount\": 999999\n}"
+        },
+        "description": "Expect 403 Forbidden - ward_official cannot update budgets"
       }
     },
     {
-      "name": "PUT update budget - wrong ward (expect 403)",
-      "request": {
-        "method": "PUT",
-        "header": [
-          { "key": "Content-Type", "value": "application/json" },
-          { "key": "Authorization", "value": "Bearer {{ward_official_token}}" }
-        ],
-        "url": "{{base_url}}/{{budget_id}}",
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"allocatedAmount\": 999999\n}"
-        }
-      }
-    },
-    {
-      "name": "DELETE budget (metro_admin only)",
+      "name": "DELETE budget (metro_admin - success)",
       "request": {
         "method": "DELETE",
         "header": [
@@ -115,13 +168,41 @@
       }
     },
     {
-      "name": "DELETE budget - as ward_official (expect 403)",
+      "name": "DELETE budget (ward_official - expect 403)",
       "request": {
         "method": "DELETE",
         "header": [
           { "key": "Authorization", "value": "Bearer {{ward_official_token}}" }
         ],
-        "url": "{{base_url}}/{{budget_id}}"
+        "url": "{{base_url}}/{{budget_id}}",
+        "description": "Expect 403 Forbidden - ward_official cannot delete budgets"
+      }
+    },
+    {
+      "name": "GET budgets as citizen (can see all wards)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{citizen_token}}" }
+        ],
+        "url": "{{base_url}}?fiscalYear=2082/83",
+        "description": "Citizens can see all wards for transparency, but only if they are logged in"
+      }
+    },
+    {
+      "name": "Test duplicate budget creation (expect 409)",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" },
+          { "key": "Authorization", "value": "Bearer {{metro_admin_token}}" }
+        ],
+        "url": "{{base_url}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"ward\": 12,\n  \"fiscalYear\": \"2083/84\",\n  \"allocatedAmount\": 750000\n}"
+        },
+        "description": "Expect 409 Conflict - duplicate ward + fiscalYear combination"
       }
     }
   ]
