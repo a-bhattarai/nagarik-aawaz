@@ -154,6 +154,38 @@ tbody tr:hover { background: var(--bg); }
 .page-btn.active { background: var(--green-deep); color: #fff; border-color: var(--green-deep); }
 .page-btn:hover:not(.active) { border-color: var(--green-accent); }
 
+
+/* Budget Edit Form */
+.budget-edit-form { display: flex; flex-direction: column; }
+.bef-header { display: flex; align-items: center; gap: 14px; padding: 0 0 20px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+.bef-header h3 { font-size: 1.05rem; font-weight: 700; color: var(--ink); margin: 0 0 2px 0; }
+.bef-icon { width: 48px; height: 48px; border-radius: 12px; background: var(--green-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.bef-body { display: flex; flex-direction: column; gap: 18px; }
+.bef-field { display: flex; flex-direction: column; gap: 6px; }
+.bef-field label { font-size: 0.78rem; font-weight: 700; color: var(--gray); text-transform: uppercase; letter-spacing: 0.5px; }
+.bef-field input, .bef-field select { width: 100%; padding: 12px 14px; border: 1.5px solid var(--border); border-radius: 10px; font-size: 0.95rem; font-family: inherit; }
+.bef-field input:focus, .bef-field select:focus { border-color: var(--green-accent); outline: none; box-shadow: 0 0 0 3px rgba(76,175,125,0.1); }
+.bef-input-wrap { position: relative; }
+.bef-prefix { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--gray); font-size: 0.9rem; }
+.bef-input-wrap input { padding-left: 50px; }
+.bef-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 14px; background: var(--bg); border-radius: 10px; }
+.bef-stat { text-align: center; }
+.bef-stat span { font-size: 0.7rem; color: var(--gray); text-transform: uppercase; font-weight: 600; }
+.bef-stat strong { font-size: 1rem; display: block; margin-top: 2px; }
+.bef-footer { display: flex; gap: 10px; justify-content: flex-end; margin-top: 24px; padding-top: 18px; border-top: 1px solid var(--border); }
+.btn-cancel { padding: 10px 20px; border: 1.5px solid var(--border); border-radius: 8px; background: var(--white); color: var(--gray); font-weight: 600; font-size: 0.88rem; cursor: pointer; font-family: inherit; }
+.btn-save { padding: 10px 24px; border: none; border-radius: 8px; background: var(--green-deep); color: #fff; font-weight: 600; font-size: 0.88rem; cursor: pointer; font-family: inherit; }
+.btn-save:hover { background: var(--green-main); }
+.btn-cancel:hover { background: var(--bg); }
+
+/* Edit row button */
+.btn-edit-row { padding: 6px 14px; border: 1.5px solid var(--green-accent); border-radius: 6px; background: var(--white); color: var(--green-deep); font-weight: 600; font-size: 0.75rem; cursor: pointer; font-family: inherit; transition: all 0.15s; }
+.btn-edit-row:hover { background: var(--green-light); }
+
+/* New Budget button */
+#btnAddBudget { padding: 10px 20px; background: var(--green-deep); color: #fff; border: none; border-radius: 8px; cursor: pointer; font-family: inherit; font-weight: 600; font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s; }
+#btnAddBudget:hover { background: var(--green-main); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(27,94,60,0.2); }
+
 /* ===== INFO BANNER ===== */
 .info-banner {
   background: var(--green-light); border: 1px solid var(--border); border-radius: 16px;
@@ -225,4 +257,57 @@ body.lang-mode-en option[data-lang="en"] { display: block; }
   .top-strip-left { display: none; }
   .footer-inner { grid-template-columns: 1fr; }
   .finance-card { flex-direction: column; text-align: center; }
+}
+
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  z-index: 2000;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.modal-overlay.open {
+  display: flex;
+}
+.modal-box {
+  background: var(--white);
+  border-radius: 14px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-header h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--green-deep);
+}
+.modal-close {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: none;
+  background: var(--bg);
+  color: var(--gray);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.modal-close:hover {
+  background: var(--error-bg);
+  color: var(--error);
+}
+.modal-body {
+  padding: 22px;
 }
