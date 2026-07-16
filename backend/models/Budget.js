@@ -1,31 +1,11 @@
 const mongoose = require("mongoose");
 
-// One breakdown entry = one project/category line item within a ward's
-// budget for a given fiscal year.
 const breakdownItemSchema = new mongoose.Schema(
   {
-    category: {
-      type: String,
-      required: true,
-      trim: true, // e.g. "Road Maintenance", "Sanitation", "Education"
-    },
-    project: {
-      type: String,
-      trim: true,
-      default: null, // optional specific project name under the category
-    },
-    allocatedAmount: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    spentAmount: {
-      type: Number,
-      default: 0,
-      min: 0,
-    },
+    label: String,
+    amount: Number,
   },
-  { _id: true }, // keep _id so individual breakdown items can be targeted for edits
+  { _id: false },
 );
 
 const budgetSchema = new mongoose.Schema(
@@ -33,49 +13,46 @@ const budgetSchema = new mongoose.Schema(
     ward: {
       type: Number,
       required: true,
-      min: 1,
-      max: 33,
     },
     fiscalYear: {
-      type: String, // e.g. "2081/82"
+      type: String, // e.g. "2082/83"
       required: true,
-      trim: true,
     },
     allocatedAmount: {
       type: Number,
       required: true,
-      min: 0,
+      default: 0,
     },
     spentAmount: {
       type: Number,
+      required: true,
       default: 0,
-      min: 0,
     },
+    // Task-wise division — stored, but never sent to citizen/ward-official views
     breakdown: {
       type: [breakdownItemSchema],
       default: [],
+    },
+    updatedBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
     lastUpdated: {
       type: Date,
       default: Date.now,
     },
-    // Track which admin/officer last modified this record — useful for
-    // an audit trail on public budget data.
-    updatedBy: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
-    },
   },
   { timestamps: true },
 );
 
-// One budget document per ward per fiscal year.
+// One budget record per ward per fiscal year
 budgetSchema.index({ ward: 1, fiscalYear: 1 }, { unique: true });
 
-// Keep lastUpdated in sync automatically whenever the doc is saved.
-budgetSchema.pre("save", function () {
-  this.lastUpdated = new Date();
+budgetSchema.virtual("remainingAmount").get(function () {
+  return this.allocatedAmount - this.spentAmount;
 });
 
-module.exports = mongoose.model("Budget", budgetSchema);  
+budgetSchema.set("toJSON", { virtuals: true });
+budgetSchema.set("toObject", { virtuals: true });
+
+module.exports = mongoose.model("Budget", budgetSchema);
