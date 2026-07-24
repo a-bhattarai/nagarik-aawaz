@@ -1,17 +1,15 @@
 /* ================================================================
    NAGARIK AAWAZ — scriptbudget.js
    Sections:
-     1. Config & Helpers
+     1. Config & helpers
      2. Language
-     3. User & Auth
-     4. Budget Loading & Rendering
-     5. Edit Modal
+     3. User & auth
+     4. Budget loading & rendering
+     5. Edit modal
      6. Init
 ================================================================ */
 
-/* ────────────────────────────────────────────────────────────────
-   1. CONFIG & HELPERS
-   ──────────────────────────────────────────────────────────────── */
+/* ── 1. Config & helpers ── */
 const API = 'http://localhost:5000/api';
 var CURRENT_USER = null;
 
@@ -26,9 +24,7 @@ function fmtNPR(n) {
   return 'रु. ' + n.toLocaleString();
 }
 
-/* ────────────────────────────────────────────────────────────────
-   2. LANGUAGE
-   ──────────────────────────────────────────────────────────────── */
+/* ── 2. Language ── */
 function setLang(lang) {
   document.body.classList.toggle('lang-mode-en', lang === 'en');
   document.getElementById('btn-ne').classList.toggle('active', lang === 'ne');
@@ -45,9 +41,7 @@ function toNepaliDigits(n) {
   return String(n).split('').map(function(d) { return map[d] || d; }).join('');
 }
 
-/* ────────────────────────────────────────────────────────────────
-   3. USER & AUTH
-   ──────────────────────────────────────────────────────────────── */
+/* ── 3. User & auth ── */
 async function loadCurrentUser() {
   var token = getToken();
   if (!token) {
@@ -84,9 +78,7 @@ function updateUI() {
   }
 }
 
-/* ────────────────────────────────────────────────────────────────
-   4. BUDGET LOADING & RENDERING
-   ──────────────────────────────────────────────────────────────── */
+/* ── 4. Budget loading & rendering ── */
 async function loadBudgets(ward, fiscalYear) {
   var params = new URLSearchParams();
   if (ward) params.set('ward', ward);
@@ -129,7 +121,7 @@ function renderBudgets(budgets) {
     if (circle3) circle3.setAttribute('stroke-dashoffset', 264 - (264 * (100 - utilPct) / 100));
   }
 
-  /* --- Update table header based on role --- */
+  /* --- Table header (columns differ by role) --- */
   var thead = document.querySelector('table thead tr');
   if (thead) {
     if (isMetro) {
@@ -201,9 +193,7 @@ function renderBudgets(budgets) {
   }).join('');
 }
 
-/* ────────────────────────────────────────────────────────────────
-   5. EDIT MODAL
-   ──────────────────────────────────────────────────────────────── */
+/* ── 5. Edit modal ── */
 async function openEditModal(id) {
   var en = isEn();
 
@@ -287,9 +277,7 @@ async function saveBudget(id) {
   }
 }
 
-/* ────────────────────────────────────────────────────────────────
-   6. INIT
-   ──────────────────────────────────────────────────────────────── */
+/* ── 6. Init ── */
 document.addEventListener('DOMContentLoaded', function() {
   var savedLang = localStorage.getItem('nagarikAawazLang');
   if (savedLang === 'en') setLang('en');

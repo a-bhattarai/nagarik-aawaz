@@ -1,10 +1,10 @@
 /* ================================================================
-   NAGARIK AAWAZ — complaint.css
+   NAGARIK AAWAZ — stylecomplaint.css
    Sections:
      1.  Design tokens
-     2.  Reset
+     2.  Reset & Base
      3.  Top strip
-     4.  Masthead
+     4.  Masthead (no logo, icon-only home)
      5.  Page header
      6.  Progress stepper
      7.  Main layout
@@ -37,9 +37,10 @@
   --success:      #1B5E3C;
   --warning:      #B7770D;
   --warning-bg:   #FEF9EE;
+  --radius-full:  999px;
 }
 
-/* ── 2. Reset ── */
+/* ── 2. Reset & Base ── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body {
@@ -54,7 +55,6 @@ body {
 svg.icon { flex-shrink: 0; }
 
 /* ── 3. Top strip ── */
-/* ===== TOP STRIP ===== */
 .top-strip {
   background: var(--green-deep);
   color: #fff;
@@ -110,100 +110,55 @@ svg.icon { flex-shrink: 0; }
   color: var(--green-deep);
 }
 
-/* ===== MASTHEAD ===== */
+/* ── 4. Masthead (no logo, icon-only home) ── */
 .masthead {
   background: var(--white);
   border-bottom: 1px solid var(--border);
 }
-.masthead-inner{
-    max-width:1280px;
-    margin:0 auto;
-    padding:16px 24px;
-
-    position:relative;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-.masthead-brand{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:18px;
-}
-/* ===== Masthead Home Button ===== */
-
-.home-btn{
-    position:absolute;
-    left:24px;
-
-    display:flex;
-    align-items:center;
-    gap:8px;
-
-    padding:10px 16px;
-
-    background:var(--green-deep);
-    color:var(--white);
-
-    border-radius:10px;
-    text-decoration:none;
-    font-size:.95rem;
-    font-weight:600;
-
-    transition:.25s;
+.masthead-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
 }
 
-.home-btn:hover{
-    background:var(--green-accent);
-}
-
-.home-btn i{
-    font-size:1rem;
-}
-
-
-  /* LEFT: Metro logo slot */
-.masthead-logo-metro {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px dashed var(--border);
-  background: var(--gray-light);
+/* Home button - icon only */
+.home-btn {
+  grid-column: 1;
+  justify-self: start;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
+  background: var(--green-deep);
+  color: var(--white);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.25s ease;
 }
-.masthead-logo-metro img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+.home-btn:hover { background: var(--green-accent); }
+.home-btn i { font-size: 1.1rem; }
+.home-btn span { display: none !important; }
+
+/* Brand - centered */
+.masthead-brand {
+  grid-column: 2;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 18px;
 }
-.logo-placeholder-text {
-  font-size: 0.52rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  color: var(--gray);
+
+.masthead-text {
   text-align: center;
-  line-height: 1.4;
-  padding: 4px;
-  user-select: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-
-/* CENTER: Text */
-.masthead-text{
-    text-align:center;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .masthead-text h1 {
   font-size: 1.4rem;
@@ -225,38 +180,6 @@ svg.icon { flex-shrink: 0; }
   color: var(--green-accent);
   font-weight: 700;
   margin-top: 4px;
-}
-
-/* RIGHT: Nagarik Aawaz logo slot */
-.masthead-logo-portal {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px dashed var(--green-accent);
-  background: var(--green-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-.masthead-logo-portal img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-.masthead-logo-portal .logo-placeholder-text {
-  color: var(--green-main);
-}
-
-.home-btn{
-    position:absolute;
-    left:24px;
-}
-
-.masthead-logo-metro{
-    margin:0 auto 0 auto;
 }
 
 /* ── 5. Page header ── */
@@ -396,7 +319,7 @@ svg.icon { flex-shrink: 0; }
 .form-card-header p  { font-size: 0.85rem; color: var(--gray); margin-top: 2px; }
 .form-card-body { padding: 28px; }
 
-/* ── Step transitions ── */
+/* Step transitions */
 .form-step { display: none; }
 .form-step.active { display: block; animation: fadeIn 0.3s ease; }
 @keyframes fadeIn {
@@ -412,15 +335,6 @@ svg.icon { flex-shrink: 0; }
   font-weight: 600;
   color: var(--ink);
   margin-bottom: 7px;
-}
-.form-group label .en-tag {
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.68rem;
-  font-weight: 700;
-  color: var(--green-accent);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-left: 7px;
 }
 .form-group label .required { color: var(--error); margin-left: 3px; }
 
@@ -469,17 +383,9 @@ textarea {
   min-height: 110px;
   padding-left: 44px;
 }
-input[type="text"]:focus,
-input[type="email"]:focus,
-input[type="tel"]:focus,
-select:focus,
-textarea:focus {
+input:focus, select:focus, textarea:focus {
   border-color: var(--green-accent);
   box-shadow: 0 0 0 3px rgba(76,175,125,0.15);
-}
-input.error, select.error, textarea.error {
-  border-color: var(--error);
-  box-shadow: 0 0 0 3px rgba(192,57,43,0.1);
 }
 
 .error-msg {
@@ -644,11 +550,11 @@ input.error, select.error, textarea.error {
   margin-top: 4px;
 }
 #complaint-map {
-    width: 100%;
-    height: 450px;
-    display: block !important;  /* Forces visibility regardless of layout switches */
-    position: relative;
-    z-index: 1;                 /* Keeps map layers above backgrounds */
+  width: 100%;
+  height: 450px;
+  display: block !important;
+  position: relative;
+  z-index: 1;
 }
 .map-instructions {
   background: var(--green-light);
@@ -674,12 +580,7 @@ input.error, select.error, textarea.error {
 }
 .map-coords svg { width: 15px; height: 15px; flex-shrink: 0; }
 .map-coords strong { color: var(--ink); font-family: 'Poppins', sans-serif; }
-.coord-value {
-  font-family: 'Poppins', sans-serif;
-  color: var(--green-deep);
-  font-weight: 600;
-  font-size: 0.8rem;
-}
+
 .use-gps-btn {
   border: 1.5px solid var(--green-deep);
   border-radius: 7px;
@@ -709,7 +610,7 @@ input.error, select.error, textarea.error {
 }
 #review-map { height: 200px; width: 100%; }
 
-/* ── 12. Nav buttons ── */
+/* ── 12. Form nav buttons ── */
 .form-nav {
   display: flex;
   gap: 12px;
@@ -908,39 +809,6 @@ input.error, select.error, textarea.error {
 .cat-ref-item .cr-icon { color: var(--green-deep); display: flex; flex-shrink: 0; }
 .cat-ref-item .cr-icon svg { width: 16px; height: 16px; }
 
-/* Deadline card — flat 7-day policy */
-.deadline-badge {
-  background: var(--warning-bg);
-  border: 1px solid #F0C060;
-  border-radius: 9px;
-  padding: 12px 14px;
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-.deadline-badge .db-icon { flex-shrink: 0; margin-top: 1px; color: var(--warning); display: flex; }
-.deadline-badge .db-icon svg { width: 16px; height: 16px; }
-.deadline-badge p { font-size: 0.82rem; color: var(--warning); line-height: 1.5; }
-.deadline-badge strong { color: var(--ink); }
-.deadline-flat-row {
-  margin-top: 14px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.9rem;
-  padding: 14px 16px;
-  background: var(--green-light);
-  border-radius: 9px;
-  border: 1px solid var(--green-accent);
-  font-weight: 600;
-  color: var(--ink);
-}
-.deadline-value {
-  color: var(--green-deep);
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.05rem;
-}
-
 /* ── 15. Footer ── */
 footer { background: #163C28; color: #BFD9CB; padding: 50px 24px 24px; margin-top: auto; }
 .footer-inner {
@@ -982,31 +850,53 @@ body.lang-mode-en [data-lang="en"] { display: block; }
 @media (max-width: 1024px) {
   .complaint-layout { grid-template-columns: 1fr; }
   .sidebar { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-}
-@media (max-width: 768px) {
-  .masthead-inner { flex-direction: column; gap: 16px; padding: 20px; }
-  .masthead-logo-metro,
-  .masthead-logo-portal { width: 72px; height: 72px; }
-  .masthead-text h1 { font-size: 1.35rem; }
-  .sub-district { font-size: .85rem; }
-  .sub-portal   { font-size: .8rem; }
   .footer-inner { grid-template-columns: 1fr 1fr; gap: 28px; }
-  .form-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .masthead-inner {
+    padding: 14px 16px;
+    grid-template-columns: 1fr auto 1fr;
+  }
+  .masthead-text h1 { font-size: 1.05rem; }
+  .masthead-text .sub-district { font-size: 0.8rem; }
+  .masthead-text .sub-portal { font-size: 0.7rem; letter-spacing: 1.2px; }
+  .home-btn { width: 40px; height: 40px; padding: 8px; }
+  .home-btn i { font-size: 1rem; }
+
+  .footer-inner { grid-template-columns: 1fr 1fr; gap: 28px; }
   .progress-wrap { margin: -20px 16px 0; padding: 18px 20px; }
   .step-label { display: none; }
   .complaint-layout { padding: 0 16px; margin-top: 28px; }
   .form-card-body { padding: 20px 18px; }
   .sidebar { grid-template-columns: 1fr; }
-  
+  #complaint-map { height: 300px; }
+  .page-header { padding: 30px 16px 40px; }
 }
+
 @media (max-width: 480px) {
-  .masthead-logo-metro,
-  .masthead-logo-portal { width: 64px; height: 64px; }
-  .masthead-text h1 { font-size: 1.15rem; }
-  .sub-district, .sub-portal { font-size: .75rem; }
+  .top-strip-left { display: none; }
+  .masthead-text h1 { font-size: 0.95rem; }
+  .masthead-text .sub-district { font-size: 0.7rem; }
+  .masthead-text .sub-portal { font-size: 0.6rem; letter-spacing: 0.8px; }
+  .home-btn { width: 36px; height: 36px; padding: 6px; }
+  .home-btn i { font-size: 0.85rem; }
+
   .form-nav { flex-direction: column-reverse; }
   .form-nav .btn { width: 100%; justify-content: center; }
   .footer-inner { grid-template-columns: 1fr; }
   .stepper { gap: 4px; }
   .step-connector { margin: 0 6px; }
+  .form-card-header { flex-direction: column; text-align: center; padding: 16px; }
+  .form-card-header .icon { width: 40px; height: 40px; }
+  .form-card-header .icon svg { width: 18px; height: 18px; }
+  .form-card-body { padding: 16px 14px; }
+  #complaint-map { height: 250px; }
+  .success-actions { flex-direction: column; }
+  .success-actions .btn { width: 100%; justify-content: center; }
+  .page-header h2 { font-size: 1.2rem; }
+  .page-header p { font-size: 0.85rem; }
+  .breadcrumb { font-size: 0.75rem; flex-wrap: wrap; }
+  .ticket-id { font-size: 1rem; }
+  .step-circle { width: 32px; height: 32px; font-size: 0.75rem; }
 }

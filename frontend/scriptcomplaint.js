@@ -1,12 +1,5 @@
 /* ================================================================
    NAGARIK AAWAZ — scriptcomplaint.js
-   Fixes in this version:
-     - Port changed to 5000
-     - map.invalidateSize() called every time step-2 becomes visible
-     - Location marker is NOW OPTIONAL (photo is the only required field
-       in step 2, matching the backend model where lat/lng default null)
-     - Review map only shown when marker was actually placed
-     - Auth guard redirects to login.html if no token
 ================================================================ */
 
 const API = 'http://localhost:5000/api';

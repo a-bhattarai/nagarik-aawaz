@@ -10,98 +10,63 @@
 <link rel="stylesheet" href="leaflet.css">
 <link rel="stylesheet" href="stylecomplaint.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 </head>
 <body>
 
-<!-- ===== TOP STRIP ===== -->
+<!-- ================================================================
+     1. TOP STRIP
+================================================================ -->
 <div class="top-strip">
   <div class="top-strip-inner">
-
     <div class="top-strip-left"></div>
-
     <div class="top-strip-right">
-
-    <!-- Phone -->
-<a href="tel:061500000" class="top-strip-link">
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l.95-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
-  </svg>
-
-  <span data-lang="ne">०६१-५०००००</span>
-  <span data-lang="en">061-500000</span>
-</a>
-
-<!-- Contact -->
-<a href="mailto:nagarikaawaz@pokharamun.gov.np" class="top-strip-link">
-  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-    <polyline points="22,6 12,13 2,6"/>
-  </svg>
-
-  <span data-lang="ne">सम्पर्क</span>
-  <span data-lang="en">Contact</span>
-</a>
-
-      <!-- Language Toggle -->
+      <a href="tel:061500000" class="top-strip-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l.95-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
+        <span data-lang="ne">०६१-५०००००</span>
+        <span data-lang="en">061-500000</span>
+      </a>
+      <a href="mailto:nagarikaawaz@pokharamun.gov.np" class="top-strip-link">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <span data-lang="ne">सम्पर्क</span>
+        <span data-lang="en">Contact</span>
+      </a>
       <div class="lang-toggle">
         <button id="btn-ne" class="active" onclick="setLang('ne')" aria-label="नेपाली">नेपाली</button>
         <button id="btn-en" onclick="setLang('en')" aria-label="English">English</button>
       </div>
-
     </div>
   </div>
 </div>
 
-<!-- ===== MASTHEAD ===== -->
- 
+<!-- ================================================================
+     2. MASTHEAD (No logo, icon-only home button)
+================================================================ -->
 <div class="masthead">
   <div class="masthead-inner">
-
-    <!-- Home Button -->
-    <a href="dashboard-citizen.html" class="home-btn" title="dashboard">
+    <a href="dashboard-citizen.html" class="home-btn" title="Home">
       <i class="fas fa-house"></i>
-      <span data-lang="ne">मेरो ड्यासबोर्ड</span>
-      <span data-lang="en">My Dashboard</span>
     </a>
-
-    <!-- Brand -->
     <div class="masthead-brand">
-
-      <!-- Logo -->
-      <div class="masthead-logo-metro" title="Pokhara Metropolitan City Logo">
-        <img src="logo1.jpg" alt="Pokhara Metropolitan City Logo">
-      </div>
-
-      <!-- Text -->
       <div class="masthead-text">
-
         <h1 data-lang="ne">पोखरा महानगरपालिका</h1>
         <h1 data-lang="en">Pokhara Metropolitan City</h1>
-
-        <p class="sub-district" data-lang="ne">
-          गण्डकी प्रदेश, नेपाल
-        </p>
-
-        <p class="sub-district" data-lang="en">
-          Gandaki Province, Nepal
-        </p>
-
-        <p class="sub-portal" data-lang="ne">
-          नागरिक आवाज — नागरिक गुनासो पोर्टल
-        </p>
-
-        <p class="sub-portal" data-lang="en">
-          NAGARIK AAWAZ — CITIZEN'S VOICE PORTAL
-        </p>
-
+        <p class="sub-district" data-lang="ne">गण्डकी प्रदेश, नेपाल</p>
+        <p class="sub-district" data-lang="en">Gandaki Province, Nepal</p>
+        <p class="sub-portal" data-lang="ne">नागरिक आवाज — नागरिक गुनासो पोर्टल</p>
+        <p class="sub-portal" data-lang="en">NAGARIK AAWAZ — CITIZEN'S VOICE PORTAL</p>
       </div>
-
     </div>
-
   </div>
 </div>
-<!-- ===== PAGE HEADER ===== -->
+
+<!-- ================================================================
+     3. PAGE HEADER
+================================================================ -->
 <div class="page-header">
   <div class="page-header-inner">
     <div class="breadcrumb">
@@ -118,7 +83,9 @@
   </div>
 </div>
 
-<!-- ===== PROGRESS STEPPER ===== -->
+<!-- ================================================================
+     4. PROGRESS STEPPER
+================================================================ -->
 <div class="progress-wrap">
   <div class="stepper" id="stepper">
     <div class="step-item">
@@ -141,7 +108,9 @@
   </div>
 </div>
 
-<!-- ===== MAIN LAYOUT ===== -->
+<!-- ================================================================
+     5. MAIN LAYOUT
+================================================================ -->
 <div class="complaint-layout">
 
   <!-- ===== FORM CARD ===== -->
@@ -173,8 +142,6 @@
           <label for="complaintTitle">
             <span data-lang="ne">गुनासोको शीर्षक<span class="required">*</span></span>
             <span data-lang="en">Complaint Title<span class="required">*</span></span>
-            
-            
           </label>
           <div class="input-wrap">
             <span class="field-icon">
@@ -197,8 +164,6 @@
           <label for="wardSelect">
             <span data-lang="ne">वडा नम्बर<span class="required">*</span></span>
             <span data-lang="en">Ward Number<span class="required">*</span></span>
-            
-            
           </label>
           <div class="input-wrap">
             <span class="field-icon">
@@ -254,7 +219,6 @@
           <label for="complaintDesc">
             <span data-lang="ne">विस्तृत विवरण<span class="required">*</span></span>
             <span data-lang="en">Detailed Description<span class="required">*</span></span>
-           
           </label>
           <div class="input-wrap">
             <span class="field-icon top">
@@ -273,7 +237,6 @@
         </div>
 
         <div class="form-nav">
-          
           <button type="button" class="btn btn-primary" onclick="goToStep(2)">
             <span data-lang="ne">अर्को चरण →</span>
             <span data-lang="en">Next Step →</span>
@@ -304,16 +267,12 @@
         </div>
 
         <!-- Photo Upload -->
-      
-        
         <div class="form-group" id="fg-photo">
           <label>
             <span data-lang="ne">समस्याको फोटो<span class="required">*</span></span>
             <span data-lang="en">Photo of the Issue<span class="required">*</span></span>
-            
           </label>
           <div class="photo-drop-zone" id="dropZone">
-            <!-- No "multiple" attribute — exactly 1 photo allowed -->
             <input type="file" id="photoInput" accept="image/jpeg,image/png,image/webp"
               onchange="handlePhotoUpload(this)">
             <div class="drop-icon">
@@ -335,12 +294,10 @@
         <hr class="form-divider">
 
         <!-- Map Location -->
-        
         <div class="form-group" id="fg-location">
           <label>
             <span data-lang="ne">नक्सामा स्थान<span class="required">*</span></span>
             <span data-lang="en">Location on Map<span class="required">*</span></span>
-            
           </label>
           <div class="map-container">
             <div class="map-instructions">
@@ -376,7 +333,6 @@
           <label for="landmark">
             <span data-lang="ne">नजिकको चिनारी स्थान</span>
             <span data-lang="en">Nearest Landmark</span>
-        
           </label>
           <div class="input-wrap">
             <span class="field-icon">
@@ -544,7 +500,6 @@
           <span data-lang="ne">झुटा गुनासो दर्ता गर्नु नियम विरुद्ध हो।</span>
           <span data-lang="en">Filing false complaints is against the rules.</span>
         </li>
-       
       </ul>
     </div>
 
@@ -594,9 +549,6 @@
       </div>
     </div>
 
-    <!-- Deadline Info — FLAT 7-DAY POLICY -->
-  
-
     <!-- Contact -->
     <div class="sidebar-card">
       <h4>
@@ -629,7 +581,9 @@
   </aside>
 </div><!-- /complaint-layout -->
 
-<!-- ===== FOOTER ===== -->
+<!-- ================================================================
+     6. FOOTER
+================================================================ -->
 <footer>
   <div class="footer-inner">
     <div class="footer-col">
@@ -638,8 +592,6 @@
       <p data-lang="ne">पोखरा महानगरपालिकाको लागि निर्मित नागरिक गुनासो तथा बजेट पारदर्शिता पोर्टल।</p>
       <p data-lang="en">A civic complaint and budget transparency portal built for Pokhara Metropolitan City.</p>
     </div>
-   
-  
     <div class="footer-col">
       <h5 data-lang="ne">सम्पर्क</h5>
       <h5 data-lang="en">Contact</h5>

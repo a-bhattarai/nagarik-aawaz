@@ -12,18 +12,25 @@
 </head>
 <body>
 
-<!-- ===== TOP STRIP ===== -->
+<!-- ================================================================
+     1. TOP STRIP
+================================================================ -->
 <div class="top-strip">
   <div class="top-strip-inner">
     <div class="top-strip-left"></div>
     <div class="top-strip-right">
       <a href="tel:061500000" class="top-strip-link">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l.95-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.39 2 2 0 0 1 3.6 1.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.8a16 16 0 0 0 6.29 6.29l.95-.94a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+        </svg>
         <span data-lang="ne">०६१-५०००००</span>
         <span data-lang="en">061-500000</span>
       </a>
       <a href="mailto:nagarikaawaz@pokharamun.gov.np" class="top-strip-link">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
         <span data-lang="ne">सम्पर्क</span>
         <span data-lang="en">Contact</span>
       </a>
@@ -35,7 +42,9 @@
   </div>
 </div>
 
-<!-- ===== MASTHEAD ===== -->
+<!-- ================================================================
+     2. MASTHEAD (No Logo, Icon-only Home)
+================================================================ -->
 <div class="masthead">
   <div class="masthead-inner">
     <a href="index.html" class="home-btn">
@@ -45,9 +54,6 @@
     </a>
 
     <div class="masthead-brand">
-      <div class="masthead-logo-metro">
-        <img src="logo1.jpg" alt="Pokhara Metropolitan City Logo">
-      </div>
       <div class="masthead-text">
         <h1 data-lang="ne">पोखरा महानगरपालिका</h1>
         <h1 data-lang="en">Pokhara Metropolitan City</h1>
@@ -60,17 +66,22 @@
   </div>
 </div>
 
-<!-- ===== MAIN ===== -->
+<!-- ================================================================
+     3. MAIN CONTENT
+================================================================ -->
 <main>
   <div class="auth-card">
 
-    <!-- =====================================================
+    <!-- ============================================================
          STEP 1 — REGISTRATION FORM
-    ===================================================== -->
+    ============================================================ -->
     <div class="form-step active" id="registerStep1">
       <div class="auth-header">
         <div class="icon-circle">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z"/><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z"/>
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          </svg>
         </div>
         <p class="eyebrow">CREATE ACCOUNT</p>
         <h2 data-lang="ne">नयाँ खाता दर्ता गर्नुहोस्</h2>
@@ -78,14 +89,23 @@
         <p class="subtitle" data-lang="ne">गुनासो दर्ता गर्न आफ्नो व्यक्तिगत विवरण भर्नुहोस्।</p>
         <p class="subtitle" data-lang="en">Fill in your information to register your citizen account.</p>
       </div>
-<div id="registerAlert" class="error-msg">
-    <span></span>
-</div>
-      <form id="registerForm">
 
+      <div class="alert-banner" id="registerAlert" role="alert">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <div>
+          <span data-lang="ne">दर्ता गर्न असफल। कृपया फेरि प्रयास गर्नुहोस्।</span>
+          <span data-lang="en">Registration failed. Please try again.</span>
+        </div>
+      </div>
+
+      <form id="registerForm" novalidate>
         <!-- Full Name -->
         <div class="form-group">
-          <label>
+          <label for="fullName">
             <span data-lang="ne">पूरा नाम</span>
             <span data-lang="en">Full Name</span>
           </label>
@@ -93,11 +113,15 @@
             <span class="input-icon"><i class="fa-solid fa-user"></i></span>
             <input type="text" id="fullName" placeholder="John Doe" required>
           </div>
+          <p class="error-msg" id="fullNameError">
+            <span data-lang="ne">कृपया पूरा नाम लेख्नुहोस्</span>
+            <span data-lang="en">Please enter your full name</span>
+          </p>
         </div>
 
         <!-- Email -->
         <div class="form-group">
-          <label>
+          <label for="regEmail">
             <span data-lang="ne">इमेल</span>
             <span data-lang="en">Email</span>
           </label>
@@ -105,11 +129,15 @@
             <span class="input-icon"><i class="fa-solid fa-envelope"></i></span>
             <input type="email" id="regEmail" placeholder="example@gmail.com" required>
           </div>
+          <p class="error-msg" id="regEmailError">
+            <span data-lang="ne">कृपया मान्य इमेल लेख्नुहोस्</span>
+            <span data-lang="en">Please enter a valid email</span>
+          </p>
         </div>
 
         <!-- Phone -->
         <div class="form-group">
-          <label>
+          <label for="phone">
             <span data-lang="ne">फोन नम्बर</span>
             <span data-lang="en">Phone Number</span>
           </label>
@@ -117,29 +145,33 @@
             <span class="input-icon"><i class="fa-solid fa-phone"></i></span>
             <input type="tel" id="phone" placeholder="98XXXXXXXX" required>
           </div>
+          <p class="error-msg" id="phoneError">
+            <span data-lang="ne">कृपया फोन नम्बर लेख्नुहोस्</span>
+            <span data-lang="en">Please enter your phone number</span>
+          </p>
         </div>
 
-        <!-- Address -->
+        <!-- Ward -->
         <div class="form-group">
-          <label>
-    <span data-lang="ne">वडा</span>
-    <span data-lang="en">Ward</span>
-</label>
+          <label for="wardSelect">
+            <span data-lang="ne">वडा</span>
+            <span data-lang="en">Ward</span>
+          </label>
           <div class="input-wrap">
             <span class="input-icon"><i class="fa-solid fa-location-dot"></i></span>
             <select id="wardSelect" required>
-    <option value="">
-        Select Ward
-    </option>
-</select>
+              <option value="">Select Ward / वडा छनोट</option>
+            </select>
           </div>
+          <p class="error-msg" id="wardError">
+            <span data-lang="ne">कृपया वडा छनोट गर्नुहोस्</span>
+            <span data-lang="en">Please select your ward</span>
+          </p>
         </div>
-
-        
 
         <!-- Password -->
         <div class="form-group">
-          <label>
+          <label for="password">
             <span data-lang="ne">पासवर्ड</span>
             <span data-lang="en">Password</span>
           </label>
@@ -150,11 +182,17 @@
               <i class="fa-solid fa-eye"></i>
             </button>
           </div>
+          <p class="hint" data-lang="ne">कम्तीमा ८ अक्षर हुनुपर्छ</p>
+          <p class="hint" data-lang="en">Must be at least 8 characters</p>
+          <p class="error-msg" id="passwordError">
+            <span data-lang="ne">पासवर्ड कम्तीमा ८ अक्षर हुनुपर्छ</span>
+            <span data-lang="en">Password must be at least 8 characters</span>
+          </p>
         </div>
 
         <!-- Confirm Password -->
         <div class="form-group">
-          <label>
+          <label for="confirmPassword">
             <span data-lang="ne">पासवर्ड पुष्टि</span>
             <span data-lang="en">Confirm Password</span>
           </label>
@@ -165,12 +203,13 @@
               <i class="fa-solid fa-eye"></i>
             </button>
           </div>
+          <p class="error-msg" id="confirmPasswordError">
+            <span data-lang="ne">पासवर्ड मेल खाएन</span>
+            <span data-lang="en">Passwords do not match</span>
+          </p>
         </div>
 
-        <button
-    type="submit"
-    id="registerBtn"
-    class="btn btn-primary">
+        <button type="submit" id="registerBtn" class="btn btn-primary">
           <i class="fa-solid fa-user-plus"></i>
           <span data-lang="ne">दर्ता गर्नुहोस्</span>
           <span data-lang="en">Create Account</span>
@@ -185,9 +224,9 @@
       </div>
     </div>
 
-    <!-- =====================================================
+    <!-- ============================================================
          STEP 2 — OTP VERIFICATION
-    ===================================================== -->
+    ============================================================ -->
     <div class="form-step" id="stepOtp">
       <div class="auth-header">
         <div class="icon-circle">
@@ -198,13 +237,25 @@
         <h2 data-lang="en">Verify Your Email</h2>
         <p class="subtitle" data-lang="ne">तपाईंको इमेलमा पठाइएको ६ अङ्कको OTP प्रविष्ट गर्नुहोस्।</p>
         <p class="subtitle" data-lang="en">Enter the 6-digit OTP sent to your email.</p>
-        <p class="subtitle">
-    OTP has been sent to
-    <strong class="otp-email-target"></strong>
-</p>
+        <p class="otp-info">
+          <span data-lang="ne">OTP पठाइयो <strong class="otp-email-target">your@email.com</strong> मा</span>
+          <span data-lang="en">OTP sent to <strong class="otp-email-target">your@email.com</strong></span>
+        </p>
       </div>
 
-      <form id="otpForm">
+      <div class="alert-banner" id="otpAlert" role="alert">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"/>
+          <line x1="12" y1="8" x2="12" y2="12"/>
+          <line x1="12" y1="16" x2="12.01" y2="16"/>
+        </svg>
+        <div>
+          <span data-lang="ne">गलत वा अपूरा OTP — कृपया फेरि प्रयास गर्नुहोस्</span>
+          <span data-lang="en">Incomplete or incorrect OTP — please try again</span>
+        </div>
+      </div>
+
+      <form id="otpForm" novalidate>
         <div class="otp-inputs" role="group" aria-label="OTP input">
           <input type="text" maxlength="1" inputmode="numeric" class="otp-box" autocomplete="one-time-code" aria-label="Digit 1">
           <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 2">
@@ -212,14 +263,7 @@
           <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 4">
           <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 5">
           <input type="text" maxlength="1" inputmode="numeric" class="otp-box" aria-label="Digit 6">
-          <div id="otpAlert" class="error-msg">
-    <span></span>
-</div>
         </div>
-        <p class="error-msg" id="otpError" style="justify-content:center;">
-          <span data-lang="ne">गलत वा अपूरा OTP — कृपया फेरि प्रयास गर्नुहोस्</span>
-          <span data-lang="en">Incomplete or incorrect OTP — please try again</span>
-        </p>
 
         <div class="resend">
           <span data-lang="ne">OTP प्राप्त भएन?</span>
@@ -236,18 +280,18 @@
             <span data-lang="ne">पछाडि</span>
             <span data-lang="en">Back</span>
           </button>
-         <button type="submit" id="verifyOtpBtn" class="btn btn-primary">
-    <i class="fa-solid fa-circle-check"></i>
-    <span data-lang="ne">प्रमाणित गर्नुहोस्</span>
-    <span data-lang="en">Verify OTP</span>
-</button>
+          <button type="submit" id="verifyOtpBtn" class="btn btn-primary">
+            <i class="fa-solid fa-circle-check"></i>
+            <span data-lang="ne">प्रमाणित गर्नुहोस्</span>
+            <span data-lang="en">Verify OTP</span>
+          </button>
         </div>
       </form>
     </div>
 
-    <!-- =====================================================
+    <!-- ============================================================
          STEP 3 — SUCCESS
-    ===================================================== -->
+    ============================================================ -->
     <div class="form-step" id="stepSuccess">
       <div class="auth-header">
         <div class="success-circle">

@@ -1,4 +1,25 @@
-/* ===== DESIGN TOKENS ===== */
+/* ================================================================
+   NAGARIK AAWAZ — stylelogin.css
+   Sections:
+     1.  Design tokens
+     2.  Reset & Base
+     3.  Language visibility
+     4.  Top strip
+     5.  Masthead (No logo, icon-only home)
+     6.  Main content
+     7.  Auth card
+     8.  Auth header
+     9.  Step transitions
+     10. Alert banner
+     11. Form elements
+     12. Form options
+     13. Buttons
+     14. OTP inputs
+     15. Auth footer
+     16. Responsive
+================================================================ */
+
+/* ── 1. Design tokens ── */
 :root {
   --green-deep:   #1B5E3C;
   --green-main:   #2E7D52;
@@ -23,7 +44,7 @@
   --radius-full:  999px;
 }
 
-/* ===== RESET ===== */
+/* ── 2. Reset & Base ── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
@@ -36,7 +57,12 @@ body {
   flex-direction: column;
 }
 
-/* ===== TOP STRIP ===== */
+/* ── 3. Language visibility ── */
+[data-lang="en"] { display: none; }
+body.lang-mode-en [data-lang="ne"] { display: none !important; }
+body.lang-mode-en [data-lang="en"] { display: revert; }
+
+/* ── 4. Top strip ── */
 .top-strip {
   background: var(--green-deep);
   color: #fff;
@@ -92,100 +118,57 @@ body {
   color: var(--green-deep);
 }
 
-/* ===== MASTHEAD ===== */
+/* ── 5. Masthead (No logo, icon-only home) ── */
 .masthead {
   background: var(--white);
   border-bottom: 1px solid var(--border);
 }
-.masthead-inner{
-    max-width:1280px;
-    margin:0 auto;
-    padding:16px 24px;
-
-    position:relative;
-
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-.masthead-brand{
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:18px;
-}
-/* ===== Masthead Home Button ===== */
-
-.home-btn{
-    position:absolute;
-    left:24px;
-
-    display:flex;
-    align-items:center;
-    gap:8px;
-
-    padding:10px 16px;
-
-    background:var(--green-deep);
-    color:var(--white);
-
-    border-radius:10px;
-    text-decoration:none;
-    font-size:.95rem;
-    font-weight:600;
-
-    transition:.25s;
+.masthead-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
 }
 
-.home-btn:hover{
-    background:var(--green-accent);
-}
-
-.home-btn i{
-    font-size:1rem;
-}
-
-
-  /* LEFT: Metro logo slot */
-.masthead-logo-metro {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px dashed var(--border);
-  background: var(--gray-light);
+.home-btn {
+  grid-column: 1;
+  justify-self: start;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--green-deep);
+  color: var(--white);
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  transition: all 0.25s ease;
 }
-.masthead-logo-metro img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+.home-btn:hover { background: var(--green-accent); }
+.home-btn i { font-size: 1rem; }
+.home-btn span[data-lang="ne"] { display: inline; }
+.home-btn span[data-lang="en"] { display: none; }
+body.lang-mode-en .home-btn span[data-lang="ne"] { display: none; }
+body.lang-mode-en .home-btn span[data-lang="en"] { display: inline; }
+
+.masthead-brand {
+  grid-column: 2;
+  justify-self: center;
+  display: flex;
+  align-items: center;
+  gap: 18px;
 }
-.logo-placeholder-text {
-  font-size: 0.52rem;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  color: var(--gray);
+
+.masthead-text {
   text-align: center;
-  line-height: 1.4;
-  padding: 4px;
-  user-select: none;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-
-/* CENTER: Text */
-.masthead-text{
-    text-align:center;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .masthead-text h1 {
   font-size: 1.4rem;
@@ -209,126 +192,7 @@ body {
   margin-top: 4px;
 }
 
-/* RIGHT: Nagarik Aawaz logo slot */
-.masthead-logo-portal {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: 2px dashed var(--green-accent);
-  background: var(--green-light);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-.masthead-logo-portal img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-}
-.masthead-logo-portal .logo-placeholder-text {
-  color: var(--green-main);
-}
-
-.home-btn{
-    position:absolute;
-    left:24px;
-}
-
-.masthead-logo-metro{
-    margin:0 auto 0 auto;
-}
-
-/* ===== STICKY NAV ===== */
-.navbar {
-  background: var(--green-deep);
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  box-shadow: 0 2px 12px rgba(27,94,60,0.2);
-}
-.navbar-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-}
-.nav-links {
-  display: flex;
-  list-style: none;
-  gap: 2px;
-}
-.nav-links li { display: flex; }
-.nav-links a {
-  display: block;
-  color: #E3F2EA;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.9rem;
-  padding: 15px 16px;
-  transition: all 0.2s ease;
-  border-bottom: 3px solid transparent;
-  white-space: nowrap;
-}
-.nav-links a:hover,
-.nav-links a.active {
-  background: rgba(255,255,255,0.08);
-  border-bottom-color: var(--gold);
-  color: #fff;
-}
-.nav-cta {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-.btn-nav-outline {
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-  font-size: 0.88rem;
-  padding: 8px 16px;
-  border: 1.5px solid rgba(255,255,255,0.45);
-  border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-.btn-nav-outline:hover,
-.btn-nav-outline.active {
-  background: rgba(255,255,255,0.12);
-  border-color: #fff;
-}
-.btn-nav-solid {
-  background: var(--gold);
-  color: var(--green-deep);
-  text-decoration: none;
-  font-weight: 700;
-  font-size: 0.88rem;
-  padding: 9px 18px;
-  border-radius: var(--radius-sm);
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-.btn-nav-solid:hover {
-  background: #E8B95C;
-  transform: translateY(-1px);
-}
-.menu-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  padding: 14px 8px;
-  align-items: center;
-  justify-content: center;
-}
-
-/* ===== MAIN ===== */
+/* ── 6. Main content ── */
 main {
   flex: 1;
   display: flex;
@@ -341,7 +205,7 @@ main {
     var(--bg);
 }
 
-/* ===== AUTH CARD ===== */
+/* ── 7. Auth card ── */
 .auth-card {
   background: var(--white);
   border: 1px solid var(--border);
@@ -361,7 +225,7 @@ main {
   background: linear-gradient(90deg, var(--green-deep) 0%, var(--green-accent) 55%, var(--gold) 100%);
 }
 
-/* ===== AUTH HEADER ===== */
+/* ── 8. Auth header ── */
 .auth-header {
   text-align: center;
   margin-bottom: 28px;
@@ -411,7 +275,7 @@ main {
   color: var(--gray);
 }
 
-/* ===== STEP TRANSITIONS ===== */
+/* ── 9. Step transitions ── */
 .form-step { display: none; }
 .form-step.active {
   display: block;
@@ -422,7 +286,7 @@ main {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ===== ALERT BANNER ===== */
+/* ── 10. Alert banner ── */
 .alert-banner {
   display: none;
   background: var(--error-bg);
@@ -438,7 +302,7 @@ main {
 .alert-banner.show { display: flex; }
 .alert-banner svg { flex-shrink: 0; margin-top: 1px; }
 
-/* ===== FORM ELEMENTS ===== */
+/* ── 11. Form elements ── */
 .form-group { margin-bottom: 18px; }
 .form-group label {
   display: flex;
@@ -493,15 +357,6 @@ select:focus {
 input.error { border-color: var(--error); }
 input.error:focus { box-shadow: 0 0 0 3px rgba(192,57,43,0.12); }
 
-select {
-  padding-left: 42px;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B7770' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 36px;
-}
-
 .toggle-pw {
   position: absolute;
   right: 12px;
@@ -534,7 +389,7 @@ select {
   margin-top: 5px;
 }
 
-/* ===== FORM OPTIONS ROW ===== */
+/* ── 12. Form options ── */
 .form-options {
   display: flex;
   justify-content: space-between;
@@ -572,7 +427,7 @@ select {
 }
 .forgot-btn:hover { text-decoration: underline; }
 
-/* ===== BUTTONS ===== */
+/* ── 13. Buttons ── */
 .btn {
   width: 100%;
   padding: 13px 20px;
@@ -612,7 +467,6 @@ select {
 }
 .btn-row .btn { margin-top: 0; }
 
-/* Spinner */
 .spinner {
   width: 17px;
   height: 17px;
@@ -624,7 +478,7 @@ select {
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
-/* ===== OTP ===== */
+/* ── 14. OTP inputs ── */
 .otp-inputs {
   display: flex;
   gap: 10px;
@@ -669,7 +523,7 @@ select {
 .resend-link:hover:not(.disabled) { text-decoration: underline; }
 .resend-link.disabled { color: var(--gray); pointer-events: none; }
 
-/* ===== AUTH FOOTER ===== */
+/* ── 15. Auth footer ── */
 .auth-footer {
   text-align: center;
   margin-top: 24px;
@@ -684,63 +538,29 @@ select {
 }
 .auth-footer a:hover { text-decoration: underline; }
 
-/* ===== LANGUAGE VISIBILITY ===== */
-[data-lang="en"] { display: none; }
-body.lang-mode-en [data-lang="ne"] { display: none !important; }
-body.lang-mode-en [data-lang="en"] { display: revert; }
+/* ── 16. Responsive ── */
 
-.nav-links li a[data-lang="ne"],
-.nav-cta a[data-lang="ne"] { display: block; }
-.nav-links li a[data-lang="en"],
-.nav-cta a[data-lang="en"] { display: none; }
-body.lang-mode-en .nav-links li a[data-lang="ne"],
-body.lang-mode-en .nav-cta a[data-lang="ne"] { display: none; }
-body.lang-mode-en .nav-links li a[data-lang="en"],
-body.lang-mode-en .nav-cta a[data-lang="en"] { display: block; }
-
-.btn[data-lang="ne"] { display: flex; }
-.btn[data-lang="en"] { display: none; }
-body.lang-mode-en .btn[data-lang="ne"] { display: none; }
-body.lang-mode-en .btn[data-lang="en"] { display: flex; }
-
-/* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .masthead-text h1 { font-size: 1.2rem; }
 }
 
 @media (max-width: 768px) {
   .top-strip-left { display: none; }
-  .menu-toggle { display: flex; }
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 100%; left: 0; right: 0;
-    background: var(--green-deep);
-    flex-direction: column;
-    padding: 6px 0 12px;
-    box-shadow: 0 10px 24px rgba(0,0,0,0.18);
-    z-index: 99;
+  
+  .masthead-inner {
+    padding: 14px 16px;
+    grid-template-columns: 1fr auto 1fr;
   }
-  .nav-links.open { display: flex; }
-  .nav-links li { flex-direction: column; }
-  .nav-links a {
-    padding: 13px 24px;
-    border-bottom: none;
-    border-left: 3px solid transparent;
-  }
-  .nav-links a:hover,
-  .nav-links a.active {
-    border-left-color: var(--gold);
-    border-bottom: none;
-  }
-  .nav-cta { display: none; }
-  .navbar-inner { padding: 4px 20px; }
-
-  .masthead-inner { gap: 14px; padding: 14px 16px; }
   .masthead-text h1 { font-size: 1.05rem; }
   .masthead-text .sub-district { font-size: 0.8rem; }
-  .masthead-logo-metro,
-  .masthead-logo-portal { width: 48px; height: 48px; }
+  .masthead-text .sub-portal { font-size: 0.7rem; letter-spacing: 1.2px; }
+  
+  .home-btn {
+    padding: 8px 12px;
+    font-size: 0.85rem;
+  }
+  .home-btn i { font-size: 0.9rem; }
+  .home-btn span { display: none !important; }
 
   .auth-card { padding: 32px 22px; }
   .otp-box { width: 44px !important; height: 52px; font-size: 1.25rem; }
@@ -749,9 +569,16 @@ body.lang-mode-en .btn[data-lang="en"] { display: flex; }
   .btn-row .btn { width: 100%; }
 }
 
-@media (max-width: 400px) {
-  main { padding: 28px 14px 44px; }
-  .auth-card { padding: 28px 16px; }
-  .otp-inputs { gap: 7px; }
+@media (max-width: 640px) {
+  main { padding: 32px 16px 48px; }
+  .auth-card { padding: 28px 18px; }
+  .auth-header h2 { font-size: 1.2rem; }
+}
+
+@media (max-width: 420px) {
+  main { padding: 24px 12px 40px; }
+  .auth-card { padding: 24px 14px; }
+  .otp-inputs { gap: 6px; }
   .otp-box { width: 38px !important; height: 46px; font-size: 1.1rem; }
+  .btn { font-size: 0.9rem; padding: 11px 16px; }
 }

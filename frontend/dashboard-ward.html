@@ -11,12 +11,12 @@
 </head>
 <body>
 
-<!-- ===== TOP STRIP ===== -->
+<!-- ================================================================
+     1. TOP STRIP
+================================================================ -->
 <div class="top-strip">
   <div class="top-strip-inner">
-    <div class="top-strip-left">
-      <!-- Back to Home removed per requirement -->
-    </div>
+    <div class="top-strip-left"></div>
     <div class="top-strip-right">
       <a href="tel:061500000" class="top-strip-link">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -32,7 +32,9 @@
   </div>
 </div>
 
-<!-- ===== APP BAR ===== -->
+<!-- ================================================================
+     2. APP BAR (No logo)
+================================================================ -->
 <header class="app-bar">
   <div class="app-bar-inner">
 
@@ -50,10 +52,6 @@
       </button>
 
       <a href="#" class="brand">
-        <div class="brand-logo">
-          <img src="logo1.jpg" alt="Nagarik Aawaz Logo">
-         
-        </div>
         <div class="brand-text">
           <h1 data-lang="ne">नागरिक आवाज</h1>
           <h1 data-lang="en">Nagarik Aawaz</h1>
@@ -71,7 +69,7 @@
             <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/>
             <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
           </svg>
-          <span class="notif-dot" id="notifDot"></span>
+          <span class="notif-dot" id="notifDot" style="display:none;"></span>
         </button>
 
         <!-- Notification Dropdown Panel -->
@@ -84,66 +82,8 @@
               <span data-lang="en">Mark all read</span>
             </button>
           </div>
-          <div class="notif-list">
-            <div class="notif-item unread">
-              <div class="notif-icon notif-icon-new">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                </svg>
-              </div>
-              <div class="notif-content">
-                <p data-lang="ne">नयाँ गुनासो दर्ता भयो — NA-2082-10248</p>
-                <p data-lang="en">New complaint filed — NA-2082-10248</p>
-                <span class="notif-time" data-lang="ne">५ मिनेट अघि</span>
-                <span class="notif-time" data-lang="en">5 minutes ago</span>
-              </div>
-            </div>
-            <div class="notif-item unread">
-              <div class="notif-icon notif-icon-escalate">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
-                </svg>
-              </div>
-              <div class="notif-content">
-                <p data-lang="ne">गुनासो NA-2082-10188 महानगरमा पठाइयो</p>
-                <p data-lang="en">Complaint NA-2082-10188 escalated to Metro</p>
-                <span class="notif-time" data-lang="ne">२ घण्टा अघि</span>
-                <span class="notif-time" data-lang="en">2 hours ago</span>
-              </div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-icon notif-icon-resolve">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
-                </svg>
-              </div>
-              <div class="notif-content">
-                <p data-lang="ne">गुनासो NA-2082-10205 समाधान भयो</p>
-                <p data-lang="en">Complaint NA-2082-10205 marked resolved</p>
-                <span class="notif-time" data-lang="ne">१ दिन अघि</span>
-                <span class="notif-time" data-lang="en">1 day ago</span>
-              </div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-icon notif-icon-new">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                  <polyline points="14 2 14 8 20 8"/>
-                </svg>
-              </div>
-              <div class="notif-content">
-                <p data-lang="ne">नयाँ गुनासो दर्ता भयो — NA-2082-10231</p>
-                <p data-lang="en">New complaint filed — NA-2082-10231</p>
-                <span class="notif-time" data-lang="ne">२ दिन अघि</span>
-                <span class="notif-time" data-lang="en">2 days ago</span>
-              </div>
-            </div>
-          </div>
-          <div class="notif-panel-footer">
-            <a href="#" onclick="openModal('escalated')">
-              
-            </a>
+          <div class="notif-list" id="notifList">
+            <!-- Populated by JS -->
           </div>
         </div>
       </div>
@@ -157,7 +97,6 @@
           <div class="uward" id="userWardTitleNe" data-lang="ne">वडा अध्यक्ष, वडा नं. ८</div>
           <div class="uward" id="userWardTitleEn" data-lang="en">Ward Chair, Ward 8</div>
         </div>
-        
       </div>
     </div>
 
@@ -167,7 +106,9 @@
 <!-- Sidebar backdrop -->
 <div class="sidebar-backdrop" id="sbBackdrop" onclick="toggleSidebar()"></div>
 
-<!-- ===== APP SHELL ===== -->
+<!-- ================================================================
+     3. APP SHELL
+================================================================ -->
 <div class="app-shell">
 
   <!-- ===== SIDEBAR ===== -->
@@ -176,7 +117,6 @@
     <div class="sb-section-label" data-lang="ne">मुख्य मेनु</div>
     <div class="sb-section-label" data-lang="en">MAIN MENU</div>
 
-    <!-- Active: no popup, just the main view -->
     <a href="dashboard-ward.html" class="sb-link active">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <rect x="3" y="3" width="7" height="9" rx="1.5"/>
@@ -188,7 +128,6 @@
       <span data-lang="en">Manage Complaints</span>
     </a>
 
-    <!-- Popup triggers -->
     <a href="#" class="sb-link" onclick="openModal('escalated'); return false;">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M18 13V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v14l4-4h6"/>
@@ -234,16 +173,16 @@
     </a>
 
     <div class="sb-spacer"></div>
-<div class="sb-divider"></div>
+    <div class="sb-divider"></div>
 
-<a href="#" class="sb-link sb-logout" onclick="logoutWard(); return false;">
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-    <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-  </svg>
-  <span data-lang="ne">लग-आउट</span>
-  <span data-lang="en">Logout</span>
-</a>
+    <a href="#" class="sb-link sb-logout" onclick="logoutWard(); return false;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+        <polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+      </svg>
+      <span data-lang="ne">लग-आउट</span>
+      <span data-lang="en">Logout</span>
+    </a>
 
   </aside>
 
@@ -258,18 +197,11 @@
         <p data-lang="ne">आफ्नो क्षेत्राधिकार भित्रका गुनासोहरू समीक्षा र व्यवस्थापन गर्नुहोस्।</p>
         <p data-lang="en">Review and manage grievances within your jurisdiction.</p>
       </div>
-      <button class="btn btn-outline" onclick="exportReport()">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-          <polyline points="7 10 12 15 17 10"/>
-          <line x1="12" y1="15" x2="12" y2="3"/>
-        </svg>
-        <span data-lang="ne">रिपोर्ट निर्यात</span>
-        <span data-lang="en">Export Report</span>
-      </button>
     </div>
 
-    <!-- ===== STAT CARDS ===== -->
+    <!-- ============================================================
+         SECTION 1 — STAT CARDS
+    ============================================================ -->
     <div class="stat-grid">
 
       <div class="stat-card s-pending">
@@ -279,7 +211,7 @@
           </svg>
         </div>
         <div class="stat-body">
-          <div class="stat-num" data-ne="९" data-en="9">९</div>
+          <div class="stat-num" data-ne="०" data-en="0">०</div>
           <div class="stat-label">
             <span data-lang="ne">समीक्षा बाँकी</span>
             <span data-lang="en">Pending Review</span>
@@ -294,7 +226,7 @@
           </svg>
         </div>
         <div class="stat-body">
-          <div class="stat-num" data-ne="१४" data-en="14">१४</div>
+          <div class="stat-num" data-ne="०" data-en="0">०</div>
           <div class="stat-label">
             <span data-lang="ne">प्रक्रियामा</span>
             <span data-lang="en">In Progress</span>
@@ -310,7 +242,7 @@
           </svg>
         </div>
         <div class="stat-body">
-          <div class="stat-num" data-ne="३" data-en="3">३</div>
+          <div class="stat-num" data-ne="०" data-en="0">०</div>
           <div class="stat-label">
             <span data-lang="ne">महानगरमा पठाइएका</span>
             <span data-lang="en">Escalated to Metro</span>
@@ -326,7 +258,7 @@
           </svg>
         </div>
         <div class="stat-body">
-          <div class="stat-num" data-ne="५२" data-en="52">५२</div>
+          <div class="stat-num" data-ne="०" data-en="0">०</div>
           <div class="stat-label">
             <span data-lang="ne">कुल समाधान भएका</span>
             <span data-lang="en">Total Resolved</span>
@@ -336,54 +268,9 @@
 
     </div>
 
-    <!-- ===== FILTER BAR ===== -->
-    <div class="filter-bar">
-
-      <!-- Search -->
-      <div class="filter-field filter-search-wrap">
-        <label>
-          <span data-lang="ne">खोज्नुहोस्</span>
-          <span data-lang="en">Search</span>
-        </label>
-        <div class="search-input-wrap">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
-            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-          </svg>
-          <input type="search" id="searchInput" class="filter-input" placeholder="ID, शीर्षक..." oninput="applyFilters()">
-        </div>
-      </div>
-
-      <!-- Status filter -->
-      <div class="filter-field">
-        <label>
-          <span data-lang="ne">स्थिती</span>
-          <span data-lang="en">Status</span>
-        </label>
-        <select class="filter-select" id="statusFilter" onchange="applyFilters()">
-          <option value="">
-            <!-- show both so option reads correctly on toggle -->
-            सबै / All
-          </option>
-          <option value="pending">समीक्षामा / Pending</option>
-          <option value="progress">प्रक्रियामा / In Progress</option>
-          <option value="resolved">समाधान / Resolved</option>
-          <option value="escalated">महानगरमा / Escalated</option>
-        </select>
-      </div>
-
-      <button class="btn btn-outline btn-sm filter-clear" onclick="clearFilters()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"/>
-          <line x1="15" y1="9" x2="9" y2="15"/>
-          <line x1="9" y1="9" x2="15" y2="15"/>
-        </svg>
-        <span data-lang="ne">फिल्टर हटाउनुहोस्</span>
-        <span data-lang="en">Clear Filters</span>
-      </button>
-
-    </div>
-
-    <!-- ===== COMPLAINTS TABLE ===== -->
+    <!-- ============================================================
+         SECTION 2 — COMPLAINTS TABLE
+    ============================================================ -->
     <div class="panel">
       <div class="panel-header">
         <h3>
@@ -397,17 +284,12 @@
           <span data-lang="en">Complaints in Ward</span>
         </h3>
         <span class="complaint-count" id="complaintCount">
-          <span data-lang="ne">५ गुनासोहरू</span>
-          <span data-lang="en">5 complaints</span>
+          <span data-lang="ne">० गुनासोहरू</span>
+          <span data-lang="en">0 complaints</span>
         </span>
       </div>
 
       <div class="table-scroll">
-        <!--
-          IMPORTANT: Each <th> and <td> contains BOTH language spans.
-          Only one is visible at a time via CSS. This keeps column count
-          constant so the table never misaligns on language toggle.
-        -->
         <table class="complaints-table" id="complaintsTable">
           <thead>
             <tr>
@@ -438,331 +320,59 @@
             </tr>
           </thead>
           <tbody id="tableBody">
-
-            <!-- Row 1 -->
-            <tr data-status="progress">
-              <td class="cell-id">NA-2082-10231</td>
-              <td class="cell-title-col">
-                <div class="cell-title">
-                  <span data-lang="ne">बाटोमा ठूलो खाल्डो</span>
-                  <span data-lang="en">Large pothole on main road</span>
-                </div>
-                <div class="cell-landmark">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                  </svg>
-                  <span data-lang="ne">नया बजार नजिक, वडा ८</span>
-                  <span data-lang="en">Near Naya Bazar, Ward 8</span>
-                </div>
-                <div class="cell-coords">28.21023, 83.98147</div>
-              </td>
-              <td class="cell-desc">
-                <span data-lang="ne" class="desc-text">मुख्य सडकमा ठूलो खाल्डो छ जसले सवारी साधन र पैदलयात्रुहरूलाई...</span>
-                <span data-lang="en" class="desc-text">Large pothole on main road causing danger to vehicles and...</span>
-              </td>
-              <td class="cell-photo">
-                <div class="photo-thumb-wrap">
-                  <div class="photo-placeholder">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                      <circle cx="12" cy="13" r="4"/>
-                    </svg>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <select class="status-select" onchange="handleStatusChange(this, 'NA-2082-10231')">
-                  <option value="pending">
-                    <span data-lang="ne">समीक्षामा</span>
-                    <span data-lang="en">Pending</span>
-                  </option>
-                  <option value="in-progress" selected>
-                    <span data-lang="ne">प्रक्रियामा</span>
-                    <span data-lang="en">In Progress</span>
-                  </option>
-                  <option value="resolved">
-                    <span data-lang="ne">समाधान</span>
-                    <span data-lang="en">Resolved</span>
-                  </option>
-                </select>
-              </td>
-              <td>
-                <div class="row-actions">
-                  <button class="action-btn btn-escalate" onclick="escalateComplaint('NA-2082-10231')" title="Escalate to Metro">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
-                    </svg>
-                  </button>
-                  <button class="action-btn btn-view" onclick="viewComplaint('NA-2082-10231')" title="View Details">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                  </button>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 2 -->
-            <tr data-status="pending">
-              <td class="cell-id">NA-2082-10219</td>
-              <td class="cell-title-col">
-                <div class="cell-title">
-                  <span data-lang="ne">ढल अवरुद्ध, पानी जम्मा</span>
-                  <span data-lang="en">Blocked drain, water pooling</span>
-                </div>
-                <div class="cell-landmark">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                  </svg>
-                  <span data-lang="ne">गल्ली ४ छेउ, वडा ८</span>
-                  <span data-lang="en">Near Galli 4, Ward 8</span>
-                </div>
-                <div class="cell-coords">28.20897, 83.98312</div>
-              </td>
-              <td class="cell-desc">
-                <span data-lang="ne" class="desc-text">ढल पूर्ण रूपले बन्द छ र सडकमा पानी जम्मा भइरहेको छ...</span>
-                <span data-lang="en" class="desc-text">Drain is completely blocked and water is pooling on the street...</span>
-              </td>
-              <td class="cell-photo">
-                <div class="photo-thumb-wrap">
-                  <div class="photo-placeholder">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                      <circle cx="12" cy="13" r="4"/>
-                    </svg>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <select class="status-select" onchange="handleStatusChange(this, 'NA-2082-10219')">
-                  <option value="pending" selected>समीक्षामा / Pending</option>
-                  <option value="in-progress">प्रक्रियामा / In Progress</option>
-                  <option value="resolved">समाधान / Resolved</option>
-                </select>
-              </td>
-              <td>
-                <div class="row-actions">
-                  <button class="action-btn btn-escalate" onclick="escalateComplaint('NA-2082-10219')" title="Escalate to Metro">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
-                    </svg>
-                  </button>
-                  <button class="action-btn btn-view" onclick="viewComplaint('NA-2082-10219')" title="View Details">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                  </button>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 3 -->
-            <tr data-status="resolved">
-              <td class="cell-id">NA-2082-10205</td>
-              <td class="cell-title-col">
-                <div class="cell-title">
-                  <span data-lang="ne">सडक बत्ती बिग्रिएको</span>
-                  <span data-lang="en">Street light not working</span>
-                </div>
-                <div class="cell-landmark">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                  </svg>
-                  <span data-lang="ne">मुख्य चोक नजिक, वडा ८</span>
-                  <span data-lang="en">Near Main Chowk, Ward 8</span>
-                </div>
-                <div class="cell-coords">28.21155, 83.98054</div>
-              </td>
-              <td class="cell-desc">
-                <span data-lang="ne" class="desc-text">मुख्य चोकको सडक बत्ती १ हप्तादेखि काम गरिरहेको छैन...</span>
-                <span data-lang="en" class="desc-text">Street light at main chowk has not been working for 1 week...</span>
-              </td>
-              <td class="cell-photo">
-                <div class="photo-thumb-wrap">
-                  <div class="photo-placeholder">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                      <circle cx="12" cy="13" r="4"/>
-                    </svg>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <select class="status-select" onchange="handleStatusChange(this, 'NA-2082-10205')">
-                  <option value="pending">समीक्षामा / Pending</option>
-                  <option value="in-progress">प्रक्रियामा / In Progress</option>
-                  <option value="resolved" selected>समाधान / Resolved</option>
-                </select>
-              </td>
-              <td>
-                <div class="row-actions">
-                  <button class="action-btn btn-view" onclick="viewComplaint('NA-2082-10205')" title="View Details">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                  </button>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 4 — Escalated -->
-            <tr data-status="escalated">
-              <td class="cell-id">NA-2082-10188</td>
-              <td class="cell-title-col">
-                <div class="cell-title">
-                  <span data-lang="ne">पुल भत्किने जोखिम</span>
-                  <span data-lang="en">Foot-bridge structurally unsafe</span>
-                </div>
-                <div class="cell-landmark">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                  </svg>
-                  <span data-lang="ne">खोल्सी किनार नजिक, वडा ८</span>
-                  <span data-lang="en">Near Kholsi Bank, Ward 8</span>
-                </div>
-                <div class="cell-coords">28.20743, 83.98521</div>
-              </td>
-              <td class="cell-desc">
-                <span data-lang="ne" class="desc-text">पुलको मुख्य बीम क्षतिग्रस्त छ र तुरुन्त मर्मत नभएमा...</span>
-                <span data-lang="en" class="desc-text">Main bridge beam is damaged and may collapse if not repaired...</span>
-              </td>
-              <td class="cell-photo">
-                <div class="photo-thumb-wrap">
-                  <div class="photo-placeholder">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                      <circle cx="12" cy="13" r="4"/>
-                    </svg>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <span class="badge b-escalated">
-                  <span class="badge-dot"></span>
-                  <span data-lang="ne">महानगरमा पठाइयो</span>
-                  <span data-lang="en">Escalated</span>
-                </span>
-              </td>
-              <td>
-                <div class="row-actions">
-                  <button class="action-btn btn-view" onclick="viewComplaint('NA-2082-10188')" title="View Details">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                  </button>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 5 -->
-            <tr data-status="progress">
-              <td class="cell-id">NA-2082-10174</td>
-              <td class="cell-title-col">
-                <div class="cell-title">
-                  <span data-lang="ne">सार्वजनिक धारा भाँचिएको</span>
-                  <span data-lang="en">Public tap stand broken</span>
-                </div>
-                <div class="cell-landmark">
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
-                  </svg>
-                  <span data-lang="ne">पसल टोल नजिक, वडा ८</span>
-                  <span data-lang="en">Near Pasal Tole, Ward 8</span>
-                </div>
-                <div class="cell-coords">28.21088, 83.98229</div>
-              </td>
-              <td class="cell-desc">
-                <span data-lang="ne" class="desc-text">सार्वजनिक धारा भाँचिएको कारण पानी बर्बाद भइरहेको छ...</span>
-                <span data-lang="en" class="desc-text">Broken public tap causing continuous water wastage...</span>
-              </td>
-              <td class="cell-photo">
-                <div class="photo-thumb-wrap">
-                  <div class="photo-placeholder">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-                      <circle cx="12" cy="13" r="4"/>
-                    </svg>
-                  </div>
-                </div>
-              </td>
-              <td>
-                <select class="status-select" onchange="handleStatusChange(this, 'NA-2082-10174')">
-                  <option value="pending">समीक्षामा / Pending</option>
-                  <option value="in-progress" selected>प्रक्रियामा / In Progress</option>
-                  <option value="resolved">समाधान / Resolved</option>
-                </select>
-              </td>
-              <td>
-                <div class="row-actions">
-                  <button class="action-btn btn-escalate" onclick="escalateComplaint('NA-2082-10174')" title="Escalate to Metro">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
-                    </svg>
-                  </button>
-                  <button class="action-btn btn-view" onclick="viewComplaint('NA-2082-10174')" title="View Details">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
-                      <circle cx="12" cy="12" r="3"/>
-                    </svg>
-                  </button>
-                </div>
-              </td>
-            </tr>
-
+            <!-- Populated by JS -->
           </tbody>
         </table>
       </div>
 
       <!-- Pagination -->
       <div class="pagination">
-        <p>
-          <span data-lang="ne">२६ मध्ये १–५ देखाइँदै</span>
-          <span data-lang="en">Showing 1–5 of 26</span>
+        <p id="paginationInfo">
+          <span data-lang="ne">० मध्ये ०–० देखाइँदै</span>
+          <span data-lang="en">Showing 0–0 of 0</span>
         </p>
-        <div class="page-btns">
-          <button class="page-btn active">1</button>
-          <button class="page-btn">2</button>
-          <button class="page-btn">3</button>
-          <button class="page-btn page-next">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="9 18 15 12 9 6"/>
-            </svg>
-          </button>
+        <div class="page-btns" id="pageBtns">
+          <!-- Populated by JS -->
         </div>
       </div>
     </div>
-<div class="panel" style="margin-top:20px;">
-  <div class="panel-header">
-    <h3>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
-      <span data-lang="ne">महानगरमा पठाइएका गुनासोहरू</span><span data-lang="en">Complaints Escalated to Metro</span>
-    </h3>
-    <span class="complaint-count" id="escalatedCount"></span>
-  </div>
-  <div class="table-scroll">
-    <table class="complaints-table">
-      <thead>
-        <tr>
-          <th><span data-lang="ne">आईडी</span><span data-lang="en">ID</span></th>
-          <th><span data-lang="ne">शीर्षक र स्थान</span><span data-lang="en">Title &amp; Location</span></th>
-          <th><span data-lang="ne">विवरण</span><span data-lang="en">Description</span></th>
-          <th><span data-lang="ne">कार्य</span><span data-lang="en">Actions</span></th>
-        </tr>
-      </thead>
-      <tbody id="escalatedSectionBody"></tbody>
-    </table>
-  </div>
-</div>
+
+    <!-- ============================================================
+         SECTION 3 — ESCALATED COMPLAINTS
+    ============================================================ -->
+    <div class="panel" style="margin-top:20px;">
+      <div class="panel-header">
+        <h3>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="19" x2="12" y2="5"/>
+            <polyline points="5 12 12 5 19 12"/>
+          </svg>
+          <span data-lang="ne">महानगरमा पठाइएका गुनासोहरू</span>
+          <span data-lang="en">Complaints Escalated to Metro</span>
+        </h3>
+        <span class="complaint-count" id="escalatedCount"></span>
+      </div>
+      <div class="table-scroll">
+        <table class="complaints-table">
+          <thead>
+            <tr>
+              <th><span data-lang="ne">आईडी</span><span data-lang="en">ID</span></th>
+              <th><span data-lang="ne">शीर्षक र स्थान</span><span data-lang="en">Title &amp; Location</span></th>
+              <th><span data-lang="ne">विवरण</span><span data-lang="en">Description</span></th>
+              <th><span data-lang="ne">कार्य</span><span data-lang="en">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="escalatedSectionBody"></tbody>
+        </table>
+      </div>
+    </div>
+
   </main>
 </div>
 
-<!-- ===================================================================
-     MODAL OVERLAY — used for all sidebar popup panels
-=================================================================== -->
+<!-- ================================================================
+     4. MODAL OVERLAY
+================================================================ -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal()">
   <div class="modal-box" onclick="event.stopPropagation()">
     <div class="modal-header">

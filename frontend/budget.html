@@ -11,7 +11,9 @@
 </head>
 <body>
 
-<!-- ===== TOP STRIP ===== -->
+<!-- ================================================================
+     1. TOP STRIP
+================================================================ -->
 <div class="top-strip">
   <div class="top-strip-inner">
     <div class="top-strip-left"></div>
@@ -28,27 +30,32 @@
   </div>
 </div>
 
-<!-- ===== MASTHEAD ===== -->
+<!-- ================================================================
+     2. MASTHEAD
+================================================================ -->
 <div class="masthead">
   <div class="masthead-inner">
     <a href="#" id="homeBtn" class="home-btn">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-9 9 9"/><path d="M5 10v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10"/><path d="M9 21v-6h6v6"/></svg>
-      <span data-lang="ne">मेरो ड्यासबोर्ड</span>
-      <span data-lang="en">My Dashboard</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 12l9-9 9 9"/>
+        <path d="M5 10v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V10"/>
+        <path d="M9 21v-6h6v6"/>
+      </svg>
     </a>
     <div class="masthead-brand">
-      <div class="masthead-logo-metro"><img src="logo1.jpg" alt="Logo"></div>
       <div class="masthead-text">
         <h1 data-lang="ne">पोखरा महानगरपालिका</h1>
         <h1 data-lang="en">Pokhara Metropolitan City</h1>
-        <p data-lang="ne">नागरिक आवाज — बजेट पारदर्शिता पोर्टल</p>
-        <p data-lang="en">NAGARIK AAWAZ — BUDGET TRANSPARENCY PORTAL</p>
+        <p data-lang="ne" class="sub-portal">नागरिक आवाज — बजेट पारदर्शिता पोर्टल</p>
+        <p data-lang="en" class="sub-portal">NAGARIK AAWAZ — BUDGET TRANSPARENCY PORTAL</p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ===== PAGE HEADER ===== -->
+<!-- ================================================================
+     3. PAGE HEADER
+================================================================ -->
 <section class="page-header">
   <div class="page-header-inner">
     <h2 data-lang="ne">सार्वजनिक बजेट पारदर्शिता ट्र्याकर</h2>
@@ -58,21 +65,26 @@
   </div>
 </section>
 
-<!-- ===== ADMIN BAR (hidden for citizens) ===== -->
-<div id="adminBar" style="display:none;background:var(--green-light);border:1px solid var(--green-accent);border-radius:8px;padding:12px 16px;margin:0 auto 16px;max-width:1440px;align-items:center;justify-content:space-between;">
-  <span style="font-weight:600;color:var(--green-deep);">
+<!-- ================================================================
+     4. ADMIN BAR (hidden for citizens — toggled via JS by role)
+================================================================ -->
+<div id="adminBar" class="admin-bar">
+  <span class="admin-bar-label">
     <span data-lang="ne">बजेट व्यवस्थापन</span>
     <span data-lang="en">Budget Management</span>
   </span>
-  <button id="btnAddBudget" onclick="openAddModal()" style="display:none;padding:8px 16px;background:var(--green-deep);color:#fff;border:none;border-radius:6px;cursor:pointer;font-family:inherit;font-weight:600;">
+  <button id="btnAddBudget" class="btn-add-budget" onclick="openAddModal()">
     <span data-lang="ne">+ नयाँ बजेट विनियोजन</span>
     <span data-lang="en">+ Allocate New Budget</span>
   </button>
 </div>
 
-<!-- ===== FINANCIAL CARDS ===== -->
+<!-- ================================================================
+     5. FINANCIAL SUMMARY CARDS
+================================================================ -->
 <section class="section">
   <div class="finance-grid">
+
     <div class="finance-card">
       <div class="ring-wrap">
         <svg viewBox="0 0 100 100" width="92" height="92">
@@ -87,6 +99,7 @@
         <div class="amount">रु. —</div>
       </div>
     </div>
+
     <div class="finance-card">
       <div class="ring-wrap">
         <svg viewBox="0 0 100 100" width="92" height="92">
@@ -101,6 +114,7 @@
         <div class="amount">रु. —</div>
       </div>
     </div>
+
     <div class="finance-card">
       <div class="ring-wrap">
         <svg viewBox="0 0 100 100" width="92" height="92">
@@ -115,10 +129,13 @@
         <div class="amount">रु. —</div>
       </div>
     </div>
+
   </div>
 </section>
 
-<!-- ===== CONTROL BAR ===== -->
+<!-- ================================================================
+     6. FILTER CONTROL BAR (fiscal year / ward)
+================================================================ -->
 <div class="control-bar">
   <div class="control-field">
     <label data-lang="ne">आर्थिक वर्ष</label>
@@ -138,7 +155,9 @@
   </div>
 </div>
 
-<!-- ===== BUDGET TABLE ===== -->
+<!-- ================================================================
+     7. WARD-WISE BUDGET LEDGER TABLE
+================================================================ -->
 <section class="section section-tight">
   <div class="panel">
     <div class="panel-header">
@@ -167,7 +186,9 @@
   </div>
 </section>
 
-<!-- ===== FOOTER ===== -->
+<!-- ================================================================
+     8. FOOTER
+================================================================ -->
 <footer>
   <div class="footer-inner">
     <div class="footer-col">
@@ -188,21 +209,11 @@
   </div>
 </footer>
 
-<!-- ===== EDIT BUDGET MODAL ===== -->
+<!-- ================================================================
+     9. EDIT BUDGET MODAL
+================================================================ -->
 <div class="modal-overlay" id="editOverlay" onclick="closeEditModal()">
-  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:500px;">
-    <div class="modal-header">
-      
-</div>
-    <div class="modal-body" id="editModalBody"></div>
-  </div>
-</div>
-
-<script src="scriptbudget.js"></script>
-
-<!-- ===== EDIT BUDGET MODAL ===== -->
-<div class="modal-overlay" id="editOverlay" onclick="closeEditModal()">
-  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:500px;">
+  <div class="modal-box modal-edit" onclick="event.stopPropagation()">
     <div class="modal-header">
       <h3><span data-lang="ne">बजेट सम्पादन</span><span data-lang="en">Edit Budget</span></h3>
       <button class="modal-close" onclick="closeEditModal()">
@@ -212,6 +223,11 @@
     <div class="modal-body" id="editModalBody"></div>
   </div>
 </div>
+
+<!-- ================================================================
+     10. SCRIPTS
+================================================================ -->
+<script src="scriptbudget.js"></script>
 
 </body>
 </html>
